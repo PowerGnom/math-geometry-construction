@@ -1,0 +1,13 @@
+- intersections
+  - concept:
+    - Math::Geometry::Construction::Intersection has code to accept
+      two (or more?) objects and dynamically applies the appropriate
+      role, e.g.
+      Math::Geometry::Construction::Intersection::CircleLine.
+    - It also consumes PointSelection.
+    - The roles provide the points method and possibly more point
+      selection methods.
+    - Math::Geometry::Construction::IntersectionPoint contains code
+      to hold the Intersection object, the point selection method to
+      call and its parameters. This is executed when the position
+      method is called.
