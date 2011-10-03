@@ -148,6 +148,8 @@ attributes. This is the default C<Moose|Moose> constructor.
 
 =head3 add_line
 
+=head3 add_object
+
 =head3 as_svg
 
 =head2 Methods for Subclass Developers
