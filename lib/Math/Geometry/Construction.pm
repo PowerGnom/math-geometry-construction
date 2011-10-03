@@ -87,24 +87,25 @@ sub as_svg {
 #                                                                         #
 ###########################################################################
 
+sub add_object {
+    my ($self, $class, @args) = @_;
+
+    my $object = $class->new(order_index => $self->count_objects, @args);
+    $self->object($object->id, $object);
+
+    return $object;
+}
+
 sub add_point {
     my ($self, @args) = @_;
 
-    my $point = Math::Geometry::Construction::Point->new
-	(order_index => $self->count_objects, @args);
-    $self->object($point->id, $point);
-
-    return $point;
+    return $self->add_object('Math::Geometry::Construction::Point', @args);
 }
 
 sub add_line {
     my ($self, @args) = @_;
 
-    my $line = Math::Geometry::Construction::Line->new
-	(order_index => $self->count_objects, @args);
-    $self->object($line->id, $line);
-
-    return $line;
+    return $self->add_object('Math::Geometry::Construction::Line', @args);
 }
 
 1;
