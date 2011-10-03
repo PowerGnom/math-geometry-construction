@@ -9,15 +9,15 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Object> - line through to points
+C<Math::Geometry::Construction::Object> - shared administrative issues
 
 =head1 VERSION
 
-Version 0.001
+Version 0.002
 
 =cut
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 
 ###########################################################################
