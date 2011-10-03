@@ -108,6 +108,10 @@ sub add_line {
     return $self->add_object('Math::Geometry::Construction::Line', @args);
 }
 
+sub add_intersection {
+    my ($self, @args) = @_;
+}
+
 1;
 
 
@@ -149,6 +153,8 @@ attributes. This is the default C<Moose|Moose> constructor.
 =head3 add_line
 
 =head3 add_object
+
+=head3 add_intersection
 
 =head3 as_svg
 
