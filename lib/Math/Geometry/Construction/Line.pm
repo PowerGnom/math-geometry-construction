@@ -36,6 +36,7 @@ sub id_template { return $ID_TEMPLATE }
 
 with 'Math::Geometry::Construction::Object';
 with 'Math::Geometry::Construction::PointSelection';
+with 'Math::Geometry::Construction::Output';
 
 has 'support'     => (isa     => 'ArrayRef[Item]',
 		      is      => 'bare',
