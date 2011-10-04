@@ -5,19 +5,17 @@ use 5.008008;
 
 use Carp;
 
-# $Id: PointSelection.pm 6956 2011-09-25 07:15:08Z powergnom $
-
 =head1 NAME
 
 C<Math::Geometry::Construction::PointSelection> - how far to draw?
 
 =head1 VERSION
 
-Version 0.001
+Version 0.002
 
 =cut
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 
 ###########################################################################
