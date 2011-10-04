@@ -26,12 +26,13 @@ our $VERSION = '0.002';
 #                                                                         #
 ###########################################################################
 
-requires '_generate_id';
+requires 'id_template';
 
 has 'id'          => (isa      => 'Str',
 		      is       => 'rw',
 		      writer   => '_id',
 		      required => 1,
+		      lazy     => 1,
 		      builder  => '_generate_id');
 
 has 'order_index' => (isa      => 'Int',
@@ -64,7 +65,9 @@ has 'specific_poi' => (isa     => 'ArrayRef[Item]',
 ###########################################################################
 
 sub _generate_id {
-    return sprintf($ID_TEMPLATE, $id_counter++);
+    my ($self) = @_;
+    
+    return sprintf($self->id_template, $self->order_index);
 }
 
 ###########################################################################
