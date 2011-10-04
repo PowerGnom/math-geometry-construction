@@ -11,8 +11,6 @@ use Math::Geometry::Construction::Point;
 use Math::Geometry::Construction::Line;
 
 
-# $Id: Construction.pm 6955 2011-09-25 06:29:57Z powergnom $
-
 =head1 NAME
 
 C<Math::Geometry::Construction> - intersecting lines and circles
