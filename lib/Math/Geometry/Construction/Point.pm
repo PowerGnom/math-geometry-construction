@@ -6,8 +6,6 @@ use Moose;
 use Math::VectorReal;
 use Carp;
 
-# $Id: Point.pm 6933 2011-09-18 06:23:09Z powergnom $
-
 =head1 NAME
 
 C<Math::Geometry::Construction::Point> - a free user-defined point
