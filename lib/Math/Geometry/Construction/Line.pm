@@ -5,8 +5,6 @@ use 5.008008;
 
 use Carp;
 
-# $Id: Line.pm 6958 2011-09-25 07:19:38Z powergnom $
-
 =head1 NAME
 
 C<Math::Geometry::Construction::Line> - line through to points
