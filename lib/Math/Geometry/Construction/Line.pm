@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Line> - line through to points
 
 =head1 VERSION
 
-Version 0.001
+Version 0.002
 
 =cut
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 
 ###########################################################################
@@ -28,13 +28,7 @@ our $VERSION = '0.001';
 
 our $ID_TEMPLATE = 'L%09d';
 
-{
-    my  $id_counter  = 0;
-
-    sub _generate_id {
-	return sprintf($ID_TEMPLATE, $id_counter++);
-    }
-}
+sub id_template { return $ID_TEMPLATE }
 
 ###########################################################################
 #                                                                         #
@@ -130,6 +124,8 @@ __END__
 =head2 Methods for Subclass Developers
 
 =head3 as_svg
+
+=head3 id_template
 
 =head1 DIAGNOSTICS
 
