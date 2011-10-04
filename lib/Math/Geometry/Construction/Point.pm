@@ -36,6 +36,7 @@ sub id_template { return $ID_TEMPLATE }
 ###########################################################################
 
 with 'Math::Geometry::Construction::Object';
+with 'Math::Geometry::Construction::Output';
 
 has 'position'    => (isa      => 'Math::VectorReal',
 		      is       => 'rw',
