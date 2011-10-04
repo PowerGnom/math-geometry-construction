@@ -110,6 +110,9 @@ sub add_line {
 
 sub add_intersection {
     my ($self, @args) = @_;
+
+    return $self->add_object('Math::Geometry::Construction::Intersection',
+			     @args);
 }
 
 1;
