@@ -113,6 +113,8 @@ __END__
 
 =head3 as_svg
 
+=head3 id_template
+
 =head1 DIAGNOSTICS
 
 =head2 Exceptions
