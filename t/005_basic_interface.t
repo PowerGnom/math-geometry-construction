@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 9;
+use Test::More tests => 6;
 use Math::Geometry::Construction;
 use Math::VectorReal;
 
@@ -22,12 +22,7 @@ sub line {
     isa_ok($support[0], 'Math::Geometry::Construction::Point');
     isa_ok($support[1], 'Math::Geometry::Construction::Point');
 
-    @support = $l1->default_poi;
-    is(@support, 2, "two default poi");
-    isa_ok($support[0], 'Math::Geometry::Construction::Point');
-    isa_ok($support[1], 'Math::Geometry::Construction::Point');
-
-    @support = $l1->points_of_interest;
+    @support = $l1->points;
     is(@support, 2, "two poi");
     isa_ok($support[0], 'Math::Geometry::Construction::Point');
     isa_ok($support[1], 'Math::Geometry::Construction::Point');
