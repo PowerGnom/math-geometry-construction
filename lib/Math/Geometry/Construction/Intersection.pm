@@ -37,6 +37,30 @@ sub id_template { return $ID_TEMPLATE }
 
 with 'Math::Geometry::Construction::Object';
 
+has 'intersectants' => (isa      => 'ArrayRef[Item]',
+			is       => 'bare',
+			traits   => ['Array'],
+			required => 1,
+			handles  => {count_intersectants => 'count',
+				     intersectants       => 'elements',
+				     single_intersectant => 'accessor'});
+
+sub BUILD {
+    my ($self, $args) = @_;
+    my @names         = ();
+    
+    my $class_regex = qr/Math\:\:Geometry\:\:Construction\:\:([^\:]+)/;
+    foreach($self->intersectants) {
+	my $class = ref($_);
+	if($class =~ $class_regex) { push(@names, $1) }
+	else { croak "Invalid class $class for intersection." }
+    }
+    my $role = join('', sort @names);
+
+    require($role);
+    $role->meta->apply($self);
+}
+
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #
