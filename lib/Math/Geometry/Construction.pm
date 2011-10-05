@@ -10,6 +10,7 @@ use SVG;
 use Math::Geometry::Construction::Point;
 use Math::Geometry::Construction::Line;
 
+use Math::Geometry::Construction::Intersection;
 
 =head1 NAME
 
@@ -70,7 +71,7 @@ sub as_svg {
 
     my $point_class = 'Math::Geometry::Construction::Point';
     foreach(grep { !$_->isa($point_class) } @objects) {
-	$_->as_svg(parent => $svg, %args);
+	$_->as_svg(parent => $svg, %args) if($_->can('as_svg'));
     }
     foreach(grep { $_->isa($point_class) } @objects) {
 	$_->as_svg(parent => $svg, %args);
