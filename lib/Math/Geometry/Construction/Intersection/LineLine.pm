@@ -5,6 +5,7 @@ use 5.008008;
 
 use Carp;
 use Math::VectorReal ':all';
+use Math::MatrixReal;
 
 =head1 NAME
 
@@ -45,10 +46,30 @@ sub points {
 	}
     }
 
-    my @support  = map { [$_->support] } @lines;
+    my @support  = map { [map { $_->position } $_->support] } @lines;
+
+    foreach my $line (@support) {
+	foreach my $position (@$line) {
+	    return if(!defined($position));
+	}
+    }
+
     my @normal   = map { $_->norm }
  	           map { (plane(Z, 0, ($_->[1] - $_->[0])))[0] } @support;
     my @constant = map { $normal[$_] . $support[$_]->[0] } (0, 1);
+
+    my $matrix   = Math::MatrixReal->new_from_rows
+	(map { [$_->x, $_->y] } @normal);
+
+    return if($matrix->det == 0);
+    my $inverse = $matrix->inverse;
+    return if(!$inverse);  # only possible - if at all - for num. reasons
+
+    return(vector($inverse->element(1, 1) * $constant[0] +
+		  $inverse->element(1, 2) * $constant[1],
+		  $inverse->element(2, 1) * $constant[0] +
+		  $inverse->element(2, 2) * $constant[1],
+		  0));
 }
 
 ###########################################################################
