@@ -37,25 +37,6 @@ has 'order_index' => (isa      => 'Int',
 		      is       => 'rw',
 		      required => 1);
 
-has 'style'       => (isa     => 'HashRef[Str]',
-		      is      => 'rw',
-		      reader  => 'style_hash',
-		      writer  => '_style_hash',
-		      traits  => ['Hash'],
-		      default => sub { {} },
-		      handles => {style => 'accessor'});
-
-has 'hidden'      => (isa     => 'Bool',
-		      is      => 'rw',
-		      default => 0);
-
-has 'specific_poi' => (isa     => 'ArrayRef[Item]',
-		       is      => 'bare',
-		       traits  => ['Array'],
-		       default => sub { [] },
-		       handles => {specific_poi => 'elements',
-				   add_poi      => 'push'});
-
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #
