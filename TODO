@@ -11,3 +11,10 @@
       to hold the Intersection object, the point selection method to
       call and its parameters. This is executed when the position
       method is called.
+
+- On creation of an intersection point, it should be added to the
+  lists of POIs of the intersecting objects. The user should be able
+  to inhibit this. I am unsure how he should be able to inihibit it
+  specifically for some of the objects. Maybe I won't allow
+  this. Anyway, it is planned to let objects ignore points. It can
+  always be done very specifically this way.
