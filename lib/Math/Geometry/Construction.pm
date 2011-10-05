@@ -11,6 +11,7 @@ use Math::Geometry::Construction::Point;
 use Math::Geometry::Construction::Line;
 
 use Math::Geometry::Construction::Intersection;
+use Math::Geometry::Construction::IntersectionPoint;
 
 =head1 NAME
 
@@ -89,7 +90,9 @@ sub as_svg {
 sub add_object {
     my ($self, $class, @args) = @_;
 
-    my $object = $class->new(order_index => $self->count_objects, @args);
+    my $object = $class->new(order_index  => $self->count_objects, 
+			     construction => $self,
+			     @args);
     $self->object($object->id, $object);
 
     return $object;
@@ -112,6 +115,14 @@ sub add_intersection {
 
     return $self->add_object('Math::Geometry::Construction::Intersection',
 			     @args);
+}
+
+sub add_intersection_point {
+    my ($self, @args) = @_;
+
+    return $self->add_object
+	('Math::Geometry::Construction::IntersectionPoint',
+	 @args);
 }
 
 1;

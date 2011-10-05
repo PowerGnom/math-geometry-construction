@@ -25,7 +25,7 @@ our $VERSION = '0.002';
 #                                                                         #
 ###########################################################################
 
-our $ID_TEMPLATE = 'I%09d';
+our $ID_TEMPLATE = 'S%09d';
 
 sub id_template { return $ID_TEMPLATE }
 
@@ -36,12 +36,13 @@ sub id_template { return $ID_TEMPLATE }
 ###########################################################################
 
 with 'Math::Geometry::Construction::Object';
+with 'Math::Geometry::Construction::Output';
 
 has 'intersection'   => (isa      => 'Item',
 		         is       => 'ro',
 		         required => 1);
 
-has 'point_selector' => (isa      => 'Array[Item]',
+has 'point_selector' => (isa      => 'ArrayRef[Item]',
 			 is       => 'ro',
 			 reader   => '_point_selector',
 			 required => 1);
@@ -55,8 +56,8 @@ has 'point_selector' => (isa      => 'Array[Item]',
 sub position {
     my ($self) = @_;
 
-    my ($selector_method, $args) = @{$self->_point_selector};
-    my $point = $self->intersection->$selector_method(@$args);
+    my ($selection_method, $args) = @{$self->_point_selector};
+    my $point = $self->intersection->$selection_method(@$args);
     return $point ? $point->position : undef;
 }
 

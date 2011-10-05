@@ -36,6 +36,7 @@ sub id_template { return $ID_TEMPLATE }
 ###########################################################################
 
 with 'Math::Geometry::Construction::Object';
+with 'Math::Geometry::Construction::PointSelection';
 
 has 'intersectants' => (isa      => 'ArrayRef[Item]',
 			is       => 'bare',
@@ -69,6 +70,14 @@ sub BUILD {
 #                             Retrieve Data                               #
 #                                                                         #
 ###########################################################################
+
+sub create_intersection_point {
+    my ($self, %args) = @_;
+
+    return $self->construction->add_intersection_point
+	(intersection   => $self,
+	 point_selector => [$args{method}, $args{params}]);
+}
 
 ###########################################################################
 #                                                                         #

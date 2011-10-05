@@ -26,16 +26,21 @@ our $VERSION = '0.002';
 
 requires 'id_template';
 
-has 'id'          => (isa      => 'Str',
-		      is       => 'rw',
-		      writer   => '_id',
-		      required => 1,
-		      lazy     => 1,
-		      builder  => '_generate_id');
+has 'id'           => (isa      => 'Str',
+		       is       => 'rw',
+		       writer   => '_id',
+		       required => 1,
+		       lazy     => 1,
+		       builder  => '_generate_id');
 
-has 'order_index' => (isa      => 'Int',
-		      is       => 'rw',
-		      required => 1);
+has 'order_index'  => (isa      => 'Int',
+		       is       => 'rw',
+		       required => 1);
+
+has 'construction' => (isa      => 'Item',
+		       is       => 'ro',
+		       required => 1,
+		       weak_ref => 1);
 
 ###########################################################################
 #                                                                         #

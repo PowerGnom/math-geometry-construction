@@ -6,6 +6,7 @@ use 5.008008;
 use Carp;
 use Math::VectorReal ':all';
 use Math::MatrixReal;
+use Math::Geometry::Construction::TemporaryPoint;
 
 =head1 NAME
 
@@ -55,21 +56,23 @@ sub points {
     }
 
     my @normal   = map { $_->norm }
- 	           map { (plane(Z, 0, ($_->[1] - $_->[0])))[0] } @support;
+	           map { (plane(Z, O, $_->[1] - $_->[0]))[0] } @support;
     my @constant = map { $normal[$_] . $support[$_]->[0] } (0, 1);
-
     my $matrix   = Math::MatrixReal->new_from_rows
-	(map { [$_->x, $_->y] } @normal);
+	([map { [$_->x, $_->y] } @normal]);
 
     return if($matrix->det == 0);
     my $inverse = $matrix->inverse;
     return if(!$inverse);  # only possible - if at all - for num. reasons
 
-    return(vector($inverse->element(1, 1) * $constant[0] +
-		  $inverse->element(1, 2) * $constant[1],
-		  $inverse->element(2, 1) * $constant[0] +
-		  $inverse->element(2, 2) * $constant[1],
-		  0));
+    my $position = vector($inverse->element(1, 1) * $constant[0] +
+			  $inverse->element(1, 2) * $constant[1],
+			  $inverse->element(2, 1) * $constant[0] +
+			  $inverse->element(2, 2) * $constant[1],
+			  0);
+
+    return(Math::Geometry::Construction::TemporaryPoint->new
+	   (position => $position));
 }
 
 ###########################################################################
