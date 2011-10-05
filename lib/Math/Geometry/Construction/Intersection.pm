@@ -59,10 +59,8 @@ sub BUILD {
     my $role = 'Math::Geometry::Construction::Intersection::'.
 	join('', sort @names);
 
-#    eval "require $role" or croak "Unable to load $role";
-#    $role->meta->apply($self);
-    require Math::Geometry::Construction::Intersection::LineLine;
-    Math::Geometry::Construction::Intersection::LineLine->meta->apply($self);
+    eval "require $role" or croak "Unable to load $role";
+    $role->meta->apply($self);
 }
 
 ###########################################################################
