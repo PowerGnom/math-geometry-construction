@@ -56,7 +56,8 @@ sub position {
     my ($self) = @_;
 
     my ($selector_method, $args) = @{$self->_point_selector};
-    return($self->intersection->$selector_method(@$args)->position);
+    my $point = $self->intersection->$selector_method(@$args);
+    return $point ? $point->position : undef;
 }
 
 ###########################################################################
