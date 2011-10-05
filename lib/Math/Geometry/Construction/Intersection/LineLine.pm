@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::LineLine;
+package Math::Geometry::Construction::Intersection::LineLine;
 use Moose::Role;
 
 use 5.008008;
@@ -9,7 +9,7 @@ use Math::MatrixReal;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::LineLine> - line line intersection
+C<Math::Geometry::Construction::Intersection::LineLine> - line line intersection
 
 =head1 VERSION
 
