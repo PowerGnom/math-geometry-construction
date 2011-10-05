@@ -37,8 +37,6 @@ sub intersection {
     my $i1 = $construction->add_intersection(intersectants => [$l1, $l2]);
     my $p5 = $i1->create_intersection_point(method => 'indexed_point',
 					    params => [0]);
-
-    print $p5->position;
 }
 
 line;
