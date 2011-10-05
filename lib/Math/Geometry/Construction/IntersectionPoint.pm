@@ -47,6 +47,10 @@ has 'point_selector' => (isa      => 'ArrayRef[Item]',
 			 reader   => '_point_selector',
 			 required => 1);
 
+has 'radius'         => (isa     => 'Num',
+			 is      => 'rw',
+			 default => 3);
+
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #
@@ -59,6 +63,20 @@ sub position {
     my ($selection_method, $args) = @{$self->_point_selector};
     my $point = $self->intersection->$selection_method(@$args);
     return $point ? $point->position : undef;
+}
+
+sub as_svg {
+    my ($self, %args) = @_;
+    return undef if $self->hidden;
+
+    my $position = $self->position;
+    $args{parent}->circle(cx    => $position->x,
+			  cy    => $position->y,
+			  r     => $self->radius,
+			  style => $self->style_hash,
+			  id    => $self->id);
+
+    return undef;
 }
 
 ###########################################################################
