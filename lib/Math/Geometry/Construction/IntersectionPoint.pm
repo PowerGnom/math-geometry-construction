@@ -51,6 +51,13 @@ has 'radius'         => (isa     => 'Num',
 			 is      => 'rw',
 			 default => 3);
 
+sub BUILD {
+    my ($self, $args) = @_;
+
+    $self->style('stroke', 'black') unless($self->style('stroke'));
+    $self->style('fill', 'white')   unless($self->style('fill'));
+}
+
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #
