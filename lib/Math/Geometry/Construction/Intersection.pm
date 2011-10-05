@@ -55,10 +55,13 @@ sub BUILD {
 	if($class =~ $class_regex) { push(@names, $1) }
 	else { croak "Invalid class $class for intersection." }
     }
-    my $role = join('', sort @names);
+    my $role = 'Math::Geometry::Construction::Intersection::'.
+	join('', sort @names);
 
-    require($role);
-    $role->meta->apply($self);
+#    eval "require $role" or croak "Unable to load $role";
+#    $role->meta->apply($self);
+    require Math::Geometry::Construction::Intersection::LineLine;
+    Math::Geometry::Construction::Intersection::LineLine->meta->apply($self);
 }
 
 ###########################################################################
