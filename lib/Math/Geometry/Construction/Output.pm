@@ -40,8 +40,8 @@ has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
 			     is      => 'bare',
 			     traits  => ['Array'],
 			     default => sub { [] },
-			     handles => {specific_poi => 'elements',
-					 add_poi      => 'push'});
+			     handles => {points_of_interest => 'elements',
+					 add_poi            => 'push'});
 
 ###########################################################################
 #                                                                         #
