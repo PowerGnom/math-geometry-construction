@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Intersection> - intersection of objects
 
 =head1 VERSION
 
-Version 0.002
+Version 0.003
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 
 ###########################################################################
@@ -72,9 +72,13 @@ sub BUILD {
 sub create_intersection_point {
     my ($self, %args) = @_;
 
-    return $self->construction->add_intersection_point
+    my $point = $self->construction->add_intersection_point
 	(intersection   => $self,
 	 point_selector => [$args{method}, $args{params}]);
+
+    foreach($self->intersectants) {
+	$_->add_poi($point);
+    }
 }
 
 ###########################################################################
