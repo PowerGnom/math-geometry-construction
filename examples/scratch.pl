@@ -23,11 +23,11 @@ sub line {
 
 sub intersection {
     my $p1 = $construction->add_point('x' => 100, 'y' => 150);
-    my $p2 = $construction->add_point('x' => 300, 'y' => 150);
+    my $p2 = $construction->add_point('x' => 120, 'y' => 150);
     my $p3 = $construction->add_point('x' => 200, 'y' => 50);
     my $p4 = $construction->add_point('x' => 200, 'y' => 250);
 
-    my $l1 = $construction->add_line;
+    my $l1 = $construction->add_line(extend => 10);
     $l1->add_support($p1);
     $l1->add_support($p2);
     my $l2 = $construction->add_line;
