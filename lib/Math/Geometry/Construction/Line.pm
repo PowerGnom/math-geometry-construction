@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Line> - line through to points
 
 =head1 VERSION
 
-Version 0.002
+Version 0.003
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 
 ###########################################################################
@@ -66,7 +66,7 @@ sub BUILD {
 sub points {
     my ($self) = @_;
 
-    return($self->support, $self->specific_poi);
+    return($self->support, $self->points_of_interest);
 }
 
 sub as_svg {
