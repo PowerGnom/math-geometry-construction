@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.002
+Version 0.003
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 
 ###########################################################################
@@ -24,24 +24,24 @@ our $VERSION = '0.002';
 #                                                                         #
 ###########################################################################
 
-has 'style'       => (isa     => 'HashRef[Str]',
-		      is      => 'rw',
-		      reader  => 'style_hash',
-		      writer  => '_style_hash',
-		      traits  => ['Hash'],
-		      default => sub { {} },
-		      handles => {style => 'accessor'});
+has 'style'              => (isa     => 'HashRef[Str]',
+			     is      => 'rw',
+			     reader  => 'style_hash',
+			     writer  => '_style_hash',
+			     traits  => ['Hash'],
+			     default => sub { {} },
+			     handles => {style => 'accessor'});
 
-has 'hidden'      => (isa     => 'Bool',
-		      is      => 'rw',
-		      default => 0);
+has 'hidden'             => (isa     => 'Bool',
+			     is      => 'rw',
+			     default => 0);
 
-has 'specific_poi' => (isa     => 'ArrayRef[Item]',
-		       is      => 'bare',
-		       traits  => ['Array'],
-		       default => sub { [] },
-		       handles => {specific_poi => 'elements',
-				   add_poi      => 'push'});
+has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
+			     is      => 'bare',
+			     traits  => ['Array'],
+			     default => sub { [] },
+			     handles => {specific_poi => 'elements',
+					 add_poi      => 'push'});
 
 ###########################################################################
 #                                                                         #
