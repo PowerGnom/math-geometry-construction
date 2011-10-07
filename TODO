@@ -37,3 +37,14 @@
     lower order indices (I hope this is really true, but I cannot -
     come up with a scenario where this restriction would be too -
     harsh).
+
+- Maybe the concept of an intersection needs to be broadened. The
+  current structure can support any "dependent point(s)", for
+  example the center of a circle defined by three points. Maybe
+  Intersection should be renamed to Derivative or so. A problem is,
+  though, how the role to load is identified. Currently, it is
+  assumed that the role to load can be determined solely by the
+  intersectants. However, there might be different constructs then
+  the aforementioned circle that would depend on
+  PointPointPoint. Maybe it should be possible to specify the role
+  explicitly.
