@@ -1,5 +1,9 @@
 Revision history for Math-Geometry-Construction
 
+0.003	 
+	 - increased robustness against non-existing intersections
+           etc.
+
 0.002	 Wed Oct  5 19:52:38 NZDT 2011
 	 Intersection of lines with lines.
 
