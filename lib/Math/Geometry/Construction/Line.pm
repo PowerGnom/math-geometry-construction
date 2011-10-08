@@ -98,6 +98,9 @@ sub as_svg {
 
     my $direction         =
 	($support_positions[1] - $support_positions[0])->norm;
+
+    # I don't need to check for defined points here because at least
+    # the support points are there and will show up as extremes.
     my @positions         = ($self->extreme_point($direction)->position
 			     + $direction * $self->extend,
 			     $self->extreme_point(-$direction)->position
