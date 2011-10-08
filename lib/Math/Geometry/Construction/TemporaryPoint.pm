@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::TemporaryPoint> - position container
 
 =head1 VERSION
 
-Version 0.002
+Version 0.003
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 
 ###########################################################################
@@ -77,8 +77,6 @@ __END__
 =head2 Methods for Users
 
 =head2 Methods for Subclass Developers
-
-=head3 id_template
 
 =head1 DIAGNOSTICS
 
