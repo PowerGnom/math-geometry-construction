@@ -43,9 +43,9 @@ sub indexed_point {
 sub extreme_point {
     my ($self, $direction) = @_;
     my $norm               = $direction / $direction->length;
-    my @points             = $self->points;
+    my @points             = grep { defined($_->position) } $self->points;
 
-    croak "No points to select from" if(!@points);
+    return undef if(!@points);
 
     return((map  { $_->[0] }
 	    sort { $b->[1] <=> $a->[1] }
