@@ -76,16 +76,24 @@ sub as_svg {
 
     my @support = $self->support;
     if(@support != 2) {
-	warn "A line needs to support points, skipping";
+	warn "A line needs two support points, skipping.\n";
+	return undef;
+    }
+
+    # check for defined points
+    if(any { !defined($_) } @support) {
+	warn sprintf("Undefined support point in line %s, ".
+		     "nothing to draw.\n", $self->id);
 	return undef;
     }
 
     my @support_positions = map { $_->position } @support;
 
-    if(any { !defined($_) } @support) {
+    # check for defined positions
+    if(any { !defined($_) } @support_positions) {
 	warn sprintf("Undefined support point in line %s, ".
 		     "nothing to draw.\n", $self->id);
-	return;
+	return undef;
     }
 
     my $direction         =
