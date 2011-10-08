@@ -34,8 +34,14 @@ sub indexed_point {
     my ($self, $index) = @_;
     my @points         = $self->points;
 
-    croak "No points to select from" if(!@points);
-    croak "Index out of range"       if($index < 0 or $index >= @points);
+    if(!@points) {
+	warn sprintf("No points to select from in %s.\n", $self->id);
+	return undef;
+    }
+    if($index < 0 or $index >= @points) {
+	warn sprintf("Point index out of range in %s.\n", $self->id);
+	return undef;
+    }
 
     return($points[$index]);
 }
@@ -45,7 +51,10 @@ sub extreme_point {
     my $norm               = $direction / $direction->length;
     my @points             = grep { defined($_->position) } $self->points;
 
-    return undef if(!@points);
+    if(!@points) {
+	warn sprintf("No points to select from in %s.\n", $self->id);
+	return undef;
+    }
 
     return((map  { $_->[0] }
 	    sort { $b->[1] <=> $a->[1] }
