@@ -77,6 +77,12 @@ sub as_svg {
     return undef if $self->hidden;
 
     my $position = $self->position;
+    if(!defined($position)) {
+	warn sprintf("Undefined position of intersection point  %s, ".
+		     "nothing to draw.\n", $self->id);
+	return undef;
+    }
+
     $args{parent}->circle(cx    => $position->x,
 			  cy    => $position->y,
 			  r     => $self->radius,
