@@ -4,6 +4,7 @@ use Moose;
 use 5.008008;
 
 use Carp;
+use List::MoreUtils qw(any);
 
 =head1 NAME
 
@@ -80,6 +81,13 @@ sub as_svg {
     }
 
     my @support_positions = map { $_->position } @support;
+
+    if(any { !defined($_) } @support) {
+	warn sprintf("Undefined support point in line %s, ".
+		     "nothing to draw.\n", $self->id);
+	return;
+    }
+
     my $direction         =
 	($support_positions[1] - $support_positions[0])->norm;
     my @positions         = ($self->extreme_point($direction)->position
