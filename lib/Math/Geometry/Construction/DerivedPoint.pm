@@ -68,7 +68,7 @@ sub position {
     my ($self) = @_;
 
     my ($selection_method, $args) = @{$self->_point_selector};
-    my $point = $self->intersection->$selection_method(@$args);
+    my $point = $self->derivate->$selection_method(@$args);
     return $point ? $point->position : undef;
 }
 
@@ -78,7 +78,7 @@ sub as_svg {
 
     my $position = $self->position;
     if(!defined($position)) {
-	warn sprintf("Undefined position of intersection point  %s, ".
+	warn sprintf("Undefined position of derived point  %s, ".
 		     "nothing to draw.\n", $self->id);
 	return undef;
     }
