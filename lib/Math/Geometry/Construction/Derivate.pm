@@ -52,6 +52,8 @@ has 'input' => (isa      => 'ArrayRef[Item]',
 #                                                                         #
 ###########################################################################
 
+sub points { return() }
+
 sub create_derived_point {
     my ($self, %args) = @_;
 
