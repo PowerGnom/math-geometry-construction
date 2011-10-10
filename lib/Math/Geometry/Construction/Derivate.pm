@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Derivative;
+package Math::Geometry::Construction::Derivate;
 
 use 5.008008;
 
