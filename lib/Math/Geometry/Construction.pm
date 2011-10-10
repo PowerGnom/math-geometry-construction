@@ -9,9 +9,7 @@ use SVG;
 
 use Math::Geometry::Construction::Point;
 use Math::Geometry::Construction::Line;
-
-use Math::Geometry::Construction::Intersection;
-use Math::Geometry::Construction::IntersectionPoint;
+use Math::Geometry::Construction::DerivedPoint;
 
 =head1 NAME
 
@@ -109,21 +107,6 @@ sub add_line {
     return $self->add_object('Math::Geometry::Construction::Line', @args);
 }
 
-sub add_intersection {
-    my ($self, @args) = @_;
-
-    return $self->add_object('Math::Geometry::Construction::Intersection',
-			     @args);
-}
-
-sub add_intersection_point {
-    my ($self, @args) = @_;
-
-    return $self->add_object
-	('Math::Geometry::Construction::IntersectionPoint',
-	 @args);
-}
-
 1;
 
 
@@ -165,8 +148,6 @@ attributes. This is the default C<Moose|Moose> constructor.
 =head3 add_line
 
 =head3 add_object
-
-=head3 add_intersection
 
 =head3 as_svg
 
