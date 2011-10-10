@@ -7,7 +7,7 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::PointSelection> - how far to draw?
+C<Math::Geometry::Construction::PointSelection> - select point from list
 
 =head1 VERSION
 
