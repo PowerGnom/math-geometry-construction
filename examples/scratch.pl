@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Math::Geometry::Construction;
+use Math::Geometry::Construction::Derivate::IntersectionLineLine;
 use Math::VectorReal;
 use SVG::Rasterize;
 
@@ -34,9 +35,11 @@ sub intersection {
     $l2->add_support($p3);
     $l2->add_support($p4);
 
-    my $i1 = $construction->add_intersection(intersectants => [$l1, $l2]);
-    my $p5 = $i1->create_intersection_point(method => 'indexed_point',
-					    params => [0]);
+    my $i1 = $construction->add_object
+	('Math::Geometry::Construction::Derivate::IntersectionLineLine',
+	 input => [$l1, $l2]);
+    my $p5 = $i1->create_derived_point(method => 'indexed_point',
+				       params => [0]);
 }
 
 line;
