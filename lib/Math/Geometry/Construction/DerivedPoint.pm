@@ -38,7 +38,7 @@ sub id_template { return $ID_TEMPLATE }
 with 'Math::Geometry::Construction::Object';
 with 'Math::Geometry::Construction::Output';
 
-has 'intersection'   => (isa      => 'Item',
+has 'derivate'       => (isa      => 'Item',
 		         is       => 'ro',
 		         required => 1);
 
