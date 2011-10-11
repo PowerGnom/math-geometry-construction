@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::DerivedPoint> - e.g. intersection point
 
 =head1 VERSION
 
-Version 0.003
+Version 0.004
 
 =cut
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 
 ###########################################################################
@@ -88,6 +88,10 @@ sub as_svg {
 			  r     => $self->radius,
 			  style => $self->style_hash,
 			  id    => $self->id);
+
+    $self->label_as_svg(parent => $args{parent},
+			'x'    => $position->x,
+			'y'    => $position->y);
 
     return undef;
 }
