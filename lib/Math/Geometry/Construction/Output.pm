@@ -36,6 +36,14 @@ has 'label'              => (isa       => 'String',
 			     clearer   => 'clear_label',
 			     predicate => 'has_label');
 
+has 'label_offset_x'     => (isa     => 'Num',
+			     is      => 'rw',
+			     default => 0);
+
+has 'label_offset_y'     => (isa     => 'Num',
+			     is      => 'rw',
+			     default => 0);
+
 has 'style'              => (isa     => 'HashRef[Str]',
 			     is      => 'rw',
 			     reader  => 'style_hash',
