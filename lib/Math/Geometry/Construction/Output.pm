@@ -31,7 +31,7 @@ has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
 			     handles => {points_of_interest => 'elements',
 					 add_poi            => 'push'});
 
-has 'label'              => (isa       => 'String',
+has 'label'              => (isa       => 'Item',
 			     is        => 'rw',
 			     clearer   => 'clear_label',
 			     predicate => 'has_label');
