@@ -26,7 +26,12 @@ sub intersection {
     my $p1 = $construction->add_point('x' => 100, 'y' => 150);
     my $p2 = $construction->add_point('x' => 120, 'y' => 150);
     my $p3 = $construction->add_point('x' => 200, 'y' => 50);
-    my $p4 = $construction->add_point('x' => 200, 'y' => 250);
+    my $p4 = $construction->add_point
+	('x' => 200, 'y' => 250,
+	 label          => "P4",
+	 label_offset_x => 7,
+	 label_offset_y => 10,
+	 label_style    => {'font-family' => 'Helvetica'});
 
     my $l1 = $construction->add_line(extend => 10);
     $l1->add_support($p1);
@@ -40,6 +45,7 @@ sub intersection {
 	 input => [$l1, $l2]);
     my $p5 = $i1->create_derived_point(method => 'indexed_point',
 				       params => [0]);
+    print $p5->label('S');
 }
 
 line;
