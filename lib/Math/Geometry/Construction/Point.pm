@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Point> - a free user-defined point
 
 =head1 VERSION
 
-Version 0.002
+Version 0.004
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.004';
 
 
 ###########################################################################
@@ -79,6 +79,14 @@ sub as_svg {
 			  r     => $self->radius,
 			  style => $self->style_hash,
 			  id    => $self->id);
+
+    if($self->has_label) {
+	my $text = $args{parent}->text
+	    ('x' => $position->x + $self->label_offset_x,
+	     'y' => $position->y + $self->label_offset_y);
+
+	$text->cdata($self->label);
+    }
 
     return undef;
 }
