@@ -70,6 +70,20 @@ has 'label_style'        => (isa     => 'HashRef[Str]',
 #                                                                         #
 ###########################################################################
 
+sub label_as_svg {
+    my ($self, %args) = @_;
+
+    if($self->has_label) {
+	my $text = $args{parent}->text
+	    ('x' => $args{x} + $self->label_offset_x,
+	     'y' => $args{y} + $self->label_offset_y,
+	     style => $self->label_style_hash);
+
+	my $label = $self->label;
+	$text->cdata(defined($label) ? $label : '');
+    }
+}
+
 ###########################################################################
 #                                                                         #
 #                              Change Data                                # 
