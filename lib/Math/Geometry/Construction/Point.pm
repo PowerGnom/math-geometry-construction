@@ -83,7 +83,8 @@ sub as_svg {
     if($self->has_label) {
 	my $text = $args{parent}->text
 	    ('x' => $position->x + $self->label_offset_x,
-	     'y' => $position->y + $self->label_offset_y);
+	     'y' => $position->y + $self->label_offset_y,
+	     style => $self->label_style_hash);
 
 	$text->cdata($self->label);
     }
