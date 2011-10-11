@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate> - derive points from objects
 
 =head1 VERSION
 
-Version 0.003
+Version 0.004
 
 =cut
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 
 ###########################################################################
@@ -65,6 +65,8 @@ sub create_derived_point {
     foreach($self->input) {
 	$_->add_poi($point);
     }
+
+    return $point;
 }
 
 ###########################################################################
