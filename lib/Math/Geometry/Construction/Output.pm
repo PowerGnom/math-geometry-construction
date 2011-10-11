@@ -44,6 +44,10 @@ has 'label_offset_y'     => (isa     => 'Num',
 			     is      => 'rw',
 			     default => 0);
 
+has 'hidden'             => (isa     => 'Bool',
+			     is      => 'rw',
+			     default => 0);
+
 has 'style'              => (isa     => 'HashRef[Str]',
 			     is      => 'rw',
 			     reader  => 'style_hash',
@@ -52,9 +56,13 @@ has 'style'              => (isa     => 'HashRef[Str]',
 			     default => sub { {} },
 			     handles => {style => 'accessor'});
 
-has 'hidden'             => (isa     => 'Bool',
+has 'label_style'        => (isa     => 'HashRef[Str]',
 			     is      => 'rw',
-			     default => 0);
+			     reader  => 'label_style_hash',
+			     writer  => '_label_style_hash',
+			     traits  => ['Hash'],
+			     default => sub { {} },
+			     handles => {label_style => 'accessor'});
 
 ###########################################################################
 #                                                                         #
