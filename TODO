@@ -37,3 +37,6 @@
     lower order indices (I hope this is really true, but I cannot -
     come up with a scenario where this restriction would be too -
     harsh).
+
+- create_derived_point should accept init parameters for the derived
+  point
