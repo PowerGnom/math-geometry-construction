@@ -80,14 +80,9 @@ sub as_svg {
 			  style => $self->style_hash,
 			  id    => $self->id);
 
-    if($self->has_label) {
-	my $text = $args{parent}->text
-	    ('x' => $position->x + $self->label_offset_x,
-	     'y' => $position->y + $self->label_offset_y,
-	     style => $self->label_style_hash);
-
-	$text->cdata($self->label);
-    }
+    $self->label_as_svg(parent => $args{parent},
+			'x'    => $position->x,
+			'y'    => $position->y);
 
     return undef;
 }
