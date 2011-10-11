@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.003
+Version 0.004
 
 =cut
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 
 ###########################################################################
@@ -23,6 +23,18 @@ our $VERSION = '0.003';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
+			     is      => 'bare',
+			     traits  => ['Array'],
+			     default => sub { [] },
+			     handles => {points_of_interest => 'elements',
+					 add_poi            => 'push'});
+
+has 'label'              => (isa       => 'String',
+			     is        => 'rw',
+			     clearer   => 'clear_label',
+			     predicate => 'has_label');
 
 has 'style'              => (isa     => 'HashRef[Str]',
 			     is      => 'rw',
@@ -35,13 +47,6 @@ has 'style'              => (isa     => 'HashRef[Str]',
 has 'hidden'             => (isa     => 'Bool',
 			     is      => 'rw',
 			     default => 0);
-
-has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
-			     is      => 'bare',
-			     traits  => ['Array'],
-			     default => sub { [] },
-			     handles => {points_of_interest => 'elements',
-					 add_poi            => 'push'});
 
 ###########################################################################
 #                                                                         #
