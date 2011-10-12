@@ -1,12 +1,18 @@
 #!perl -T
 
-use Test::More tests => 4;
+use Test::More tests => 7;
 
 BEGIN {
     use_ok( 'Math::Geometry::Construction' )        || print "Bail out!\n";
     use_ok( 'Math::Geometry::Construction::Point' ) || print "Bail out!\n";
     use_ok( 'Math::Geometry::Construction::Line' )  || print "Bail out!\n";
-    use_ok( 'Math::Geometry::Construction::Intersection' )
+    use_ok( 'Math::Geometry::Construction::Derivate' )
+	|| print "Bail out!\n";
+    use_ok( 'Math::Geometry::Construction::Derivate::IntersectionLineLine' )
+	|| print "Bail out!\n";
+    use_ok( 'Math::Geometry::Construction::DerivedPoint' )
+	|| print "Bail out!\n";
+    use_ok( 'Math::Geometry::Construction::TemporaryPoint' )
 	|| print "Bail out!\n";
 }
 
