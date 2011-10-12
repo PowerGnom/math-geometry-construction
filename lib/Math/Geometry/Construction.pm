@@ -130,10 +130,7 @@ __END__
 
 =head3 new
 
-  Usage   : Math::Geometry::Construction->new(%args)
-  Function: creates a new Math::Geometry::Construction object
-  Returns : a Math::Geometry::Construction object
-  Args    : initial attribute values as named parameters
+  $construction = Math::Geometry::Construction->new(%args)
 
 Creates a new C<Math::Geometry::Construction> object and initializes
 attributes. This is the default C<Moose|Moose> constructor.
@@ -141,7 +138,7 @@ attributes. This is the default C<Moose|Moose> constructor.
 
 =head2 Public Attributes
 
-=head2 Methods for Users
+=head2 Methods
 
 =head3 add_point
 
@@ -150,8 +147,6 @@ attributes. This is the default C<Moose|Moose> constructor.
 =head3 add_object
 
 =head3 as_svg
-
-=head2 Methods for Subclass Developers
 
 
 =head1 DIAGNOSTICS
@@ -163,7 +158,12 @@ attributes. This is the default C<Moose|Moose> constructor.
 
 =head1 BUGS AND LIMITATIONS
 
-No bugs have been reported. Please report all bugs directly to the author.
+Please report any bugs or feature requests to
+C<bug-math-geometry-construction at rt.cpan.org>, or through the web
+interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Math-Geometry-Construction>.
+I will be notified, and then you will automatically be notified of
+progress on your bug as I make changes.
 
 
 =head1 AUTHOR
