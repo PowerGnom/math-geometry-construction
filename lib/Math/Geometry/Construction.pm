@@ -200,6 +200,8 @@ the situation where I needed to double an angle iteratively until it
 becomes larger than a given angle. Impossible in most macro
 languates. With this module, you have Perl as your "macro language".
 
+=back
+
 =head2 Intersection Concept
 
 Intersecting two objects consists of two steps. First, you create a
