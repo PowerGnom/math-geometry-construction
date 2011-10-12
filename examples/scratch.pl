@@ -33,7 +33,9 @@ sub intersection {
 	 label_offset_y => 10,
 	 label_style    => {'font-family' => 'Helvetica'});
 
-    my $l1 = $construction->add_line(extend => 10);
+    my $l1 = $construction->add_line(extend         => 10,
+				     label          => 'g',
+				     label_offset_y => 13);
     $l1->add_support($p1);
     $l1->add_support($p2);
     my $l2 = $construction->add_line;
