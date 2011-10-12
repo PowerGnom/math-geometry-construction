@@ -1,7 +1,8 @@
 Revision history for Math-Geometry-Construction
 
-0.004	 
-	 - Labels for points and lines
+0.004	 Wed Oct 12 19:52:51 NZDT 2011
+	 - labels for points and lines
+	 - started documentation
 
 0.003	 Tue Oct 11 15:14:33 NZDT 2011 (unpublished)
 	 - increased robustness against non-existing intersections
