@@ -43,9 +43,11 @@ sub intersection {
     my $i1 = $construction->add_object
 	('Math::Geometry::Construction::Derivate::IntersectionLineLine',
 	 input => [$l1, $l2]);
-    my $p5 = $i1->create_derived_point(method => 'indexed_point',
-				       params => [0]);
-    print $p5->label('S');
+    my $p5 = $i1->create_derived_point
+	(point_selector => ['indexed_point', [0]],
+	 label          => 'S',
+	 label_offset_x => 5,
+	 label_offset_y => -5);
 }
 
 line;
