@@ -8,7 +8,7 @@ use List::MoreUtils qw(any);
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Line> - line through to points
+C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
