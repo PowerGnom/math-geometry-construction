@@ -17,11 +17,11 @@ C<Math::Geometry::Construction> - intersecting lines and circles
 
 =head1 VERSION
 
-Version 0.004
+Version 0.005
 
 =cut
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 
 ###########################################################################
