@@ -1,5 +1,8 @@
 Revision history for Math-Geometry-Construction
 
+0.004	 
+	 - Labels for points and lines
+
 0.003	 Tue Oct 11 15:14:33 NZDT 2011 (unpublished)
 	 - increased robustness against non-existing intersections
            etc.
