@@ -112,6 +112,11 @@ sub as_svg {
 			y2    => $positions[1]->y,
 			style => $self->style_hash,
 			id    => $self->id);
+
+    $self->label_as_svg
+	(parent => $args{parent},
+	 'x'    => ($positions[0]->x + $positions[1]->x) / 2,
+	 'y'    => ($positions[0]->y + $positions[1]->y) / 2);
 }
 
 ###########################################################################
