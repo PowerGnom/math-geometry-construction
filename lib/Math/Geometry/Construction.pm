@@ -267,7 +267,7 @@ L<SYNOPSIS|SYNOPSIS>.
   $construction = Math::Geometry::Construction->new(%args)
 
 Creates a new C<Math::Geometry::Construction> object and initializes
-attributes. This is the default C<Moose|Moose> constructor.
+attributes. This is the default L<Moose|Moose> constructor.
 
 
 =head2 Public Attributes
