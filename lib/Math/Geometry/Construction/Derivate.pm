@@ -59,8 +59,8 @@ sub create_derived_point {
 
     my $point = $self->construction->add_object
 	('Math::Geometry::Construction::DerivedPoint',
-	 derivate       => $self,
-	 point_selector => [$args{method}, $args{params}]);
+	 derivate => $self,
+	 %args);
 
     foreach($self->input) {
 	$_->add_poi($point);
