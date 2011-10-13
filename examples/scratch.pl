@@ -52,8 +52,17 @@ sub intersection {
 	 label_offset_y => -5);
 }
 
+sub circle {
+    my $p1 = $construction->add_point('x' => 190, 'y' => 200);
+    my $p2 = $construction->add_point('x' => 190, 'y' => 170, hidden => 1);
+
+    my $c1 = $construction->add_circle(center  => $p1,
+				       support => $p2);
+}
+
 line;
 intersection;
+circle;
     
 my $svg = $construction->as_svg(width => 800, height => 300);
     
