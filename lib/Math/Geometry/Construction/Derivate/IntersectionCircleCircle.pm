@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Derivate::IntersectionCircleLine;
+package Math::Geometry::Construction::Derivate::IntersectionCircleCircle;
 use base 'Math::Geometry::Construction::Derivate';
 use strict;
 use warnings;
@@ -11,7 +11,7 @@ use Math::Geometry::Construction::TemporaryPoint;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Derivate::IntersectionCircleLine> - circle line intersection
+C<Math::Geometry::Construction::Derivate::IntersectionCircleCircle> - circle circle intersection
 
 =head1 VERSION
 
