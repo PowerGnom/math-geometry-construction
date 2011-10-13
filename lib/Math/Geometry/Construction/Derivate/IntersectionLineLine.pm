@@ -1,5 +1,7 @@
 package Math::Geometry::Construction::Derivate::IntersectionLineLine;
 use base 'Math::Geometry::Construction::Derivate';
+use strict;
+use warnings;
 
 use 5.008008;
 
