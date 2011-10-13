@@ -5,6 +5,9 @@ use 5.008008;
 
 use Carp;
 
+use Math::Geometry::Construction::Derivate::IntersectionCircleCircle;
+use Math::Geometry::Construction::Derivate::IntersectionCircleLine;
+
 =head1 NAME
 
 C<Math::Geometry::Construction::Circle> - circle by center and point
