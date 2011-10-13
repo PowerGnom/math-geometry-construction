@@ -40,9 +40,8 @@ sub intersection {
     $l2->add_support($p3);
     $l2->add_support($p4);
 
-    my $i1 = $construction->add_object
-	('Math::Geometry::Construction::Derivate::IntersectionLineLine',
-	 input => [$l1, $l2]);
+    my $i1 = $construction->add_derivate('IntersectionLineLine',
+					 input => [$l1, $l2]);
     my $p5 = $i1->create_derived_point
 	(point_selector => ['indexed_point', [0]],
 	 label          => 'S',
@@ -64,9 +63,8 @@ sub circle {
     $l1->add_support($p3);
     $l1->add_support($p4);
 
-    my $i1 = $construction->add_object
-	('Math::Geometry::Construction::Derivate::IntersectionCircleLine',
-	 input => [$l1, $c1]);
+    my $i1 = $construction->add_derivate('IntersectionCircleLine',
+					 input => [$l1, $c1]);
     my $p5 = $i1->create_derived_point
 	(point_selector => ['indexed_point', [0]],
 	 label          => 'T',
