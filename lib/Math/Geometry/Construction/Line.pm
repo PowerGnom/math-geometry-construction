@@ -6,6 +6,9 @@ use 5.008008;
 use Carp;
 use List::MoreUtils qw(any);
 
+use Math::Geometry::Construction::Derivate::IntersectionLineLine;
+use Math::Geometry::Construction::Derivate::IntersectionCircleLine;
+
 =head1 NAME
 
 C<Math::Geometry::Construction::Line> - line through two points
