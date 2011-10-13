@@ -105,11 +105,11 @@ sub as_svg {
     my $radius = ($support_position - $center_position)->length;
 
     # currently, we just draw the full circle
-    $args{parent}->circle(cx     => $center_position->x,
-			  cy     => $center_position->y,
-			  radius => $radius,
-			  style  => $self->style_hash,
-			  id     => $self->id);
+    $args{parent}->circle(cx    => $center_position->x,
+			  cy    => $center_position->y,
+			  r     => $radius,
+			  style => $self->style_hash,
+			  id    => $self->id);
 
     $self->label_as_svg(parent => $args{parent},
 			'x'    => $support_position->x,
