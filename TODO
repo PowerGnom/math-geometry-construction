@@ -37,3 +37,11 @@
     lower order indices (I hope this is really true, but I cannot -
     come up with a scenario where this restriction would be too -
     harsh).
+
+- Work out if points really can be undefined. What is returned from
+  a point selector can be undefined, but can the support points of
+  object be undefined? They are either real points or derived
+  points. Even if a derived point turns out not to exist, the
+  depending object has only a reference to the DerivedPoint object
+  and that is defined. It will deal with the undefined point and
+  return a undefined position.
