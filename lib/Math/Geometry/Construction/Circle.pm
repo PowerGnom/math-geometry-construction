@@ -72,6 +72,16 @@ sub points {
     return($self->support, $self->points_of_interest);
 }
 
+sub radius {
+    my ($self) = @_;
+
+    my $center_p  = $self->center->position;
+    my $support_p = $self->support->position;
+
+    return if(!$center_p or !$support_p);
+    return(($support_p - $center_p)->length);
+}
+
 sub as_svg {
     my ($self, %args) = @_;
     return undef if $self->hidden;
@@ -143,6 +153,8 @@ __END__
 =head2 Public Attributes
 
 =head2 Methods for Users
+
+=head2 radius
 
 =head2 Methods for Subclass Developers
 
