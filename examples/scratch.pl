@@ -3,8 +3,6 @@ use strict;
 use warnings;
 
 use Math::Geometry::Construction;
-use Math::Geometry::Construction::Derivate::IntersectionLineLine;
-use Math::Geometry::Construction::Derivate::IntersectionCircleLine;
 use Math::VectorReal;
 use SVG::Rasterize;
 
@@ -20,7 +18,6 @@ sub line {
     my $l1 = $construction->add_line(extend => 50);
     $l1->add_support($p1);
     $l1->add_support($p2);
-    #$l1->style('stroke', 'red');
 }
 
 sub intersection {
