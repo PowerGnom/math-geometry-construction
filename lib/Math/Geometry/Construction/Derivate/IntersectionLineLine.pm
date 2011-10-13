@@ -45,6 +45,7 @@ sub points {
 	}
     }
 
+    # TODO: points might be undefined
     my @support  = map { [map { $_->position } $_->support] } @lines;
 
     foreach my $line (@support) {
