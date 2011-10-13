@@ -9,6 +9,7 @@ use SVG;
 
 use Math::Geometry::Construction::Point;
 use Math::Geometry::Construction::Line;
+use Math::Geometry::Construction::Circle;
 use Math::Geometry::Construction::DerivedPoint;
 
 =head1 NAME
@@ -105,6 +106,13 @@ sub add_line {
     my ($self, @args) = @_;
 
     return $self->add_object('Math::Geometry::Construction::Line', @args);
+}
+
+sub add_circle {
+    my ($self, @args) = @_;
+
+    return $self->add_object('Math::Geometry::Construction::Circle',
+			     @args);
 }
 
 1;
@@ -277,6 +285,8 @@ attributes. This is the default L<Moose|Moose> constructor.
 =head3 add_point
 
 =head3 add_line
+
+=head3 add_circle
 
 =head3 add_object
 
