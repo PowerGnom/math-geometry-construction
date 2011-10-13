@@ -1,5 +1,7 @@
 package Math::Geometry::Construction::Derivate::IntersectionCircleLine;
 use base 'Math::Geometry::Construction::Derivate';
+use strict;
+use warnings;
 
 use 5.008008;
 
@@ -54,55 +56,26 @@ sub points {
     }
     else { croak "Need one circle and one line to intersect"  }
        
-    my $center_p    = $circle->center->position;
+    my $c_center_p  = $circle->center->position;
     my $c_support_p = $circle->support->position;
     my @l_support_p = map { $_->position } $line->support;
 
-    foreach my $_ ($center_p, $c_support_p, @l_support_p) {
+    foreach my $_ ($c_center_p, $c_support_p, @l_support_p) {
 	return if(!defined($_));
     }
 
-    # line normal
-    my $l_normal   =
-	(plane(Z, O, $l_support_p[1] - $l_support_p[0]))[0]->norm;
+    my $l_parallel = ($l_support_p[1] - $l_support_p[0])->norm;
+    my $l_normal   = vector($l_parallel->y, -$l_parallel->x, 0);
+    my $l_constant = $l_normal . $l_support_p[0];
+    my $c_radius   = ($c_support_p - $c_center_p)->length;
 
-    # some shorter and/or more intuitive variables
-    my $a  = $l_normal->x;
-    my $b  = $l_normal->y;
-    my $c  = $l_normal . $l_support[0];
-    my $cx = $center_p->x;
-    my $cy = $center_p->y;
-    my $r  = ($c_support_p - $center_p)->length;
-
-    my @x;
-    my @y;
-    # quadratic equation
-    if(abs($a) >= abs($b)) {
-	my $denom = ($b/$a)**2 + 1;
-	my $mph   = ($b*$c/$a**2 + $cy - $b/$a*$cx) / $denom;
-	my $q     = (($cx - $c/$a)**2 + $cy**2 - $r**2) / $denom;
-
-	my $rad = $mph**2 - $q;
-	return if($rad < 0);
-
-	my $root = sqrt($rad);
-	@y = ($mph + $root, $mph - $root);
-	@x = map { ($c - $b * $_) / $a } @y;
-    }
-    else {
-	my $denom = ($a/$b)**2 + 1;
-	my $mph   = ($a*$c/$b**2 + $cx - $a/$b*$cy) / $denom;
-	my $q     = (($cy - $c/$b)**2 + $cx**2 - $r**2) / $denom;
-
-	my $rad = $mph**2 - $q;
-	return if($rad < 0);
-
-	my $root = sqrt($rad);
-	@x = ($mph + $root, $mph - $root);
-	@y = map { ($c - $a * $_) / $b } @x;
-    }
-
-    my @positions = map { vector($x[$_], $y[$_], 0) } (0, 1);
+    my $a   = $l_normal . $c_center_p - $l_constant;
+    my $rad = $c_radius ** 2 - $a ** 2;
+    return if($rad < 0);
+    my $b   = sqrt($rad);
+    
+    my @positions = ($c_center_p - $l_normal * $a + $l_parallel * $b,
+		     $c_center_p - $l_normal * $a - $l_parallel * $b);
     my $class     = 'Math::Geometry::Construction::TemporaryPoint';
     return(map { $class->new(position => $_) } @positions);
 }
