@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use Math::Geometry::Construction;
-use Math::Geometry::Construction::Derivate::IntersectionLineLine;
 
 my $construction = Math::Geometry::Construction->new
     (width  => 500, height => 300);
