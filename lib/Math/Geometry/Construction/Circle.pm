@@ -1,22 +1,21 @@
-package Math::Geometry::Construction::Line;
+package Math::Geometry::Construction::Circle;
 use Moose;
 
 use 5.008008;
 
 use Carp;
-use List::MoreUtils qw(any);
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Line> - line through two points
+C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.004
+Version 0.005
 
 =cut
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 
 ###########################################################################
@@ -25,7 +24,7 @@ our $VERSION = '0.004';
 #                                                                         #
 ###########################################################################
 
-our $ID_TEMPLATE = 'L%09d';
+our $ID_TEMPLATE = 'C%09d';
 
 sub id_template { return $ID_TEMPLATE }
 
@@ -39,16 +38,15 @@ with 'Math::Geometry::Construction::Object';
 with 'Math::Geometry::Construction::PointSelection';
 with 'Math::Geometry::Construction::Output';
 
-has 'support'     => (isa     => 'ArrayRef[Item]',
-		      is      => 'bare',
-		      traits  => ['Array'],
-		      default => sub { [] },
-		      handles => {count_support  => 'count',
-				  support        => 'elements',
-				  single_support => 'accessor',
-				  add_support    => 'push'});
+has 'center'  => (isa      => 'Item',
+		  is       => 'rw',
+		  required => 1);
 
-has 'extend'      => (isa     => 'Num',
+has 'support' => (isa      => 'Item',
+		  is       => 'rw',
+		  required => 1);
+
+has 'extend'  => (isa     => 'Num',
 		      is      => 'rw',
 		      default => 0);
 
@@ -56,6 +54,7 @@ sub BUILD {
     my ($self, $args) = @_;
 
     $self->style('stroke', 'black') unless($self->style('stroke'));
+    $self->style('fill',   'none')  unless($self->style('fill'));
 }
 
 ###########################################################################
@@ -74,49 +73,47 @@ sub as_svg {
     my ($self, %args) = @_;
     return undef if $self->hidden;
 
-    my @support = $self->support;
-    if(@support != 2) {
-	warn "A line needs two support points, skipping.\n";
-	return undef;
-    }
+    my $center  = $self->center;
+    my $support = $self->support;
 
     # check for defined points
-    if(any { !defined($_) } @support) {
-	warn sprintf("Undefined support point in line %s, ".
+    if(!defined($center)) {
+	warn sprintf("Undefined center of circle %s, ".
+		     "nothing to draw.\n", $self->id);
+	return undef;
+    }
+    if(!defined($support)) {
+	warn sprintf("Undefined support of circle %s, ".
 		     "nothing to draw.\n", $self->id);
 	return undef;
     }
 
-    my @support_positions = map { $_->position } @support;
+    my $center_position  = $center->position;
+    my $support_position = $support->position;
 
-    # check for defined positions
-    if(any { !defined($_) } @support_positions) {
-	warn sprintf("Undefined support point in line %s, ".
+    if(!defined($center_position)) {
+	warn sprintf("Undefined center of circle %s, ".
+		     "nothing to draw.\n", $self->id);
+	return undef;
+    }
+    if(!defined($support_position)) {
+	warn sprintf("Undefined support of circle %s, ".
 		     "nothing to draw.\n", $self->id);
 	return undef;
     }
 
-    my $direction         =
-	($support_positions[1] - $support_positions[0])->norm;
+    my $radius = ($support_position - $center_position)->length;
 
-    # I don't need to check for defined points here because at least
-    # the support points are there and will show up as extremes.
-    my @positions         = ($self->extreme_point($direction)->position
-			     + $direction * $self->extend,
-			     $self->extreme_point(-$direction)->position
-			     - $direction * $self->extend);
+    # currently, we just draw the full circle
+    $args{parent}->circle(cx     => $center_position->x,
+			  cy     => $center_position->y,
+			  radius => $radius,
+			  style  => $self->style_hash,
+			  id     => $self->id);
 
-    $args{parent}->line(x1    => $positions[0]->x,
-			y1    => $positions[0]->y,
-			x2    => $positions[1]->x,
-			y2    => $positions[1]->y,
-			style => $self->style_hash,
-			id    => $self->id);
-
-    $self->label_as_svg
-	(parent => $args{parent},
-	 'x'    => ($positions[0]->x + $positions[1]->x) / 2,
-	 'y'    => ($positions[0]->y + $positions[1]->y) / 2);
+    $self->label_as_svg(parent => $args{parent},
+			'x'    => $support_position->x,
+			'y'    => $support_position->y);
 }
 
 ###########################################################################
