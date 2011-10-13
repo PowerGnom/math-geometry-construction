@@ -4,6 +4,7 @@ use warnings;
 
 use Math::Geometry::Construction;
 use Math::Geometry::Construction::Derivate::IntersectionLineLine;
+use Math::Geometry::Construction::Derivate::IntersectionCircleLine;
 use Math::VectorReal;
 use SVG::Rasterize;
 
@@ -58,6 +59,27 @@ sub circle {
 
     my $c1 = $construction->add_circle(center  => $p1,
 				       support => $p2);
+
+    my $p3 = $construction->add_point('x' => 200, 'y' => 50, hidden => 1);
+    my $p4 = $construction->add_point('x' => 200, 'y' => 60, hidden => 1);
+
+    my $l1 = $construction->add_line(hidden => 1);
+    $l1->add_support($p3);
+    $l1->add_support($p4);
+
+    my $i1 = $construction->add_object
+	('Math::Geometry::Construction::Derivate::IntersectionCircleLine',
+	 input => [$l1, $c1]);
+    my $p5 = $i1->create_derived_point
+	(point_selector => ['indexed_point', [0]],
+	 label          => 'T',
+	 label_offset_x => 5,
+	 label_offset_y => -5);
+    my $p6 = $i1->create_derived_point
+	(point_selector => ['indexed_point', [1]],
+	 label          => 'U',
+	 label_offset_x => 5,
+	 label_offset_y => -5);
 }
 
 line;
