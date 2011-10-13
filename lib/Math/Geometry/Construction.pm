@@ -115,6 +115,15 @@ sub add_circle {
 			     @args);
 }
 
+sub add_derivate {
+    my ($self, $class, @args) = @_;
+
+    if($class !~ /\:\:/) {
+	$class = 'Math::Geometry::Construction::Derivate::'.$class;
+    }
+    return $self->add_object($class, @args);
+}
+
 1;
 
 
@@ -288,6 +297,8 @@ attributes. This is the default L<Moose|Moose> constructor.
 =head3 add_circle
 
 =head3 add_object
+
+=head3 add_derivate
 
 =head3 as_svg
 
