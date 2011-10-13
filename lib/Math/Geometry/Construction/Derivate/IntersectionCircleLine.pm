@@ -65,7 +65,7 @@ sub points {
     }
 
     my $l_parallel = ($l_support_p[1] - $l_support_p[0])->norm;
-    my $l_normal   = vector($l_parallel->y, -$l_parallel->x, 0);
+    my $l_normal   = vector(-$l_parallel->y, $l_parallel->x, 0);
     my $l_constant = $l_normal . $l_support_p[0];
     my $c_radius   = ($c_support_p - $c_center_p)->length;
 
