@@ -35,7 +35,7 @@ requires 'positions';
 
 sub indexed_position {
     my ($self, $index) = @_;
-    my @positions         = $self->positions;
+    my @positions      = grep { defined($_) } $self->positions;
 
     if(!@positions) {
 	warn sprintf("No positions to select from in %s.\n", $self->id);
@@ -52,7 +52,7 @@ sub indexed_position {
 sub extreme_position {
     my ($self, $direction) = @_;
     my $norm               = $direction / $direction->length;
-    my @positions             = grep { defined($_->position) } $self->positions;
+    my @positions          = grep { defined($_) } $self->positions;
 
     if(!@positions) {
 	warn sprintf("No positions to select from in %s.\n", $self->id);
@@ -91,8 +91,6 @@ __END__
 =head2 Methods for Users
 
 =head2 Methods for Subclass Developers
-
-=head3 as_svg
 
 =head1 DIAGNOSTICS
 
