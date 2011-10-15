@@ -61,7 +61,7 @@ sub extreme_position {
 
     return((map  { $_->[0] }
 	    sort { $b->[1] <=> $a->[1] }
-	    map  { [$_, $_->position . $norm] }
+	    map  { [$_, $_ . $norm] }
 	    @positions)[0]);
 }
 
