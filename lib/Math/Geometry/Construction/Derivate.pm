@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate> - derive points from objects
 
 =head1 VERSION
 
-Version 0.004
+Version 0.006
 
 =cut
 
-our $VERSION = '0.004';
+our $VERSION = '0.006';
 
 
 ###########################################################################
@@ -36,7 +36,7 @@ sub id_template { return $ID_TEMPLATE }
 ###########################################################################
 
 with 'Math::Geometry::Construction::Object';
-with 'Math::Geometry::Construction::PointSelection';
+with 'Math::Geometry::Construction::PositionSelection';
 
 has 'input' => (isa      => 'ArrayRef[Item]',
 		is       => 'bare',
@@ -52,7 +52,7 @@ has 'input' => (isa      => 'ArrayRef[Item]',
 #                                                                         #
 ###########################################################################
 
-sub points { return() }
+sub positions { return() }
 
 sub create_derived_point {
     my ($self, %args) = @_;
