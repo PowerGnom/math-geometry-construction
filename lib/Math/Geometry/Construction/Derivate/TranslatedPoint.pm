@@ -1,5 +1,6 @@
 package Math::Geometry::Construction::Derivate::TranslatedPoint;
-use base 'Math::Geometry::Construction::Derivate';
+use Moose;
+extends 'Math::Geometry::Construction::Derivate';
 use strict;
 use warnings;
 
@@ -42,13 +43,13 @@ sub points {
     my ($self) = @_;
     my @input  = $self->input;
 
-    croak "Need one point" if(@circles != 1);
+    croak "Need one point" if(@input != 1);
     if(!$input[0]->can('position')) {
 	croak sprintf("Need something with a position, no %s",
 		      ref($_));
     }
 
-    my $positions = $input[0]->position;
+    my $position = $input[0]->position;
     return if(!$position);
 
     return Math::Geometry::Construction::TemporaryPoint->new
