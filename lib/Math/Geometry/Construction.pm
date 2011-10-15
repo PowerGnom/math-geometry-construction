@@ -271,8 +271,6 @@ primitive and unsatisfactory withouth polishing by the user.
 
 =over 4
 
-=item * Circles
-
 =item * Extend documentation
 
 =item * Improve performance
