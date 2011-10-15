@@ -1,7 +1,6 @@
 package Math::Geometry::Construction::Derivate::IntersectionCircleLine;
-use base 'Math::Geometry::Construction::Derivate';
-use strict;
-use warnings;
+use Moose;
+extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
@@ -15,11 +14,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleLine> - circle line 
 
 =head1 VERSION
 
-Version 0.005
+Version 0.006
 
 =cut
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 
 ###########################################################################
