@@ -6,7 +6,6 @@ use 5.008008;
 
 use Carp;
 use Math::VectorReal ':all';
-use Math::Geometry::Construction::TemporaryPoint;
 
 =head1 NAME
 
@@ -37,7 +36,7 @@ has 'translator' => (isa      => 'Item',
 #                                                                         #
 ###########################################################################
 
-sub points {
+sub positions {
     my ($self) = @_;
     my @input  = $self->input;
 
@@ -50,8 +49,7 @@ sub points {
     my $position = $input[0]->position;
     return if(!$position);
 
-    return Math::Geometry::Construction::TemporaryPoint->new
-	(position => $position + $self->translator);
+    return($position + $self->translator);
 }
 
 ###########################################################################
