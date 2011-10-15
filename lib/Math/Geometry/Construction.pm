@@ -118,10 +118,8 @@ sub add_circle {
 sub add_derivate {
     my ($self, $class, @args) = @_;
 
-    if($class !~ /\:\:/) {
-	$class = 'Math::Geometry::Construction::Derivate::'.$class;
-    }
-    return $self->add_object($class, @args);
+    return $self->add_object
+	('Math::Geometry::Construction::Derivate::'.$class, @args);
 }
 
 1;
