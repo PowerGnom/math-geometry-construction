@@ -402,9 +402,9 @@ attributes. They can be overwritten by the respective parameters.
 
 Draws a white rectangle as background.
 
-Calls the C<as_svg> method on all first on all non-point objects
-then on all C<Point> and C<DerivedPoint> objects. This is because I
-think that points should be drawn on top of lines, circles etc..
+Calls the C<as_svg> method first on all non-point objects, then on
+all C<Point> and C<DerivedPoint> objects. This is because I think
+that points should be drawn on top of lines, circles etc..
 
 Details of this method are likely to change, especially with respect
 to the background rectangle and to width and height.
