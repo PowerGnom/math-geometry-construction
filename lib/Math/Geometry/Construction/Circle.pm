@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.005
+Version 0.006
 
 =cut
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 
 ###########################################################################
@@ -38,7 +38,7 @@ sub id_template { return $ID_TEMPLATE }
 ###########################################################################
 
 with 'Math::Geometry::Construction::Object';
-with 'Math::Geometry::Construction::PointSelection';
+with 'Math::Geometry::Construction::PositionSelection';
 with 'Math::Geometry::Construction::Output';
 
 has 'center'  => (isa      => 'Item',
@@ -50,8 +50,8 @@ has 'support' => (isa      => 'Item',
 		  required => 1);
 
 has 'extend'  => (isa     => 'Num',
-		      is      => 'rw',
-		      default => 0);
+		  is      => 'rw',
+		  default => 0);
 
 sub BUILD {
     my ($self, $args) = @_;
@@ -72,6 +72,12 @@ sub points {
     return($self->support, $self->points_of_interest);
 }
 
+sub positions {
+    my ($self) = @_;
+
+    return map { $self->position } $self->points;
+}
+
 sub radius {
     my ($self) = @_;
 
@@ -86,23 +92,8 @@ sub as_svg {
     my ($self, %args) = @_;
     return undef if $self->hidden;
 
-    my $center  = $self->center;
-    my $support = $self->support;
-
-    # check for defined points
-    if(!defined($center)) {
-	warn sprintf("Undefined center of circle %s, ".
-		     "nothing to draw.\n", $self->id);
-	return undef;
-    }
-    if(!defined($support)) {
-	warn sprintf("Undefined support of circle %s, ".
-		     "nothing to draw.\n", $self->id);
-	return undef;
-    }
-
-    my $center_position  = $center->position;
-    my $support_position = $support->position;
+    my $center_position  = $self->center->position;
+    my $support_position = $self->support->position;
 
     if(!defined($center_position)) {
 	warn sprintf("Undefined center of circle %s, ".
