@@ -8,15 +8,15 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::DerivedPoint> - e.g. intersection point
+C<Math::Geometry::Construction::DerivedPoint> - point derived from other objects, e.g. intersection point
 
 =head1 VERSION
 
-Version 0.004
+Version 0.006
 
 =cut
 
-our $VERSION = '0.004';
+our $VERSION = '0.006';
 
 
 ###########################################################################
@@ -38,18 +38,18 @@ sub id_template { return $ID_TEMPLATE }
 with 'Math::Geometry::Construction::Object';
 with 'Math::Geometry::Construction::Output';
 
-has 'derivate'       => (isa      => 'Item',
-		         is       => 'ro',
-		         required => 1);
+has 'derivate'          => (isa      => 'Item',
+			    is       => 'ro',
+			    required => 1);
 
-has 'point_selector' => (isa      => 'ArrayRef[Item]',
-			 is       => 'ro',
-			 reader   => '_point_selector',
-			 required => 1);
+has 'position_selector' => (isa      => 'ArrayRef[Item]',
+			    is       => 'ro',
+			    reader   => '_position_selector',
+			    required => 1);
 
-has 'radius'         => (isa     => 'Num',
-			 is      => 'rw',
-			 default => 3);
+has 'radius'            => (isa     => 'Num',
+			    is      => 'rw',
+			    default => 3);
 
 sub BUILD {
     my ($self, $args) = @_;
@@ -67,9 +67,8 @@ sub BUILD {
 sub position {
     my ($self) = @_;
 
-    my ($selection_method, $args) = @{$self->_point_selector};
-    my $point = $self->derivate->$selection_method(@$args);
-    return $point ? $point->position : undef;
+    my ($selection_method, $args) = @{$self->_position_selector};
+    return $self->derivate->$selection_method(@$args);
 }
 
 sub as_svg {
