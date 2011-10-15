@@ -252,10 +252,10 @@ concept will be implemented for circles and other objects.
 
 =head2 Current Status
 
-At the moment, you can define points and lines, and you can
-intersect lines. Points and lines can have labels. Essentially, the
-whole current functionality is summarized in the
-L<SYNOPSIS|SYNOPSIS>.
+At the moment, you can define points, lines, and circles. You can
+intersect circles and lines with each other. The objects can have
+labels, but the automatic positioning of the labels is very
+primitive and unsatisfactory withouth polishing by the user.
 
 =head2 Next Steps
 
