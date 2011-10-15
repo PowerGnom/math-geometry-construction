@@ -323,18 +323,17 @@ Accessor/mutator method for single entries of the hash. The keys are
 the object IDs. Usage of the mutator is not intended, use only to
 tamper with the internals at your own risk.
 
-For the L<Moose|Moose> aficionado: This is the C<accessor> method of
-the C<Hash> trait.
+This is the C<accessor> method of the C<Hash> trait.
 
 =item * object_ids
 
-Returns a (copy of) the list of keys. For the L<Moose|Moose>
-aficionado: This is the C<keys> method of the C<Hash> trait.
+Returns a (copy of) the list of keys. This is the C<keys> method of
+the C<Hash> trait.
 
 =item * objects
 
-Returns a (copy of) the list of values. For the L<Moose|Moose>
-aficionado: This is the C<values> method of the C<Hash> trait.
+Returns a (copy of) the list of values. This is the C<values> method
+of the C<Hash> trait.
 
 =back
 
