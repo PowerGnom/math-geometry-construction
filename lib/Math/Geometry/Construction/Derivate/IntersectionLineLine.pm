@@ -1,7 +1,6 @@
 package Math::Geometry::Construction::Derivate::IntersectionLineLine;
-use base 'Math::Geometry::Construction::Derivate';
-use strict;
-use warnings;
+use Moose;
+extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
@@ -16,11 +15,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionLineLine> - line line inte
 
 =head1 VERSION
 
-Version 0.005
+Version 0.006
 
 =cut
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 
 ###########################################################################
