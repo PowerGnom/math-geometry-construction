@@ -1,8 +1,6 @@
 package Math::Geometry::Construction::Derivate::TranslatedPoint;
 use Moose;
 extends 'Math::Geometry::Construction::Derivate';
-use strict;
-use warnings;
 
 use 5.008008;
 
