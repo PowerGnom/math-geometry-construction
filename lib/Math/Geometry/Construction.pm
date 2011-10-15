@@ -242,13 +242,23 @@ in a finite number of points, it fits into this concept.
 =head2 Output
 
 Each line or similar object holds a number of "points of
-interest". This are - in case of the line - the two points that
+interest". These are - in case of the line - the two points that
 define the line and all intersection points the line is involved
 in. At drawing time, the object determines the most extreme points
 and they define the end points of the drawn line segment. The
 C<extend> attribute allows to extend the line for a given length
 beyond these points because this often looks better. A similar
-concept will be implemented for circles and other objects.
+concept will be implemented for circles, but currently, the full
+circle is drawn.
+
+Currently, the only output format is C<SVG>. I plan to implement
+C<LaTeX> output based on C<PGF/TikZ>, but I will have to learn how
+to use that package first.
+
+Eventually, the output generation should be based on some kind of
+plugin interface that allows to implement other output
+formats. Therefore, everything concerned with output generation is
+particularly prone to future API changes.
 
 =head2 Current Status
 
