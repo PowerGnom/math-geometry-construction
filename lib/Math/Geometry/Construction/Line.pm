@@ -15,11 +15,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.004
+Version 0.006
 
 =cut
 
-our $VERSION = '0.004';
+our $VERSION = '0.006';
 
 
 ###########################################################################
@@ -39,7 +39,7 @@ sub id_template { return $ID_TEMPLATE }
 ###########################################################################
 
 with 'Math::Geometry::Construction::Object';
-with 'Math::Geometry::Construction::PointSelection';
+with 'Math::Geometry::Construction::PositionSelection';
 with 'Math::Geometry::Construction::Output';
 
 has 'support'     => (isa     => 'ArrayRef[Item]',
@@ -73,6 +73,12 @@ sub points {
     return($self->support, $self->points_of_interest);
 }
 
+sub positions {
+    my ($self) = @_;
+
+    return map { $self->position } $self->points;
+}
+
 sub as_svg {
     my ($self, %args) = @_;
     return undef if $self->hidden;
@@ -80,13 +86,6 @@ sub as_svg {
     my @support = $self->support;
     if(@support != 2) {
 	warn "A line needs two support points, skipping.\n";
-	return undef;
-    }
-
-    # check for defined points
-    if(any { !defined($_) } @support) {
-	warn sprintf("Undefined support point in line %s, ".
-		     "nothing to draw.\n", $self->id);
 	return undef;
     }
 
@@ -99,15 +98,14 @@ sub as_svg {
 	return undef;
     }
 
-    my $direction         =
-	($support_positions[1] - $support_positions[0])->norm;
+    my $direction = ($support_positions[1] - $support_positions[0])->norm;
 
     # I don't need to check for defined points here because at least
     # the support points are there and will show up as extremes.
-    my @positions         = ($self->extreme_point($direction)->position
-			     + $direction * $self->extend,
-			     $self->extreme_point(-$direction)->position
-			     - $direction * $self->extend);
+    my @positions = ($self->extreme_position($direction)
+		     + $direction * $self->extend,
+		     $self->extreme_position(-$direction)
+		     - $direction * $self->extend);
 
     $args{parent}->line(x1    => $positions[0]->x,
 			y1    => $positions[0]->y,
