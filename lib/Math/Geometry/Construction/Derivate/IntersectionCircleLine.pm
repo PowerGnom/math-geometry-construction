@@ -33,7 +33,7 @@ our $VERSION = '0.006';
 #                                                                         #
 ###########################################################################
 
-sub points {
+sub positions {
     my ($self) = @_;
     my @input  = $self->input;
 
@@ -73,10 +73,8 @@ sub points {
     return if($rad < 0);
     my $b   = sqrt($rad);
     
-    my @positions = ($c_center_p - $l_normal * $a + $l_parallel * $b,
-		     $c_center_p - $l_normal * $a - $l_parallel * $b);
-    my $class     = 'Math::Geometry::Construction::TemporaryPoint';
-    return(map { $class->new(position => $_) } @positions);
+    return($c_center_p - $l_normal * $a + $l_parallel * $b,
+	   $c_center_p - $l_normal * $a - $l_parallel * $b);
 }
 
 ###########################################################################
