@@ -1,7 +1,6 @@
 package Math::Geometry::Construction::Derivate::IntersectionCircleCircle;
-use base 'Math::Geometry::Construction::Derivate';
-use strict;
-use warnings;
+use Moose;
+extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
