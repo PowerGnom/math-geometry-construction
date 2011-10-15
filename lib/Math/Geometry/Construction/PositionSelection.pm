@@ -25,7 +25,7 @@ our $VERSION = '0.006';
 ###########################################################################
 
 requires 'id';
-requires 'points';
+requires 'positions';
 
 ###########################################################################
 #                                                                         #
@@ -33,36 +33,36 @@ requires 'points';
 #                                                                         #
 ###########################################################################
 
-sub indexed_point {
+sub indexed_position {
     my ($self, $index) = @_;
-    my @points         = $self->points;
+    my @positions         = $self->positions;
 
-    if(!@points) {
-	warn sprintf("No points to select from in %s.\n", $self->id);
+    if(!@positions) {
+	warn sprintf("No positions to select from in %s.\n", $self->id);
 	return undef;
     }
-    if($index < 0 or $index >= @points) {
-	warn sprintf("Point index out of range in %s.\n", $self->id);
+    if($index < 0 or $index >= @positions) {
+	warn sprintf("Position index out of range in %s.\n", $self->id);
 	return undef;
     }
 
-    return($points[$index]);
+    return($positions[$index]);
 }
 
-sub extreme_point {
+sub extreme_position {
     my ($self, $direction) = @_;
     my $norm               = $direction / $direction->length;
-    my @points             = grep { defined($_->position) } $self->points;
+    my @positions             = grep { defined($_->position) } $self->positions;
 
-    if(!@points) {
-	warn sprintf("No points to select from in %s.\n", $self->id);
+    if(!@positions) {
+	warn sprintf("No positions to select from in %s.\n", $self->id);
 	return undef;
     }
 
     return((map  { $_->[0] }
 	    sort { $b->[1] <=> $a->[1] }
 	    map  { [$_, $_->position . $norm] }
-	    @points)[0]);
+	    @positions)[0]);
 }
 
 ###########################################################################
