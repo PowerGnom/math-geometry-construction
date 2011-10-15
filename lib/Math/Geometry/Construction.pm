@@ -301,7 +301,7 @@ The width of the visible area.
 
 The height of the visible area.
 
-=head objects
+=head3 objects
 
 A construction holds a hash of the objects it contains. The hash
 itself is inaccessible. However, you can call the following
