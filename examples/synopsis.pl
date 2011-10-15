@@ -23,9 +23,9 @@ $l2->add_support($p4);
 my $i1 = $construction->add_derivate('IntersectionLineLine',
 				     input => [$l1, $l2]);
 my $p5 = $i1->create_derived_point
-    (point_selector => ['indexed_point', [0]],
-     label          => 'S',
-     label_offset_x => 5,
-     label_offset_y => -5);
+    (position_selector => ['indexed_position', [0]],
+     label             => 'S',
+     label_offset_x    => 5,
+     label_offset_y    => -5);
 
 print $construction->as_svg(width => 800, height => 300)->xmlify;
