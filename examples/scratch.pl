@@ -43,10 +43,10 @@ sub intersection {
     my $i1 = $construction->add_derivate('IntersectionLineLine',
 					 input => [$l1, $l2]);
     my $p5 = $i1->create_derived_point
-	(point_selector => ['indexed_point', [0]],
-	 label          => 'S',
-	 label_offset_x => 5,
-	 label_offset_y => -5);
+	(position_selector => ['indexed_position', [0]],
+	 label             => 'S',
+	 label_offset_x    => 5,
+	 label_offset_y    => -5);
 }
 
 sub circle {
@@ -65,15 +65,15 @@ sub circle {
     my $i1 = $construction->add_derivate('IntersectionCircleLine',
 					 input => [$l1, $c1]);
     my $p05 = $i1->create_derived_point
-	(point_selector => ['indexed_point', [0]],
-	 label          => 'T',
-	 label_offset_x => 5,
-	 label_offset_y => -5);
+	(position_selector => ['indexed_position', [0]],
+	 label             => 'T',
+	 label_offset_x    => 5,
+	 label_offset_y    => -5);
     my $p06 = $i1->create_derived_point
-	(point_selector => ['indexed_point', [1]],
-	 label          => 'U',
-	 label_offset_x => 5,
-	 label_offset_y => -5);
+	(position_selector => ['indexed_position', [1]],
+	 label             => 'U',
+	 label_offset_x    => 5,
+	 label_offset_y    => -5);
 
     my $p07 = $construction->add_point('x' => 350, 'y' => 200);
     my $p08 = $construction->add_point('x' => 350, 'y' => 240, hidden => 1);
@@ -87,9 +87,9 @@ sub circle {
     my $i2 = $construction->add_derivate('IntersectionCircleCircle',
 					 input => [$c2, $c3]);
     my $p11 = $i2->create_derived_point
-	(point_selector => ['indexed_point', [0]]);
+	(position_selector => ['indexed_position', [0]]);
     my $p12 = $i2->create_derived_point
-	(point_selector => ['indexed_point', [1]]);
+	(position_selector => ['indexed_position', [1]]);
 }
 
 line;
