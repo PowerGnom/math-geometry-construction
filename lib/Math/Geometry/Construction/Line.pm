@@ -76,7 +76,7 @@ sub points {
 sub positions {
     my ($self) = @_;
 
-    return map { $self->position } $self->points;
+    return map { $_->position } $self->points;
 }
 
 sub as_svg {
