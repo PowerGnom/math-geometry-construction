@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::PointSelection;
+package Math::Geometry::Construction::PositionSelection;
 use Moose::Role;
 
 use 5.008008;
@@ -7,15 +7,15 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::PointSelection> - select point from list
+C<Math::Geometry::Construction::PositionSelection> - select position from list
 
 =head1 VERSION
 
-Version 0.003
+Version 0.006
 
 =cut
 
-our $VERSION = '0.003';
+our $VERSION = '0.006';
 
 
 ###########################################################################
