@@ -6,7 +6,6 @@ use 5.008008;
 
 use Carp;
 use Math::VectorReal ':all';
-use Math::Geometry::Construction::TemporaryPoint;
 
 =head1 NAME
 
