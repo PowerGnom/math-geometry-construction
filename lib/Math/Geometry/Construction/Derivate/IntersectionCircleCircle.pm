@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleCircle> - circle cir
 
 =head1 VERSION
 
-Version 0.005
+Version 0.006
 
 =cut
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 
 ###########################################################################
