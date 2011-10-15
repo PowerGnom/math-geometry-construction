@@ -295,20 +295,122 @@ attributes. This is the default L<Moose|Moose> constructor.
 
 =head2 Public Attributes
 
+=head3 width
+
+The width of the visible area.
+
+=head3 height
+
+The height of the visible area.
+
+=head objects
+
+A construction holds a hash of the objects it contains. The hash
+itself is inaccessible. However, you can call the following
+accessors:
+
+=over 4
+
+=item * count_objects
+
+Returns the number of objects. For the L<Moose|Moose> aficionado:
+This is the C<count> method of the C<Hash> trait.
+
+=item * object
+
+  $construction->object($key)
+  $construction->object($key, $value)
+
+Accessor/mutator method for single entries of the hash. The keys are
+the object IDs. Usage of the mutator is not intended, use only to
+tamper with the internals at your own risk.
+
+For the L<Moose|Moose> aficionado: This is the C<accessor> method of
+the C<Hash> trait.
+
+=item * object_ids
+
+Returns a (copy of) the list of keys. For the L<Moose|Moose>
+aficionado: This is the C<keys> method of the C<Hash> trait.
+
+=item * objects
+
+Returns a (copy of) the list of values. For the L<Moose|Moose>
+aficionado: This is the C<values> method of the C<Hash> trait.
+
+=back
+
 =head2 Methods
 
 =head3 add_point
 
+  $construction->add_point(%args)
+
+Returns a new
+L<Math::Geometry::Construction::Point|Math::Geometry::Construction::Point>.
+All parameters are handed over to the constructor after adding the
+C<construction> and C<order_index> arguments.
+
 =head3 add_line
+
+  $construction->add_line(%args)
+
+Returns a new
+L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>.
+All parameters are handed over to the constructor after adding the
+C<construction> and C<order_index> arguments.
 
 =head3 add_circle
 
+  $construction->add_circle(%args)
+
+Returns a new
+L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>.
+All parameters are handed over to the constructor after adding the
+C<construction> and C<order_index> arguments.
+
 =head3 add_object
+
+  $construction->add_object($class, %args)
+
+Returns a new instance of the given class. All parameters are handed
+over to the constructor after adding the C<construction> and
+C<order_index> arguments. In fact, L<add_point|add_point>,
+L<add_line|add_line>, and L<add_circle|add_circle> just call this
+method with the appropriate class.
 
 =head3 add_derivate
 
+  $constructor->add_derivate($class, %args)
+
+Convenience shortcut for L<add_object|add_object>. The only
+difference is that C<$class> is prepended with
+C<Math::Geometry::Construction::Derivate::>. Therefore you can call
+
+  $construction->add_derivate('IntersectionCircleLine', %args)
+
+instead of
+
+  $construction->add_object
+      ('Math::Geometry::Construction::Derivate::IntersectionCircleLine', %args)
+
+
 =head3 as_svg
 
+  $construction->as_svg(width => 800, height => 600)
+
+Returns an L<SVG|SVG> object representing the construction. Width
+and height are taken from the L<width|width> and L<height|height>
+attributes. They can be overwritten by the respective parameters.
+
+Draws a white rectangle as background.
+
+Calls the C<as_svg> method on all first on all non-point objects
+then on all C<Point> and C<DerivedPoint> objects. This is because I
+think that points should be drawn on top of lines, circles etc..
+
+Details of this method are likely to change, especially with respect
+to the background rectangle and to width and height.
 
 =head1 DIAGNOSTICS
 
