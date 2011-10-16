@@ -13,9 +13,7 @@ sub line {
 				      style    => {stroke => 'none',
 						   fill   => 'blue',
 						   'fill-opacity' => 0.5});
-    my $l1 = $construction->add_line;
-    $l1->add_support($p1);
-    $l1->add_support($p2);
+    my $l1 = $construction->add_line(support => [$p1, $p2]);
 
     my @support = $l1->support;
     is(@support, 2, "two support points");
