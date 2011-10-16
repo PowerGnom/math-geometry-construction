@@ -6,7 +6,8 @@ use Math::Geometry::Construction;
 use Math::VectorReal;
 use SVG::Rasterize;
 
-my $construction = Math::Geometry::Construction->new;
+my $construction = Math::Geometry::Construction->new
+    (background => 'white');
 
 sub line {
     my $p1 = $construction->add_point('x' => 500, 'y' => 100, hidden => 1);

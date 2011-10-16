@@ -31,14 +31,17 @@ our $VERSION = '0.006';
 #                                                                         #
 ###########################################################################
 
-has 'objects' => (isa     => 'HashRef[Item]',
-		  is      => 'bare',
-		  traits  => ['Hash'],
-		  default => sub { {} },
-		  handles => {count_objects => 'count',
-			      object        => 'accessor',
-			      object_ids    => 'keys',
-			      objects       => 'values'});
+has 'objects'    => (isa     => 'HashRef[Item]',
+		     is      => 'bare',
+		     traits  => ['Hash'],
+		     default => sub { {} },
+		     handles => {count_objects => 'count',
+				 object        => 'accessor',
+				 object_ids    => 'keys',
+				 objects       => 'values'});
+
+has 'background' => (isa => 'Str',
+		     is  => 'rw');
 
 ###########################################################################
 #                                                                         #
@@ -50,6 +53,31 @@ sub as_svg {
     my ($self, %args) = @_;
 
     my $svg = SVG->new(%args);
+
+    # draw background rectangle if possible
+    if(my $bg = $self->background) {
+	my $x;
+	my $y;
+	my $width;
+	my $height;
+	if($args{viewBox}) {
+	    my $f = '[^\s\,]+';
+	    my $w = '(?:\s+|\s*\,\*)';
+	    if($args{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
+		($x, $y, $width, $height) = ($1, $2, $3, $4);
+	    }
+	    else { warn "Failed to parse viewBox attribute.\n"  }
+	}
+	else {
+	    ($x, $y, $width, $height) =
+		(0, 0, $args{width}, $args{height});
+	}
+	if($width and $height) {
+	    $svg->rect('x' => $x, 'y' => $y,
+		       width => $width, height => $height,
+		       stroke => 'none', fill => $bg);
+	}
+    }
     
     my @objects = sort { $a->order_index <=> $b->order_index }
         $self->objects;
@@ -120,15 +148,16 @@ __END__
 
   use Math::Geometry::Construction;
 
-  my $construction = Math::Geometry::Construction->new;
+  my $construction = Math::Geometry::Construction->new
+      (background => 'white');
   my $p1 = $construction->add_point('x' => 100, 'y' => 150, hidden => 1);
   my $p2 = $construction->add_point('x' => 120, 'y' => 150, hidden => 1);
   my $p3 = $construction->add_point('x' => 200, 'y' => 50);
   my $p4 = $construction->add_point('x' => 200, 'y' => 250);
 
   my $l1 = $construction->add_line(extend         => 10,
-				     label          => 'g',
-				     label_offset_y => 13);
+				   label          => 'g',
+				   label_offset_y => 13);
   $l1->add_support($p1);
   $l1->add_support($p2);
   my $l2 = $construction->add_line;
@@ -375,7 +404,7 @@ instead of
   $construction->as_svg(%args)
 
 Returns an L<SVG|SVG> object representing the construction. All
-parameters arehanded over to the L<SVG|SVG> constructor. At least
+parameters are handed over to the L<SVG|SVG> constructor. At least
 C<width> and C<height> should be provided.
 
 Calls the C<as_svg> method first on all non-point objects, then on
