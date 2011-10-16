@@ -40,14 +40,6 @@ has 'objects' => (isa     => 'HashRef[Item]',
 			      object_ids    => 'keys',
 			      objects       => 'values'});
 
-has 'width'   => (isa      => 'Int',
-		  is       => 'rw',
-		  required => 1);
-
-has 'height'  => (isa      => 'Int',
-		  is       => 'rw',
-		  required => 1);
-
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #
@@ -56,9 +48,6 @@ has 'height'  => (isa      => 'Int',
 
 sub as_svg {
     my ($self, %args) = @_;
-
-    $args{width}  ||= $self->width;
-    $args{height} ||= $self->height;
 
     my $svg = SVG->new(%args);
     
@@ -399,11 +388,11 @@ instead of
 
 =head3 as_svg
 
-  $construction->as_svg(width => 800, height => 600)
+  $construction->as_svg(%args)
 
-Returns an L<SVG|SVG> object representing the construction. Width
-and height are taken from the L<width|width> and L<height|height>
-attributes. They can be overwritten by the respective parameters.
+Returns an L<SVG|SVG> object representing the construction. All
+parameters arehanded over to the L<SVG|SVG> constructor. At least
+C<width> and C<height> must be provided.
 
 Draws a white rectangle as background.
 
@@ -412,7 +401,7 @@ all C<Point> and C<DerivedPoint> objects. This is because I think
 that points should be drawn on top of lines, circles etc..
 
 Details of this method are likely to change, especially with respect
-to the background rectangle and to width and height.
+to the background.
 
 =head1 DIAGNOSTICS
 
