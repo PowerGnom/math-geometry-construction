@@ -7,6 +7,10 @@ Revision history for Math-Geometry-Construction
 	   selection methods are renamed to position selection
 	   methods. They had not been documented, but showed up in
 	   the SYNOPSIS.
+	 - The width and height attributes have gone and should be
+	   given directly to the output method. Background is now
+	   transparent by default, but can be specified via the
+	   background attribute.
 	 - some more Derivative classes for user convenience
 
 0.005	 Sat Oct 15 19:53:35 NZDT 2011
