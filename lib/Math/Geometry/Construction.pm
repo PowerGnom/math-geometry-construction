@@ -56,8 +56,11 @@ has 'height'  => (isa      => 'Int',
 
 sub as_svg {
     my ($self, %args) = @_;
-    my $svg           = SVG->new(width  => $args{width}  || $self->width,
-				 height => $args{height} || $self->height);
+
+    $args{width}  ||= $self->width;
+    $args{height} ||= $self->height;
+
+    my $svg = SVG->new(%args);
     
     $svg->rect('x'    => 0,
 	       'y'    => 0,
