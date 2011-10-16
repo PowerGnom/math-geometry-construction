@@ -15,9 +15,8 @@ sub line {
 				      style    => {stroke => 'none',
 						   fill   => 'blue',
 						   'fill-opacity' => 0.5});
-    my $l1 = $construction->add_line(extend => 50);
-    $l1->add_support($p1);
-    $l1->add_support($p2);
+    my $l1 = $construction->add_line(extend  => 50,
+				     support => [$p1, $p2]);
 }
 
 sub intersection {
@@ -33,12 +32,9 @@ sub intersection {
 
     my $l1 = $construction->add_line(extend         => 10,
 				     label          => 'g',
-				     label_offset_y => 13);
-    $l1->add_support($p1);
-    $l1->add_support($p2);
-    my $l2 = $construction->add_line;
-    $l2->add_support($p3);
-    $l2->add_support($p4);
+				     label_offset_y => 13,
+				     support        => [$p1, $p2]);
+    my $l2 = $construction->add_line(support => [$p3, $p4]);
 
     my $i1 = $construction->add_derivate('IntersectionLineLine',
 					 input => [$l1, $l2]);
@@ -58,9 +54,8 @@ sub circle {
     my $p03 = $construction->add_point('x' => 200, 'y' => 50, hidden => 1);
     my $p04 = $construction->add_point('x' => 200, 'y' => 60, hidden => 1);
 
-    my $l1 = $construction->add_line(hidden => 1);
-    $l1->add_support($p03);
-    $l1->add_support($p04);
+    my $l1 = $construction->add_line(hidden  => 1,
+				     support => [$p03, $p04]);
 
     my $i1 = $construction->add_derivate('IntersectionCircleLine',
 					 input => [$l1, $c1]);

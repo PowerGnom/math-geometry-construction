@@ -42,14 +42,13 @@ with 'Math::Geometry::Construction::Object';
 with 'Math::Geometry::Construction::PositionSelection';
 with 'Math::Geometry::Construction::Output';
 
-has 'support'     => (isa     => 'ArrayRef[Item]',
-		      is      => 'bare',
-		      traits  => ['Array'],
-		      default => sub { [] },
-		      handles => {count_support  => 'count',
-				  support        => 'elements',
-				  single_support => 'accessor',
-				  add_support    => 'push'});
+has 'support'     => (isa      => 'ArrayRef[Item]',
+		      is       => 'bare',
+		      traits   => ['Array'],
+		      required => 1,
+		      handles  => {count_support  => 'count',
+				   support        => 'elements',
+				   single_support => 'accessor'});
 
 has 'extend'      => (isa     => 'Num',
 		      is      => 'rw',
