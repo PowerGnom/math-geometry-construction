@@ -11,6 +11,8 @@ Revision history for Math-Geometry-Construction
 	   given directly to the output method. Background is now
 	   transparent by default, but can be specified via the
 	   background attribute.
+	 - Lines now accept and expect the support points at
+	   construction time.
 	 - some more Derivative classes for user convenience
 
 0.005	 Sat Oct 15 19:53:35 NZDT 2011
