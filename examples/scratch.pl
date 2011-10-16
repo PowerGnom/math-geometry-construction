@@ -95,8 +95,14 @@ sub circle {
 line;
 intersection;
 circle;
-    
-my $svg = $construction->as_svg(width => 800, height => 300);
+
+# width/height are on purpose not proportional to those of the
+# construction; this is to show how you can hand over SVG
+# parameters
+my $svg = $construction->as_svg(width => 600, height => 450,
+				viewBox             => "0 0 800 300",
+				preserveAspectRatio => "xMinYMid",
+				'font-family'       => 'Times');
     
 print $svg->xmlify, "\n";
     
