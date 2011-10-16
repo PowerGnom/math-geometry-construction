@@ -4,8 +4,7 @@ use warnings;
 
 use Math::Geometry::Construction;
 
-my $construction = Math::Geometry::Construction->new
-    (width  => 500, height => 300);
+my $construction = Math::Geometry::Construction->new;
 my $p1 = $construction->add_point('x' => 100, 'y' => 150, hidden => 1);
 my $p2 = $construction->add_point('x' => 120, 'y' => 150, hidden => 1);
 my $p3 = $construction->add_point('x' => 200, 'y' => 50);
