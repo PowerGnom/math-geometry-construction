@@ -69,10 +69,12 @@ sub as_svg {
     my @objects = sort { $a->order_index <=> $b->order_index }
         $self->objects;
 
-    foreach(grep { ref($_) !~ /Point$/ } @objects) {
+    my %is_point = ('Math::Geometry::Construction::Point'        => 1,
+		    'Math::Geometry::Construction::DerivedPoint' => 1);
+    foreach(grep { !$is_point{blessed($_)} } @objects) {
 	$_->as_svg(parent => $svg, %args) if($_->can('as_svg'));
     }
-    foreach(grep { ref($_) =~ /Point$/ } @objects) {
+    foreach(grep { $is_point{blessed($_)} } @objects) {
 	$_->as_svg(parent => $svg, %args);
     }
 
