@@ -120,8 +120,7 @@ __END__
 
   use Math::Geometry::Construction;
 
-  my $construction = Math::Geometry::Construction->new
-      (width  => 500, height => 300);
+  my $construction = Math::Geometry::Construction->new;
   my $p1 = $construction->add_point('x' => 100, 'y' => 150, hidden => 1);
   my $p2 = $construction->add_point('x' => 120, 'y' => 150, hidden => 1);
   my $p3 = $construction->add_point('x' => 200, 'y' => 50);
@@ -280,14 +279,6 @@ attributes. This is the default L<Moose|Moose> constructor.
 
 =head2 Public Attributes
 
-=head3 width
-
-The width of the visible area.
-
-=head3 height
-
-The height of the visible area.
-
 =head3 objects
 
 A construction holds a hash of the objects it contains. The hash
@@ -385,9 +376,7 @@ instead of
 
 Returns an L<SVG|SVG> object representing the construction. All
 parameters arehanded over to the L<SVG|SVG> constructor. At least
-C<width> and C<height> must be provided.
-
-Draws a white rectangle as background.
+C<width> and C<height> should be provided.
 
 Calls the C<as_svg> method first on all non-point objects, then on
 all C<Point> and C<DerivedPoint> objects. This is because I think
