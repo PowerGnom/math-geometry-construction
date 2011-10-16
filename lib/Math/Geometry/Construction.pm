@@ -51,13 +51,6 @@ sub as_svg {
 
     my $svg = SVG->new(%args);
     
-    $svg->rect('x'    => 0,
-	       'y'    => 0,
-	       width  => $self->width,
-	       height => $self->height,
-	       fill   => 'white',
-	       stroke => 'none');
-
     my @objects = sort { $a->order_index <=> $b->order_index }
         $self->objects;
 
