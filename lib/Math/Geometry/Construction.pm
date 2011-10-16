@@ -308,6 +308,13 @@ attributes. This is the default L<Moose|Moose> constructor.
 
 =head2 Public Attributes
 
+=head3 background
+
+By default the background is transparent. This attribute can hold a
+color to hold instead. Possible values depend on the output
+type. For C<SVG>, it can hold any valid C<SVG> color specifier,
+e.g. C<white> or C<rgb(255, 255, 255)>.
+
 =head3 objects
 
 A construction holds a hash of the objects it contains. The hash
@@ -379,15 +386,15 @@ C<construction> and C<order_index> arguments.
 
 Returns a new instance of the given class. All parameters are handed
 over to the constructor after adding the C<construction> and
-C<order_index> arguments. In fact, L<add_point|add_point>,
-L<add_line|add_line>, and L<add_circle|add_circle> just call this
+C<order_index> arguments. In fact, L<add_point|/add_point>,
+L<add_line|/add_line>, and L<add_circle|/add_circle> just call this
 method with the appropriate class.
 
 =head3 add_derivate
 
   $constructor->add_derivate($class, %args)
 
-Convenience shortcut for L<add_object|add_object>. The only
+Convenience shortcut for L<add_object|/add_object>. The only
 difference is that C<$class> is prepended with
 C<Math::Geometry::Construction::Derivate::>. Therefore you can call
 
@@ -406,6 +413,11 @@ instead of
 Returns an L<SVG|SVG> object representing the construction. All
 parameters are handed over to the L<SVG|SVG> constructor. At least
 C<width> and C<height> should be provided.
+
+If a L<background color|/background> is specified then a rectangle
+of of that color is drawn as background. The size is taken from the
+C<viewBox> attribute if specified, from C<width> and C<height>
+otherwise. If none is given, no background is drawn.
 
 Calls the C<as_svg> method first on all non-point objects, then on
 all C<Point> and C<DerivedPoint> objects. This is because I think
