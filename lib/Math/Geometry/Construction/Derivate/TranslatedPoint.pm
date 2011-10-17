@@ -5,7 +5,6 @@ extends 'Math::Geometry::Construction::Derivate';
 use 5.008008;
 
 use Carp;
-use Math::VectorReal ':all';
 
 =head1 NAME
 
@@ -13,11 +12,11 @@ C<Math::Geometry::Construction::Derivate::TranslatedPoint> - point translated by
 
 =head1 VERSION
 
-Version 0.006
+Version 0.007
 
 =cut
 
-our $VERSION = '0.006';
+our $VERSION = '0.007';
 
 
 ###########################################################################
