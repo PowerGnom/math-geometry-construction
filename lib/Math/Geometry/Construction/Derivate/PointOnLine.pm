@@ -25,9 +25,55 @@ our $VERSION = '0.007';
 #                                                                         #
 ###########################################################################
 
-has 'translator' => (isa      => 'Item',
-		     is       => 'rw',
-		     required => 1);
+has 'distance' => (isa       => 'Num',
+		   is        => 'rw',
+		   predicate => 'has_distance',
+		   clearer   => 'clear_distance',
+		   trigger   => \&_distance_rules);
+
+has 'quantile' => (isa       => 'Num',
+		   is        => 'rw',
+		   predicate => 'has_quantile',
+		   clearer   => 'clear_quantile',
+		   trigger   => \&_quantile_rules);
+
+has 'x'        => (isa       => 'Num',
+		   is        => 'rw',
+		   predicate => 'has_x',
+		   clearer   => 'clear_x',
+		   trigger   => \&_x_rules);
+
+has 'y'        => (isa       => 'Num',
+		   is        => 'rw',
+		   predicate => 'has_y',
+		   clearer   => 'clear_y',
+		   trigger   => \&_y_rules);
+
+sub _rules {
+    my ($self, $ruler) = @_;
+    
+    foreach('distance', 'quantile', 'x', 'y') {
+	unless($_ eq $ruler) {
+	    my $clearer = 'clear_'.$_;
+	    $self->$clearer;
+	}
+    }
+}
+
+sub _distance_rules { $_[0]->_rules('distance') }
+sub _quantile_rules { $_[0]->_rules('quantile') }
+sub _x_rules        { $_[0]->_rules('x') }
+sub _y_rules        { $_[0]->_rules('y') }
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    foreach('distance', 'quantile', 'x', 'y') {
+	my $predicate = 'has_'.$_;
+	return if($self->$predicate);
+    }
+    croak "Position of PointOnLine has to be set somehow";
+}
 
 ###########################################################################
 #                                                                         #
@@ -39,16 +85,43 @@ sub positions {
     my ($self) = @_;
     my @input  = $self->input;
 
-    croak "Need one point" if(@input != 1);
-    if(!$input[0]->can('position')) {
-	croak sprintf("Need something with a position, no %s",
-		      ref($_));
+    if(@input != 1
+       or
+       !eval { $input[0]->isa('Math::Geometry::Construction::Line') })
+    {
+	croak "Need one line for PointOnLine";
     }
 
-    my $position = $input[0]->position;
-    return if(!$position);
+    my @support_p = map { $_->position } $input[0]->support;
+    return if(!defined($support_p[0]) or !defined($support_p[1]));
+    my $s_distance = ($support_p[1] - $support_p[0]);
 
-    return($position + $self->translator);
+    if($self->has_distance) {
+	my $d = $s_distance->length;
+	return if($d == 0);
+
+	return($support_p[0] + $s_distance / $d * $self->distance);
+    }
+    elsif($self->has_quantile) {
+        return($support_p[0] + $s_distance * $$self->quantile);
+    }
+    elsif($self->has_x) {
+	my $sx = $s_distance->x;
+	return if($sx == 0);
+
+	my $scale = ($self->x - $support_p[0]->x) / $sx;
+	return($support_p[0] + $s_distance * $scale);
+    }
+    elsif($self->has_y) {
+	my $sy = $s_distance->y;
+	return if($sy == 0);
+
+	my $scale = ($self->y - $support_p[0]->y) / $sy;
+	return($support_p[0] + $s_distance * $scale);
+    }
+    else {
+	croak "No way to determine position of PointOnLine ".$self->id;
+    }
 }
 
 ###########################################################################
