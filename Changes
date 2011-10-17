@@ -1,5 +1,8 @@
 Revision history for Math-Geometry-Construction
 
+0.007	 
+	 - new derivates
+
 0.006	 Sun Oct 16 18:38:08 NZDT 2011
 	 - Changed point selection to position selection. This is
 	   less future-safe, but more natural and avoids some
