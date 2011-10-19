@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.004
+Version 0.007
 
 =cut
 
-our $VERSION = '0.004';
+our $VERSION = '0.007';
 
 
 ###########################################################################
@@ -23,6 +23,8 @@ our $VERSION = '0.004';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+requires 'construction';
 
 has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
 			     is      => 'bare',
@@ -70,21 +72,19 @@ has 'label_style'        => (isa     => 'HashRef[Str]',
 #                                                                         #
 ###########################################################################
 
-sub label_as_svg {
+sub draw_label {
     my ($self, %args) = @_;
-    my $text;
 
     if($self->has_label) {
-	$text = $args{parent}->text
-	    ('x' => $args{x} + $self->label_offset_x,
-	     'y' => $args{y} + $self->label_offset_y,
-	     style => $self->label_style_hash);
-
 	my $label = $self->label;
-	$text->cdata(defined($label) ? $label : '');
+	return $self->construction->draw_text
+	    ('x'   => $args{x} + $self->label_offset_x,
+	     'y'   => $args{y} + $self->label_offset_y,
+	     style => $self->label_style_hash,
+	     text  => defined($label) ? $label : '');
     }
 
-    return $text;
+    return;
 }
 
 ###########################################################################

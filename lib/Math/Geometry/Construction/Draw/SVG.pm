@@ -51,8 +51,10 @@ sub set_background {
     my $vb             = $self->view_box;
 
     $self->output->rect('x' => $vb->[0], 'y' => $vb->[1],
-			width => $vb->[2], height => $vb->[3],
-			stroke => 'none', fill => $color);
+			width  => $vb->[2],
+			height => $vb->[3],
+			stroke => 'none',
+			fill   => $color);
 }
 
 sub line {
@@ -60,6 +62,15 @@ sub line {
 
     $self->output->line(%args);
 }
+
+sub text {
+    my ($self, %args) = @_;
+
+    my $data = delete $args{text};
+    my $text = $self->output->text(%args);
+    $text->cdata($data);
+}
+
 
 1;
 
