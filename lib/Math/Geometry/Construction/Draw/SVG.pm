@@ -63,6 +63,12 @@ sub line {
     $self->output->line(%args);
 }
 
+sub circle {
+    my ($self, %args) = @_;
+
+    $self->output->circle(%args);
+}
+
 sub text {
     my ($self, %args) = @_;
 

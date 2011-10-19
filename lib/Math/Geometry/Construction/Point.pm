@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Point> - a free user-defined point
 
 =head1 VERSION
 
-Version 0.004
+Version 0.007
 
 =cut
 
-our $VERSION = '0.004';
+our $VERSION = '0.007';
 
 
 ###########################################################################
@@ -69,20 +69,19 @@ sub BUILD {
 #                                                                         #
 ###########################################################################
 
-sub as_svg {
+sub draw {
     my ($self, %args) = @_;
     return undef if $self->hidden;
 
     my $position = $self->position;
-    $args{parent}->circle(cx    => $position->x,
-			  cy    => $position->y,
-			  r     => $self->radius,
-			  style => $self->style_hash,
-			  id    => $self->id);
+    $self->construction->draw_circle(cx    => $position->x,
+				     cy    => $position->y,
+				     r     => $self->radius,
+				     style => $self->style_hash,
+				     id    => $self->id);
 
-    $self->label_as_svg(parent => $args{parent},
-			'x'    => $position->x,
-			'y'    => $position->y);
+    $self->draw_label('x' => $position->x,
+		      'y' => $position->y);
 
     return undef;
 }
