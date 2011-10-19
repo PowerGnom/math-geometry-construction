@@ -31,6 +31,9 @@ our $VERSION = '0.007';
 #                                                                         #
 ###########################################################################
 
+has 'background' => (isa => 'Str',
+		     is  => 'rw');
+
 has 'objects'    => (isa     => 'HashRef[Item]',
 		     is      => 'bare',
 		     traits  => ['Hash'],
@@ -40,8 +43,12 @@ has 'objects'    => (isa     => 'HashRef[Item]',
 				 object_ids    => 'keys',
 				 objects       => 'values'});
 
-has 'background' => (isa => 'Str',
-		     is  => 'rw');
+has 'output'     => (isa     => 'Item',
+		     is      => 'rw',
+		     writer  => '_output',
+		     handles => {draw_line   => 'line',
+				 draw_circle => 'circle',
+				 draw_text   => 'text'});
 
 ###########################################################################
 #                                                                         #
@@ -49,34 +56,19 @@ has 'background' => (isa => 'Str',
 #                                                                         #
 ###########################################################################
 
-sub as_svg {
-    my ($self, %args) = @_;
+sub draw {
+    my ($self, $type, %args) = @_;
 
-    my $svg = SVG->new(%args);
+    my $class = $type =~ /\:\:/
+	? $type
+	: 'Math::Geometry::Construction::Draw::'.$type;
 
-    # draw background rectangle if possible
+    eval "require $class" or croak "Unable to load output class $class";
+
+    my $output = $self->output($class->new(%args));
+
     if(my $bg = $self->background) {
-	my $x;
-	my $y;
-	my $width;
-	my $height;
-	if($args{viewBox}) {
-	    my $f = '[^\s\,]+';
-	    my $w = '(?:\s+|\s*\,\*)';
-	    if($args{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
-		($x, $y, $width, $height) = ($1, $2, $3, $4);
-	    }
-	    else { warn "Failed to parse viewBox attribute.\n"  }
-	}
-	else {
-	    ($x, $y, $width, $height) =
-		(0, 0, $args{width}, $args{height});
-	}
-	if($width and $height) {
-	    $svg->rect('x' => $x, 'y' => $y,
-		       width => $width, height => $height,
-		       stroke => 'none', fill => $bg);
-	}
+	$output->set_background($bg);
     }
     
     my @objects = sort { $a->order_index <=> $b->order_index }
@@ -85,14 +77,16 @@ sub as_svg {
     my %is_point = ('Math::Geometry::Construction::Point'        => 1,
 		    'Math::Geometry::Construction::DerivedPoint' => 1);
     foreach(grep { !$is_point{blessed($_)} } @objects) {
-	$_->as_svg(parent => $svg, %args) if($_->can('as_svg'));
+	$_->draw(output => $output) if($_->can('draw'));
     }
     foreach(grep { $is_point{blessed($_)} } @objects) {
-	$_->as_svg(parent => $svg, %args);
+	$_->draw(output => $output) if($_->can('draw'));
     }
 
-    return $svg;
+    return $output->output;
 }
+
+sub as_svg { return(shift(@_)->draw('SVG', @args)) }
 
 ###########################################################################
 #                                                                         #
