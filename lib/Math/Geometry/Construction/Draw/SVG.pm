@@ -28,7 +28,7 @@ our $VERSION = '0.007';
 sub BUILD {
     my ($self, $args) = @_;
 
-    $self->output(SVG->new(%$args));
+    $self->_output(SVG->new(%$args));
 
     $self->width($args->{width});
     $self->height($args->{height});
