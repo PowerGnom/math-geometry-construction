@@ -55,6 +55,12 @@ sub set_background {
 			stroke => 'none', fill => $color);
 }
 
+sub line {
+    my ($self, %args) = @_;
+
+    $self->output->line(%args);
+}
+
 1;
 
 
