@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::DerivedPoint> - point derived from other objects
 
 =head1 VERSION
 
-Version 0.006
+Version 0.007
 
 =cut
 
-our $VERSION = '0.006';
+our $VERSION = '0.007';
 
 
 ###########################################################################
@@ -71,7 +71,7 @@ sub position {
     return $self->derivate->$selection_method(@$args);
 }
 
-sub as_svg {
+sub draw {
     my ($self, %args) = @_;
     return undef if $self->hidden;
 
@@ -82,15 +82,14 @@ sub as_svg {
 	return undef;
     }
 
-    $args{parent}->circle(cx    => $position->x,
-			  cy    => $position->y,
-			  r     => $self->radius,
-			  style => $self->style_hash,
-			  id    => $self->id);
+    $self->construction->draw_circle(cx    => $position->x,
+				     cy    => $position->y,
+				     r     => $self->radius,
+				     style => $self->style_hash,
+				     id    => $self->id);
 
-    $self->label_as_svg(parent => $args{parent},
-			'x'    => $position->x,
-			'y'    => $position->y);
+    $self->draw_label('x' => $position->x,
+		      'y' => $position->y);
 
     return undef;
 }
