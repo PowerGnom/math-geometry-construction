@@ -281,6 +281,8 @@ primitive and unsatisfactory withouth polishing by the user.
 
 =item * Extend documentation
 
+=item * pgf/tikz output
+
 =item * Improve performance
 
 =item * Improve automatic positioning of labels
@@ -346,7 +348,7 @@ of the C<Hash> trait.
 
 =back
 
-=head2 Methods
+=head2 Methods for Users
 
 =head3 add_point
 
@@ -401,25 +403,35 @@ instead of
       ('Math::Geometry::Construction::Derivate::IntersectionCircleLine', %args)
 
 
+=head3 draw
+
+  $construction->draw('SVG', %args)
+
+Draws the construction. The return value depends on the output type
+and might be an object or a stringified version. Currently, the only
+output type is C<SVG>. See L<as_svg|/as_svg>.
+
+If the type does not contain a C<::> then it is prepended by
+C<Math::Geometry::Construction::Draw::> before requiring the module.
+
+Calls the C<draw> method first on all non-point objects, then on
+all C<Point> and C<DerivedPoint> objects. This is because I think
+that points should be drawn on top of lines, circles etc..
+
 =head3 as_svg
 
   $construction->as_svg(%args)
+  $construction->draw('SVG', %args)
 
-Returns an L<SVG|SVG> object representing the construction. All
-parameters are handed over to the L<SVG|SVG> constructor. At least
-C<width> and C<height> should be provided.
+Shortcut for L<draw|/draw>. Returns an L<SVG|SVG> object
+representing the construction. All parameters are handed over to the
+L<SVG|SVG> constructor. At least C<width> and C<height> should be
+provided.
 
 If a L<background color|/background> is specified then a rectangle
 of of that color is drawn as background. The size is taken from the
 C<viewBox> attribute if specified, from C<width> and C<height>
 otherwise. If none is given, no background is drawn.
-
-Calls the C<as_svg> method first on all non-point objects, then on
-all C<Point> and C<DerivedPoint> objects. This is because I think
-that points should be drawn on top of lines, circles etc..
-
-Details of this method are likely to change, especially with respect
-to the background.
 
 =head1 DIAGNOSTICS
 
