@@ -1,6 +1,10 @@
 Revision history for Math-Geometry-Construction
 
 0.007	 
+	 - modified drawing framework in order to prepare it for
+	   different output types than SVG; the method as_svg is now
+	   only an alias for draw("SVG", ...) and should be
+	   considered as deprecated
 	 - new derivates
 	 - fixed "my $_" that had been introduced by find/replace
 	   and blew smoke tests on Perl 5.8
