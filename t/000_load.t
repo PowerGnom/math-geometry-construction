@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 11;
+use Test::More tests => 13;
 
 BEGIN {
     use_ok('Math::Geometry::Construction')         || print "Bail out!\n";
@@ -20,6 +20,9 @@ BEGIN {
     use_ok('Math::Geometry::Construction::Derivate::PointOnLine')
 	|| print "Bail out!\n";
     use_ok('Math::Geometry::Construction::DerivedPoint')
+	|| print "Bail out!\n";
+    use_ok('Math::Geometry::Construction::Draw') || print "Bail out!\n";
+    use_ok('Math::Geometry::Construction::Draw::SVG')
 	|| print "Bail out!\n";
 }
 
