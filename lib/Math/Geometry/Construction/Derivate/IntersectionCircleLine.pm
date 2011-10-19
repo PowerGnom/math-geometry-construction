@@ -58,7 +58,7 @@ sub positions {
     my $c_support_p = $circle->support->position;
     my @l_support_p = map { $_->position } $line->support;
 
-    foreach my $_ ($c_center_p, $c_support_p, @l_support_p) {
+    foreach($c_center_p, $c_support_p, @l_support_p) {
 	return if(!defined($_));
     }
 
