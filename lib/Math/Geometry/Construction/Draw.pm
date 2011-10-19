@@ -35,19 +35,13 @@ has 'output'    => (isa    => 'Item',
 		    writer => '_output');
 
 has 'width'     => (isa      => 'Str',
-		    is       => 'rw',
-		    required => 1,
-		    lazy     => 1);
+		    is       => 'rw');
 
 has 'height'    => (isa      => 'Str',
-		    is       => 'rw',
-		    required => 1,
-		    lazy     => 1);
+		    is       => 'rw');
 
 has 'view_box'  => (isa      => 'ArrayRef[Str]',
-		    is       => 'rw',
-		    required => 1,
-		    lazy     => 1);
+		    is       => 'rw');
 
 ###########################################################################
 #                                                                         #
