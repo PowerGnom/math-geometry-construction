@@ -30,9 +30,24 @@ our $VERSION = '0.007';
 #                                                                         #
 ###########################################################################
 
-has 'output' => (isa    => 'Item',
-		 is     => 'rw',
-		 writer => '_output');
+has 'output'    => (isa    => 'Item',
+		    is     => 'rw',
+		    writer => '_output');
+
+has 'width'     => (isa      => 'Str',
+		    is       => 'rw',
+		    required => 1,
+		    lazy     => 1);
+
+has 'height'    => (isa      => 'Str',
+		    is       => 'rw',
+		    required => 1,
+		    lazy     => 1);
+
+has 'view_box'  => (isa      => 'ArrayRef[Str]',
+		    is       => 'rw',
+		    required => 1,
+		    lazy     => 1);
 
 ###########################################################################
 #                                                                         #
