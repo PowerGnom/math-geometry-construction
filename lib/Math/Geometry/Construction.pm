@@ -65,7 +65,7 @@ sub draw {
 
     eval "require $class" or croak "Unable to load output class $class";
 
-    my $output = $self->output($class->new(%args));
+    my $output = $self->_output($class->new(%args));
 
     if(my $bg = $self->background) {
 	$output->set_background($bg);
