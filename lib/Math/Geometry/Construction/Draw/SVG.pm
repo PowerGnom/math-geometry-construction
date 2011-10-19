@@ -33,16 +33,16 @@ sub BUILD {
     $self->width($args->{width});
     $self->height($args->{height});
 
-    if($args{viewBox}) {
+    if($args->{viewBox}) {
 	my $f = '[^\s\,]+';
 	my $w = '(?:\s+|\s*\,\*)';
-	if($args{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
+	if($args->{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
 	    $self->view_box([$1, $2, $3, $4]);
 	}
 	else { warn "Failed to parse viewBox attribute.\n"  }
     }
     else {
-	$self->view_box([0, 0, $args{width}, $args{height}]);
+	$self->view_box([0, 0, $args->{width}, $args->{height}]);
     }
 }
 
