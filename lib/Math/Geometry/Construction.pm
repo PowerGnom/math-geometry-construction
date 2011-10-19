@@ -86,7 +86,7 @@ sub draw {
     return $output->output;
 }
 
-sub as_svg { return(shift(@_)->draw('SVG', @args)) }
+sub as_svg { return(shift(@_)->draw('SVG', @_)) }
 
 ###########################################################################
 #                                                                         #
