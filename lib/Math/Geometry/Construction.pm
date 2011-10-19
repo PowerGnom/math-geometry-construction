@@ -172,8 +172,9 @@ This is alpha software. The API is likely to change, input checks
 and documentation are sparse, the test suite barely exists. But
 release early, release often, so here we go.
 
-So far, the development has been fast, and the code has to be
-considered fragile. Please report any problems you encounter.
+So far, the development has been fast and focused on adding
+features. On the downside, the code has to be considered
+fragile. Please report any problems you encounter.
 
 =head2 Aims
 
