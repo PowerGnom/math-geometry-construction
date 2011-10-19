@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.006
+Version 0.007
 
 =cut
 
-our $VERSION = '0.006';
+our $VERSION = '0.007';
 
 
 ###########################################################################
@@ -88,7 +88,7 @@ sub radius {
     return(($support_p - $center_p)->length);
 }
 
-sub as_svg {
+sub draw {
     my ($self, %args) = @_;
     return undef if $self->hidden;
 
@@ -109,15 +109,14 @@ sub as_svg {
     my $radius = ($support_position - $center_position)->length;
 
     # currently, we just draw the full circle
-    $args{parent}->circle(cx    => $center_position->x,
-			  cy    => $center_position->y,
-			  r     => $radius,
-			  style => $self->style_hash,
-			  id    => $self->id);
+    $self->construction->draw_circle(cx    => $center_position->x,
+				     cy    => $center_position->y,
+				     r     => $radius,
+				     style => $self->style_hash,
+				     id    => $self->id);
 
-    $self->label_as_svg(parent => $args{parent},
-			'x'    => $support_position->x,
-			'y'    => $support_position->y);
+    $self->draw_label('x'    => $support_position->x,
+		      'y'    => $support_position->y);
 }
 
 ###########################################################################
