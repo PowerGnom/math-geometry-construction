@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate::PointOnLine> - point on a line
 
 =head1 VERSION
 
-Version 0.007
+Version 0.008
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 
 
 ###########################################################################
@@ -103,7 +103,7 @@ sub positions {
 	return($support_p[0] + $s_distance / $d * $self->distance);
     }
     elsif($self->has_quantile) {
-        return($support_p[0] + $s_distance * $$self->quantile);
+        return($support_p[0] + $s_distance * $self->quantile);
     }
     elsif($self->has_x) {
 	my $sx = $s_distance->x;

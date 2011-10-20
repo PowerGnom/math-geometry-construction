@@ -3,6 +3,8 @@ use strict;
 use warnings;
 
 use Math::Geometry::Construction;
+use Math::Geometry::Construction::Derivate::PointOnLine;
+use Math::Geometry::Construction::Derivate::TranslatedPoint;
 use Math::VectorReal;
 use SVG::Rasterize;
 
@@ -87,9 +89,37 @@ sub circle {
 	(position_selector => ['indexed_position', [1]]);
 }
 
+sub derivates {
+    my $p01 = $construction->add_point('x' => 450, 'y' => 200);
+    my $p02 = $construction->add_point('x' => 550, 'y' => 220);
+    my $l01 = $construction->add_line(support => [$p01, $p02]);
+
+    my $d01 = $construction->add_derivate('PointOnLine',
+					  input    => [$l01],
+					  quantile => 0.3);
+    my $p03 = $d01->create_derived_point
+	(position_selector => ['indexed_position', [0]]);
+    my $d02 = $construction->add_derivate('PointOnLine',
+					  input => [$l01],
+					  x     => 540);
+    my $p04 = $d02->create_derived_point
+	(position_selector => ['indexed_position', [0]],
+	 style             => {fill => 'blue'});
+
+    my $d03 = $construction->add_derivate
+	('TranslatedPoint',
+	 input      => [$p04],
+	 translator => vector(0, -30, 0));
+    my $p05 = $d03->create_derived_point
+	(position_selector => ['indexed_position', [0]]);
+    my $c01 = $construction->add_circle(center  => $p05,
+					support => $p04);
+}
+
 line;
 intersection;
 circle;
+derivates;
 
 # width/height are on purpose not proportional to those of the
 # construction; this is to show how you can hand over SVG
