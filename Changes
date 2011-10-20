@@ -1,5 +1,8 @@
 Revision history for Math-Geometry-Construction
 
+0.008	 
+	 - fixes bug in PointOnLine with quantile
+
 0.007	 Wed Oct 19 20:44:11 NZDT 2011
 	 - modified drawing framework in order to prepare it for
 	   different output types than SVG; the method as_svg is now
