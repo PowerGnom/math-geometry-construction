@@ -5,6 +5,7 @@ extends 'Math::Geometry::Construction::Draw';
 use 5.008008;
 
 use Carp;
+use LaTeX::TikZ;
 
 =head1 NAME
 
@@ -28,7 +29,7 @@ our $VERSION = '0.008';
 sub BUILD {
     my ($self, $args) = @_;
 
-    $self->_output(SVG->new(%$args));
+    $self->_output(['\begin{tikzpicture}', '\end{tikzpicture}']);
 
     $self->width($args->{width});
     $self->height($args->{height});
