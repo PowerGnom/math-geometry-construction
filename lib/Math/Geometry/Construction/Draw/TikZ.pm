@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Draw::Tikz;
+package Math::Geometry::Construction::Draw::TikZ;
 use Moose;
 extends 'Math::Geometry::Construction::Draw';
 
@@ -9,7 +9,7 @@ use LaTeX::TikZ;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Draw::Tikz> - Tikz output
+C<Math::Geometry::Construction::Draw::TikZ> - TikZ output
 
 =head1 VERSION
 
