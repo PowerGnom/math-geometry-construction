@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Draw::SVG;
+package Math::Geometry::Construction::Draw::Tikz;
 use Moose;
 extends 'Math::Geometry::Construction::Draw';
 
@@ -8,15 +8,15 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Draw::SVG> - SVG output
+C<Math::Geometry::Construction::Draw::Tikz> - Tikz output
 
 =head1 VERSION
 
-Version 0.007
+Version 0.008
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 
 
 ###########################################################################
