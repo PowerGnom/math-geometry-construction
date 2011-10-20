@@ -7,6 +7,7 @@ use Math::Geometry::Construction::Derivate::PointOnLine;
 use Math::Geometry::Construction::Derivate::TranslatedPoint;
 use Math::VectorReal;
 use SVG::Rasterize;
+use LaTeX::TikZ;
 
 my $construction = Math::Geometry::Construction->new
     (background => 'white');
@@ -134,3 +135,7 @@ print $svg->xmlify, "\n";
 my $rasterize = SVG::Rasterize->new();
 $rasterize->rasterize(svg => $svg);
 $rasterize->write(type => 'png', file_name => 'construction.png');
+
+my $tikz = $construction->draw('TikZ');
+my (undef, undef, $body) = Tikz->formatter(scale => 0.01)->render($tikz);
+print(join("\n", @$body), "\n");

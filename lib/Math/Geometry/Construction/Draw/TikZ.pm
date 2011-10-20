@@ -29,55 +29,34 @@ our $VERSION = '0.008';
 sub BUILD {
     my ($self, $args) = @_;
 
-    $self->_output(['\begin{tikzpicture}', '\end{tikzpicture}']);
-
-    $self->width($args->{width});
-    $self->height($args->{height});
-
-    if($args->{viewBox}) {
-	my $f = '[^\s\,]+';
-	my $w = '(?:\s+|\s*\,\*)';
-	if($args->{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
-	    $self->view_box([$1, $2, $3, $4]);
-	}
-	else { warn "Failed to parse viewBox attribute.\n"  }
-    }
-    else {
-	$self->view_box([0, 0, $args->{width}, $args->{height}]);
-    }
+    $self->_output(Tikz->seq);
 }
 
 sub set_background {
     my ($self, $color) = @_;
-    my $vb             = $self->view_box;
-
-    $self->output->rect('x' => $vb->[0], 'y' => $vb->[1],
-			width  => $vb->[2],
-			height => $vb->[3],
-			stroke => 'none',
-			fill   => $color);
 }
 
 sub line {
     my ($self, %args) = @_;
 
-    $self->output->line(%args);
+    $self->output->add(Tikz->line([$args{x1}, $args{y1}],
+				  [$args{x2}, $args{y2}]));
 }
 
 sub circle {
     my ($self, %args) = @_;
 
-    $self->output->circle(%args);
+    $self->output->add(Tikz->circle([$args{cx}, $args{cy}],
+				    $args{r}));
 }
 
 sub text {
     my ($self, %args) = @_;
 
-    my $data = delete $args{text};
-    my $text = $self->output->text(%args);
-    $text->cdata($data);
+    my $content = sprintf('(%f, %f) node {%s}',
+			  $args{x}, $args{y}, $args{text});
+    $self->output->add(Tikz->raw($content));
 }
-
 
 1;
 
