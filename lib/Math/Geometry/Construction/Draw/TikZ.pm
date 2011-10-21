@@ -46,12 +46,23 @@ has 'offset_y' => (isa     => 'Num',
 		   writer  => '_offset_y',
 		   default => 0);
 
+has 'svg_mode' => (isa     => 'Bool',
+		   is      => 'ro',
+		   default => 0);
 
 sub BUILD {
     my ($self, $args) = @_;
 
     if(my $vb = $self->view_box) {
 	$self->_scale_x($self->width / $vb->[2]);
+	$self->_scale_y($self->height / $vb->[3]);
+	$self->_offset_x(-$vb->[0] * $self->scale_x);
+	if($self->svg_mode) {
+	    $self->_offset_y($self->height + $vb->[1] * $self->scale_y);
+	}
+	else {
+	    $self->_offset_y(-$vb->[1] * $self->scale_y);
+	}
     }
 
     $self->_output(Tikz->seq);
