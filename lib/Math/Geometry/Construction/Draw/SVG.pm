@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Draw::SVG> - SVG output
 
 =head1 VERSION
 
-Version 0.007
+Version 0.008
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 
 
 ###########################################################################
@@ -28,22 +28,8 @@ our $VERSION = '0.007';
 sub BUILD {
     my ($self, $args) = @_;
 
+    delete($args->{view_box});
     $self->_output(SVG->new(%$args));
-
-    $self->width($args->{width});
-    $self->height($args->{height});
-
-    if($args->{viewBox}) {
-	my $f = '[^\s\,]+';
-	my $w = '(?:\s+|\s*\,\*)';
-	if($args->{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
-	    $self->view_box([$1, $2, $3, $4]);
-	}
-	else { warn "Failed to parse viewBox attribute.\n"  }
-    }
-    else {
-	$self->view_box([0, 0, $args->{width}, $args->{height}]);
-    }
 }
 
 sub set_background {

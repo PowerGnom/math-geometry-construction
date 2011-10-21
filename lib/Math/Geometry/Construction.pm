@@ -63,6 +63,7 @@ sub draw {
 	? $type
 	: 'Math::Geometry::Construction::Draw::'.$type;
 
+    use Math::Geometry::Construction::Draw::SVG;
     eval "require $class" or croak "Unable to load output class $class";
 
     my $output = $self->_output($class->new(%args));

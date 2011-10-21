@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Draw> - base class for drawing
 
 =head1 VERSION
 
-Version 0.007
+Version 0.008
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 
 
 ###########################################################################
@@ -34,14 +34,31 @@ has 'output'    => (isa    => 'Item',
 		    is     => 'rw',
 		    writer => '_output');
 
-has 'width'     => (isa      => 'Str',
-		    is       => 'rw');
+has ['width', 'height'] => (isa      => 'Str',
+			    is       => 'ro',
+			    required => 1);
 
-has 'height'    => (isa      => 'Str',
-		    is       => 'rw');
+has 'view_box'  => (isa => 'ArrayRef[Str]',
+		    is  => 'ro');
 
-has 'view_box'  => (isa      => 'ArrayRef[Str]',
-		    is       => 'rw');
+sub BUILDARGS {
+    my ($class, %args) = @_;
+
+   if($args{viewBox}) {
+	my $f = '[^\s\,]+';
+	my $w = '(?:\s+|\s*\,\*)';
+	if($args{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
+	    $args{view_box} = [$1, $2, $3, $4];
+	}
+	else { warn "Failed to parse viewBox attribute.\n"  }
+    }
+    else {
+	$args{view_box} = [0, 0, $args{width}, $args{height}];
+    }
+
+    return \%args;
+}
+
 
 ###########################################################################
 #                                                                         #

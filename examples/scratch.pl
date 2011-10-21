@@ -136,6 +136,6 @@ my $rasterize = SVG::Rasterize->new();
 $rasterize->rasterize(svg => $svg);
 $rasterize->write(type => 'png', file_name => 'construction.png');
 
-my $tikz = $construction->draw('TikZ');
+my $tikz = $construction->draw('TikZ', width => 5, height => 5);
 my (undef, undef, $body) = Tikz->formatter(scale => 0.01)->render($tikz);
 print(join("\n", @$body), "\n");
