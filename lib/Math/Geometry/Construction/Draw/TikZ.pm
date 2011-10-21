@@ -22,15 +22,46 @@ our $VERSION = '0.008';
 
 ###########################################################################
 #                                                                         #
-#                            Generate Output                              #
+#                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+has 'scale_x'  => (isa     => 'Num',
+		   is      => 'rw',
+		   writer  => '_scale_x',
+		   default => 1);
+
+has 'scale_y'  => (isa     => 'Num',
+		   is      => 'rw',
+		   writer  => '_scale_y',
+		   default => 1);
+
+has 'offset_x' => (isa     => 'Num',
+		   is      => 'rw',
+		   writer  => '_offset_x',
+		   default => 0);
+
+has 'offset_y' => (isa     => 'Num',
+		   is      => 'rw',
+		   writer  => '_offset_y',
+		   default => 0);
+
 
 sub BUILD {
     my ($self, $args) = @_;
 
+    if(my $vb = $self->view_box) {
+	$self->_scale_x($self->width / $vb->[2]);
+    }
+
     $self->_output(Tikz->seq);
 }
+
+###########################################################################
+#                                                                         #
+#                            Generate Output                              #
+#                                                                         #
+###########################################################################
 
 sub set_background {
     my ($self, $color) = @_;
