@@ -136,6 +136,20 @@ my $rasterize = SVG::Rasterize->new();
 $rasterize->rasterize(svg => $svg);
 $rasterize->write(type => 'png', file_name => 'construction.png');
 
-my $tikz = $construction->draw('TikZ', width => 5, height => 5);
-my (undef, undef, $body) = Tikz->formatter(scale => 0.01)->render($tikz);
-print(join("\n", @$body), "\n");
+my $tikz = $construction->draw('TikZ',
+			       width    => 8,
+			       height   => 3,
+			       viewBox  => "0 0 800 300",
+			       svg_mode => 1);
+my (undef, undef, $body) = Tikz->formatter->render($tikz);
+my $string = sprintf("%s\n", join("\n", @$body));
+print $string;
+
+open(TIKZ, '>', 'construction.tex');
+print TIKZ <<END_OF_TEX;
+\\documentclass{article}
+\\usepackage{tikz}
+\\begin{document}
+$string\\end{document}
+END_OF_TEX
+close(TIKZ);

@@ -31,6 +31,11 @@ has 'scale_x'  => (isa     => 'Num',
 		   writer  => '_scale_x',
 		   default => 1);
 
+has 'transform' => (isa     => 'ArrayRef[Num]',
+		    is      => 'rw',
+		    writer  => '_transform',
+		    default => sub { [1, 1, 0, 0] });
+
 has 'scale_y'  => (isa     => 'Num',
 		   is      => 'rw',
 		   writer  => '_scale_y',
@@ -50,21 +55,20 @@ has 'svg_mode' => (isa     => 'Bool',
 		   is      => 'ro',
 		   default => 0);
 
+# TODO: Consider using builder instead for transform
 sub BUILD {
     my ($self, $args) = @_;
 
     if(my $vb = $self->view_box) {
-	$self->_scale_x($self->width / $vb->[2]);
-	$self->_scale_y($self->height / $vb->[3]);
-	$self->_offset_x(-$vb->[0] * $self->scale_x);
-	if($self->svg_mode) {
-	    $self->_offset_y($self->height + $vb->[1] * $self->scale_y);
-	}
-	else {
-	    $self->_offset_y(-$vb->[1] * $self->scale_y);
-	}
+	my $scale = [$self->width / $vb->[2],
+		     $self->height / $vb->[3]];
+	$self->_transform([@$scale,
+			   $vb->[0] * $scale->[0],
+			   $vb->[1] * $scale->[1]]);
     }
 
+    print "view_box: @{$self->view_box}\n";
+    print "transform: @{$self->transform}\n";
     $self->_output(Tikz->seq);
 }
 
@@ -74,6 +78,32 @@ sub BUILD {
 #                                                                         #
 ###########################################################################
 
+sub transform_coordinates {
+    my ($self, $x, $y) = @_;
+    my $transform      = $self->transform;
+
+    if($self->svg_mode) {
+	return($x * $transform->[0] + $transform->[2],
+	       $self->height - ($y * $transform->[1] + $transform->[3]));
+    }
+    else {
+	return($x * $transform->[0] + $transform->[2],
+	       $y * $transform->[1] + $transform->[3]);
+    }
+}
+
+sub transform_x_length {
+    my ($self, $l) = @_;
+
+    return($l * $self->transform->[0]);
+}
+
+sub transform_y_length {
+    my ($self, $l) = @_;
+
+    return($l * $self->transform->[1]);
+}
+
 sub set_background {
     my ($self, $color) = @_;
 }
@@ -81,22 +111,30 @@ sub set_background {
 sub line {
     my ($self, %args) = @_;
 
-    $self->output->add(Tikz->line([$args{x1}, $args{y1}],
-				  [$args{x2}, $args{y2}]));
+    $self->output->add
+	(Tikz->line([$self->transform_coordinates($args{x1}, $args{y1})],
+		    [$self->transform_coordinates($args{x2}, $args{y2})]));
 }
 
 sub circle {
     my ($self, %args) = @_;
 
-    $self->output->add(Tikz->circle([$args{cx}, $args{cy}],
-				    $args{r}));
+    my $content = sprintf
+	('(%f, %f) ellipse (%f and %f)',
+	 $self->transform_coordinates($args{cx}, $args{cy}),
+	 $self->transform_x_length($args{r}),
+	 $self->transform_y_length($args{r}));
+			  
+    $self->output->add(Tikz->raw($content));
 }
 
 sub text {
     my ($self, %args) = @_;
 
-    my $content = sprintf('(%f, %f) node {%s}',
-			  $args{x}, $args{y}, $args{text});
+    my $content = sprintf
+	('(%f, %f) node {%s}',
+	 $self->transform_coordinates($args{x}, $args{y}),
+	 $args{text});
     $self->output->add(Tikz->raw($content));
 }
 
