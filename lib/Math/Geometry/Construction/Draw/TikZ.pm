@@ -36,6 +36,10 @@ has 'svg_mode'  => (isa     => 'Bool',
 		    is      => 'ro',
 		    default => 0);
 
+has 'math_mode' => (isa     => 'Bool',
+		    is      => 'ro',
+		    default => 1);
+
 sub _build_transform {
     my ($self) = @_;
 
@@ -154,9 +158,11 @@ sub circle {
 
 sub text {
     my ($self, %args) = @_;
+    my $template      = $self->math_mode
+	? '(%f, %f) node {$%s$}' : '(%f, %f) node {%s}';
 
     my $content = sprintf
-	('(%f, %f) node {%s}',
+	($template,
 	 $self->transform_coordinates($args{x}, $args{y}),
 	 $args{text});
     $self->output->add(TikZ->raw($content));

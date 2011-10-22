@@ -29,7 +29,7 @@ sub intersection {
     my $p3 = $construction->add_point('x' => 200, 'y' => 50);
     my $p4 = $construction->add_point
 	('x' => 200, 'y' => 250,
-	 label          => "P4",
+	 label          => "P_4",
 	 label_offset_x => 7,
 	 label_offset_y => 10,
 	 label_style    => {'font-family' => 'Helvetica'});
