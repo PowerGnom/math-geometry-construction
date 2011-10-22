@@ -1,6 +1,7 @@
 Revision history for Math-Geometry-Construction
 
 0.008	 
+	 - initial support for TikZ output
 	 - fixes bug in PointOnLine with quantile
 
 0.007	 Wed Oct 19 20:44:11 NZDT 2011
