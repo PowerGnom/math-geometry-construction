@@ -139,7 +139,7 @@ $rasterize->write(type => 'png', file_name => 'construction.png');
 my $tikz = $construction->draw('TikZ',
 			       width    => 8,
 			       height   => 3,
-			       viewBox  => "0 0 800 300",
+			       view_box => [0, 0, 800, 300],
 			       svg_mode => 1);
 my (undef, undef, $body) = Tikz->formatter->render($tikz);
 my $string = sprintf("%s\n", join("\n", @$body));
