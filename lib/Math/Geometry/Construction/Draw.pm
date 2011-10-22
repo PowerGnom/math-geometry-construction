@@ -52,9 +52,8 @@ sub BUILDARGS {
 	}
 	else { warn "Failed to parse viewBox attribute.\n"  }
     }
-    else {
-	$args{view_box} = [0, 0, $args{width}, $args{height}];
-    }
+
+    $args{view_box} ||= [0, 0, $args{width}, $args{height}];
 
     return \%args;
 }
