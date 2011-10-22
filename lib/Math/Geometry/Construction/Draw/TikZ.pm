@@ -67,9 +67,19 @@ sub BUILD {
 			   $vb->[1] * $scale->[1]]);
     }
 
-    print "view_box: @{$self->view_box}\n";
-    print "transform: @{$self->transform}\n";
     $self->_output(Tikz->seq);
+
+=for later
+
+    # add clip and bounding box
+    my $rect = Tikz->rectangle(Tikz->point(0, 0),
+			       {$self->width, $self->height});
+    my $path = Tikz->path($rect);
+    $path->
+    $self->output->add($path);
+
+=cut
+
 }
 
 ###########################################################################
@@ -104,6 +114,28 @@ sub transform_y_length {
     return($l * $self->transform->[1]);
 }
 
+sub process_style {
+    my ($self, %style) = @_;
+    my $svg_mode       = $self->svg_mode;
+
+    if(exists($style{stroke})) {
+	$style{color} = $style{stroke} if($svg_mode);
+	delete($style{stroke});
+    }
+
+    # for some reason 'none' does not work although it should
+    if($style{color} and $style{color} eq 'none') {
+	if($style{fill} and $style{fill} ne 'none') {
+	    $style{color} = $style{fill};
+	}
+	else  {
+	    delete($style{color})
+	}
+    }
+
+    return %style;
+}
+
 sub set_background {
     my ($self, $color) = @_;
 }
@@ -111,21 +143,33 @@ sub set_background {
 sub line {
     my ($self, %args) = @_;
 
-    $self->output->add
-	(Tikz->line([$self->transform_coordinates($args{x1}, $args{y1})],
-		    [$self->transform_coordinates($args{x2}, $args{y2})]));
+    my $line = Tikz->line
+	([$self->transform_coordinates($args{x1}, $args{y1})],
+	 [$self->transform_coordinates($args{x2}, $args{y2})]);
+
+    my %style = $self->process_style(%{$args{style}});
+    while(my ($key, $value) = each(%style)) {
+	$line->mod(Tikz->raw_mod("$key=$value"));
+    }
+
+    $self->output->add($line);
 }
 
 sub circle {
     my ($self, %args) = @_;
 
-    my $content = sprintf
-	('(%f, %f) ellipse (%f and %f)',
-	 $self->transform_coordinates($args{cx}, $args{cy}),
-	 $self->transform_x_length($args{r}),
-	 $self->transform_y_length($args{r}));
-			  
-    $self->output->add(Tikz->raw($content));
+    my $raw = Tikz->raw
+	(sprintf('(%f, %f) ellipse (%f and %f)',
+		 $self->transform_coordinates($args{cx}, $args{cy}),
+		 $self->transform_x_length($args{r}),
+		 $self->transform_y_length($args{r})));
+	
+    my %style = $self->process_style(%{$args{style}});
+    
+    $raw->mod(Tikz->color($style{color})) if($style{color});
+    $raw->mod(Tikz->fill($style{fill}))   if($style{fill});
+
+    $self->output->add($raw);
 }
 
 sub text {
