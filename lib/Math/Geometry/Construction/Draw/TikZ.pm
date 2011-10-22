@@ -26,30 +26,10 @@ our $VERSION = '0.008';
 #                                                                         #
 ###########################################################################
 
-has 'scale_x'  => (isa     => 'Num',
-		   is      => 'rw',
-		   writer  => '_scale_x',
-		   default => 1);
-
 has 'transform' => (isa     => 'ArrayRef[Num]',
 		    is      => 'rw',
 		    writer  => '_transform',
 		    default => sub { [1, 1, 0, 0] });
-
-has 'scale_y'  => (isa     => 'Num',
-		   is      => 'rw',
-		   writer  => '_scale_y',
-		   default => 1);
-
-has 'offset_x' => (isa     => 'Num',
-		   is      => 'rw',
-		   writer  => '_offset_x',
-		   default => 0);
-
-has 'offset_y' => (isa     => 'Num',
-		   is      => 'rw',
-		   writer  => '_offset_y',
-		   default => 0);
 
 has 'svg_mode' => (isa     => 'Bool',
 		   is      => 'ro',
