@@ -5,7 +5,7 @@ extends 'Math::Geometry::Construction::Draw';
 use 5.008008;
 
 use Carp;
-use LaTeX::TikZ;
+use LaTeX::TikZ as => 'TikZ';
 
 =head1 NAME
 
@@ -29,37 +29,37 @@ our $VERSION = '0.008';
 has 'transform' => (isa     => 'ArrayRef[Num]',
 		    is      => 'rw',
 		    writer  => '_transform',
-		    default => sub { [1, 1, 0, 0] });
+		    lazy    => 1,
+		    builder => '_build_transform');
 
-has 'svg_mode' => (isa     => 'Bool',
-		   is      => 'ro',
-		   default => 0);
+has 'svg_mode'  => (isa     => 'Bool',
+		    is      => 'ro',
+		    default => 0);
 
-# TODO: Consider using builder instead for transform
-sub BUILD {
-    my ($self, $args) = @_;
+sub _build_transform {
+    my ($self) = @_;
 
     if(my $vb = $self->view_box) {
 	my $scale = [$self->width / $vb->[2],
 		     $self->height / $vb->[3]];
-	$self->_transform([@$scale,
-			   $vb->[0] * $scale->[0],
-			   $vb->[1] * $scale->[1]]);
+	return([@$scale,
+		$vb->[0] * $scale->[0],
+		$vb->[1] * $scale->[1]]);
     }
+    else { return [1, 1, 0, 0] }
+}
 
-    $self->_output(Tikz->seq);
+sub BUILD {
+    my ($self, $args) = @_;
+    my $transform     = $self->transform;
+    my $seq           = TikZ->seq;
 
-=for later
-
-    # add clip and bounding box
-    my $rect = Tikz->rectangle(Tikz->point(0, 0),
-			       {$self->width, $self->height});
-    my $path = Tikz->path($rect);
-    $path->
-    $self->output->add($path);
-
-=cut
-
+    # add clip
+    my $rect = TikZ->rectangle
+	(TikZ->point(0, 0),
+	 TikZ->point($self->width, $self->height));
+    $seq->clip(TikZ->path($rect));
+    $self->_output($seq);
 }
 
 ###########################################################################
@@ -123,13 +123,13 @@ sub set_background {
 sub line {
     my ($self, %args) = @_;
 
-    my $line = Tikz->line
+    my $line = TikZ->line
 	([$self->transform_coordinates($args{x1}, $args{y1})],
 	 [$self->transform_coordinates($args{x2}, $args{y2})]);
 
     my %style = $self->process_style(%{$args{style}});
     while(my ($key, $value) = each(%style)) {
-	$line->mod(Tikz->raw_mod("$key=$value"));
+	$line->mod(TikZ->raw_mod("$key=$value"));
     }
 
     $self->output->add($line);
@@ -138,7 +138,7 @@ sub line {
 sub circle {
     my ($self, %args) = @_;
 
-    my $raw = Tikz->raw
+    my $raw = TikZ->raw
 	(sprintf('(%f, %f) ellipse (%f and %f)',
 		 $self->transform_coordinates($args{cx}, $args{cy}),
 		 $self->transform_x_length($args{r}),
@@ -146,8 +146,8 @@ sub circle {
 	
     my %style = $self->process_style(%{$args{style}});
     
-    $raw->mod(Tikz->color($style{color})) if($style{color});
-    $raw->mod(Tikz->fill($style{fill}))   if($style{fill});
+    $raw->mod(TikZ->color($style{color})) if($style{color});
+    $raw->mod(TikZ->fill($style{fill}))   if($style{fill});
 
     $self->output->add($raw);
 }
@@ -159,7 +159,7 @@ sub text {
 	('(%f, %f) node {%s}',
 	 $self->transform_coordinates($args{x}, $args{y}),
 	 $args{text});
-    $self->output->add(Tikz->raw($content));
+    $self->output->add(TikZ->raw($content));
 }
 
 1;
