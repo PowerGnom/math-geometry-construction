@@ -136,7 +136,7 @@ sub add_derived_point {
     my ($self, $class, $derivate_args, $point_args) = @_;
 
     my $derivate = $self->add_derivate($class, %$derivate_args);
-    return $derivate->create_derived_point($point_args);
+    return $derivate->create_derived_point(%$point_args);
 }
 
 1;
