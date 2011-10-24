@@ -45,7 +45,7 @@ has 'derivate'          => (isa      => 'Item',
 has 'position_selector' => (isa      => 'ArrayRef[Item]',
 			    is       => 'ro',
 			    reader   => '_position_selector',
-			    default  => sub { ['indexed_point', [0]] },
+			    default  => sub { ['indexed_position', [0]] },
 			    required => 1);
 
 has 'radius'            => (isa     => 'Num',
