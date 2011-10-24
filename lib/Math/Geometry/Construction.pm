@@ -132,6 +132,13 @@ sub add_derivate {
 	('Math::Geometry::Construction::Derivate::'.$class, @args);
 }
 
+sub add_derived_point {
+    my ($self, $class, $derivate_args, $point_args) = @_;
+
+    my $derivate = $self->add_derivate($class, %$derivate_args);
+    return $derivate->create_derived_point($point_args);
+}
+
 1;
 
 
@@ -403,6 +410,8 @@ instead of
   $construction->add_object
       ('Math::Geometry::Construction::Derivate::IntersectionCircleLine', %args)
 
+
+=head3 add_derived_point
 
 =head3 draw
 
