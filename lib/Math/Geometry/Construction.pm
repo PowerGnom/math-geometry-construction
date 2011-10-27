@@ -7,11 +7,6 @@ use Moose;
 use Math::VectorReal;
 use SVG;
 
-use Math::Geometry::Construction::Point;
-use Math::Geometry::Construction::Line;
-use Math::Geometry::Construction::Circle;
-use Math::Geometry::Construction::DerivedPoint;
-
 =head1 NAME
 
 C<Math::Geometry::Construction> - intersecting lines and circles
@@ -97,6 +92,8 @@ sub as_svg { return(shift(@_)->draw('SVG', @_)) }
 
 sub add_object {
     my ($self, $class, @args) = @_;
+
+    eval "require $class" or croak "Unable to load module $class: $!";
 
     my $object = $class->new(order_index  => $self->count_objects, 
 			     construction => $self,
