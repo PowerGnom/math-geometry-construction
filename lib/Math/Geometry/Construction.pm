@@ -410,6 +410,29 @@ instead of
 
 =head3 add_derived_point
 
+  $construction->add_derived_point($class, $derivate_args, $point_args)
+
+Combines the creation of a C<Derivate> object and a C<DerivedPoint>
+object in one step. This is particularly useful if the derivate only
+holds one point, e.g. the intersection of two lines, a translated
+point, a point on a line etc..
+
+The method expects three parameters:
+
+=over 4
+
+=item 1. the derivate class
+
+=item 2. a hash reference with arguments for the constructor of
+L<Math::Geometry::Construction::Derivate|Math::Geometry::Construction::Derivate>
+
+=item 3. a hash reference with arguments for the constructor of
+L<Math::Geometry::Construction::DerivedPoint|Math::Geometry::Construction::DerivedPoint>
+
+=back
+
+Returns the C<DerivedPoint> object.
+
 =head3 draw
 
   $construction->draw('SVG', %args)
