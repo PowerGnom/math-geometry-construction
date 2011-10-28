@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Draw> - base class for drawing
 
 =head1 VERSION
 
-Version 0.008
+Version 0.009
 
 =cut
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 
 ###########################################################################
@@ -30,16 +30,16 @@ our $VERSION = '0.008';
 #                                                                         #
 ###########################################################################
 
-has 'output'    => (isa    => 'Item',
-		    is     => 'rw',
-		    writer => '_output');
+has 'output'            => (isa    => 'Item',
+			    is     => 'rw',
+			    writer => '_output');
 
 has ['width', 'height'] => (isa      => 'Str',
 			    is       => 'ro',
 			    required => 1);
 
-has 'view_box'  => (isa => 'ArrayRef[Str]',
-		    is  => 'ro');
+has 'view_box'          => (isa => 'ArrayRef[Str]',
+			    is  => 'ro');
 
 sub BUILDARGS {
     my ($class, %args) = @_;
