@@ -82,7 +82,9 @@ sub draw {
     return $output->output;
 }
 
-sub as_svg { return(shift(@_)->draw('SVG', @_)) }
+sub as_svg  { return(shift(@_)->draw('SVG', @_)) }
+
+sub as_tikz { return(shift(@_)->draw('TikZ', @_)) }
 
 ###########################################################################
 #                                                                         #
@@ -462,6 +464,19 @@ If a L<background color|/background> is specified then a rectangle
 of of that color is drawn as background. The size is taken from the
 C<viewBox> attribute if specified, from C<width> and C<height>
 otherwise. If none is given, no background is drawn.
+
+=head3 as_tikz
+
+  $construction->as_tikz(%args)
+  $construction->draw('TikZ', %args)
+
+Shortcut for L<draw|/draw>. Returns an L<LaTeX|LaTeX> sequence
+object representing the construction. See
+L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>
+and
+L<Math::Geometry::Construction::Draw::TikZ|Math::Geometry::Construction::Draw::TikZ>
+for supported parameters. At least C<width> and C<height> should be
+provided.
 
 =head1 DIAGNOSTICS
 
