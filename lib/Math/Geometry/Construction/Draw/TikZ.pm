@@ -179,6 +179,32 @@ __END__
 
 =pod
 
+=head1 SYNOPSIS
+
+  use Math::Geometry::Construction;
+
+  my $construction = Math::Geometry::Construction->new;
+  my $p1 = $construction->add_point('x' => 100, 'y' => 150);
+  my $p2 = $construction->add_point('x' => 130, 'y' => 110);
+
+  my $l1 = $construction->add_line(extend  => 10,
+				   support => [$p1, $p2]);
+
+  my $tikz = $construction->as_tikz(width    => 8,
+                                    height   => 3,
+                                    view_box => [0, 0, 800, 300],
+                                    svg_mode => 1);
+
+  my (undef, undef, $body) = Tikz->formatter->render($tikz);
+  my $string = sprintf("%s\n", join("\n", @$body));
+
+  print <<END_OF_TEX;
+  \\documentclass{article}
+  \\usepackage{tikz}
+  \\begin{document}
+  $string\\end{document}
+  END_OF_TEX
+
 =head1 DESCRIPTION
 
 This class implements the
@@ -187,6 +213,9 @@ interface in order to generate C<TikZ> code to be used in
 C<LaTeX>. It is instantiated by the L<draw
 method|Math::Geometry::Construction/draw> in
 C<Math::Geometry::Construction>.
+
+The output created by this class will be a
+C<LaTeX::TikZ::Set::Sequence> object. See C<SYNOPSIS>.
 
 Key/value pairs in the style settings of lines, circles etc. are
 translated into C<raw_mod> calls
