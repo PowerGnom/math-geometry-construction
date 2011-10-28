@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Draw::TikZ> - TikZ output
 
 =head1 VERSION
 
-Version 0.008
+Version 0.009
 
 =cut
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 
 ###########################################################################
@@ -149,9 +149,9 @@ sub circle {
 		 $self->transform_y_length($args{r})));
 	
     my %style = $self->process_style(%{$args{style}});
-    
-    $raw->mod(TikZ->color($style{color})) if($style{color});
-    $raw->mod(TikZ->fill($style{fill}))   if($style{fill});
+    while(my ($key, $value) = each(%style)) {
+	$raw->mod(TikZ->raw_mod("$key=$value"));
+    }
 
     $self->output->add($raw);
 }
@@ -165,7 +165,12 @@ sub text {
 	($template,
 	 $self->transform_coordinates($args{x}, $args{y}),
 	 $args{text});
-    $self->output->add(TikZ->raw($content));
+    my $raw = TikZ->raw($content);
+    my %style = $self->process_style(%{$args{style}});
+    while(my ($key, $value) = each(%style)) {
+	$raw->mod(TikZ->raw_mod("$key=$value"));
+    }
+    $self->output->add($raw);
 }
 
 1;
