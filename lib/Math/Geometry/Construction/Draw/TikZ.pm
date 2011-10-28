@@ -179,19 +179,55 @@ __END__
 
 =pod
 
-=head1 SYNOPSIS
-
-
 =head1 DESCRIPTION
 
+This class implements the
+L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>
+interface in order to generate C<TikZ> code to be used in
+C<LaTeX>. It is instantiated by the L<draw
+method|Math::Geometry::Construction/draw> in
+C<Math::Geometry::Construction>.
+
+Key/value pairs in the style settings of lines, circles etc. are
+translated into C<raw_mod> calls
+
+    while(my ($key, $value) = each(%style)) {
+	$raw->mod(TikZ->raw_mod("$key=$value"));
+    }
+
+See L<LaTeX::TikZ|LaTeX::TikZ> if you want to know what this code
+exactly does. Anyway, the important part is that you should be able
+to use any modifier that C<TikZ> understands. See also
+C<svg_mode|/svg_mode>.
 
 =head1 INTERFACE
 
 =head2 Public Attributes
 
-=head2 Methods for Users
+=head3 svg_mode
 
-=head2 Methods for Subclass Developers
+Defaults to C<0>. If set to a true value, C<SVG> style attributes
+are mapped to C<TikZ> attributes internally. The idea behind this is
+that you might want to use the same construction including style
+settings for both C<SVG> and C<TikZ> export. This feature is
+experimental and will probably never cover the full C<SVG> and/or
+C<TikZ> functionality.
+
+Currently, only C<stroke> is mapped to C<color>, and this is done
+literally. It will therefore only work for named colors which exist
+in both output formats.
+
+=head3 math_mode
+
+Defaults to C<0>. If set to a true value, all text is printed in
+C<LaTeX>'s math mode. Again, this is to enable the same code to be
+used for C<TikZ> along side other output formats while still
+typesetting labels in math mode.
+
+=head2 Methods
+
+See
+L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>.
 
 =head1 DIAGNOSTICS
 
@@ -202,7 +238,25 @@ __END__
 
 =head1 BUGS AND LIMITATIONS
 
-No bugs have been reported. Please report all bugs directly to the author.
+Please report any bugs or feature requests to
+C<bug-math-geometry-construction at rt.cpan.org>, or through the web
+interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Math-Geometry-Construction>.
+I will be notified, and then you will automatically be notified of
+progress on your bug as I make changes.
+
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<LaTeX::TikZ|LaTeX::TikZ>
+
+=item * L<http://en.wikipedia.org/wiki/PGF/TikZ>
+
+=item * L<http://www.ctan.org/tex-archive/graphics/pgf/base/doc/generic/pgf>
+
+=back
 
 
 =head1 AUTHOR
