@@ -27,8 +27,7 @@ our $VERSION = '0.009';
 ###########################################################################
 
 has 'transform' => (isa     => 'ArrayRef[Num]',
-		    is      => 'rw',
-		    writer  => '_transform',
+		    is      => 'ro',
 		    lazy    => 1,
 		    builder => '_build_transform');
 
