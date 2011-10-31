@@ -135,7 +135,7 @@ sub add_derived_point {
     my ($self, $class, $derivate_args, $point_args) = @_;
 
     my $derivate = $self->add_derivate($class, %$derivate_args);
-    return $derivate->create_derived_point(%$point_args);
+    return $derivate->create_derived_point(%{$point_args || {}});
 }
 
 1;
@@ -428,11 +428,50 @@ The method expects three parameters:
 L<Math::Geometry::Construction::Derivate|Math::Geometry::Construction::Derivate>
 
 =item 3. a hash reference with arguments for the constructor of
-L<Math::Geometry::Construction::DerivedPoint|Math::Geometry::Construction::DerivedPoint>
+L<Math::Geometry::Construction::DerivedPoint|Math::Geometry::Construction::DerivedPoint>; this argument is optional, if not defined it is replaced by an empty hash reference
 
 =back
 
 Returns the C<DerivedPoint> object.
+
+Example:
+
+  $derived_point = $construction->add_derived_point
+      ('IntersectionLineLine',
+       {input      => [$line1, $line2]},
+       {position_selector => ['indexed_point', [0]]});
+
+In this example, the last hash reference can be omitted:
+
+  $derived_point = $construction->add_derived_point
+      ('IntersectionLineLine', {input => [$line1, $line2]});
+
+The missing hash reference is replaced by an empty hash reference,
+and the constructor of the C<DerivedPoint> object uses the default
+position selector C<['indexed_point', [0]]>.
+
+If multiple derived points based on the same derivative are desired
+then the third argument for C<add_derived_point> can be replaced by
+the reference to an array of hash references each of which holds the
+parameters for one of the points. A list of C<DerivedPoint> objects
+is returned.
+
+Example:
+
+  use Math::VectorReal;
+
+  @derived_points = $construction->add_derived_point
+      ('IntersectionCircleLine',
+       {input      => [$circle, $line]},
+       [{position_selector => ['extreme_point', [vector(0, -1, 0)]]},
+        {position_selector => ['extreme_point', [vector(0,  1, 0)]]}]);
+
+In this case, we ask for the two intersection points between a
+circle and a line. The C<extreme_point> position selector will give
+as the most extreme of the intersection points in the given
+direction. Therefore, in C<SVG> coordinates, C<$derived_points[0]>
+will hold the "northern", C<$derived_points[1]> the "southern"
+intersection point.
 
 =head3 draw
 
