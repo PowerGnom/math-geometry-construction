@@ -15,11 +15,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.007
+Version 0.009
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.009';
 
 
 ###########################################################################
@@ -132,21 +132,63 @@ __END__
 
 =head1 SYNOPSIS
 
+  my $p1 = $construction->add_point('x' => 100, 'y' => 90);
+  my $p2 = $construction->add_point('x' => 120, 'y' => 150);
+  my $l1 = $construction->add_line(support => [$p1, $p2]);
+
+  my $p3 = $construction->add_point('x' => 200, 'y' => 50);
+  my $p4 = $construction->add_point('x' => 250, 'y' => 50);
+
+  my $l2 = $construction->add_line(support        => [$p3, $p4],
+                                   extend         => 10,
+                                   label          => 'g',
+				   label_offset_y => 13);
+
 
 =head1 DESCRIPTION
+
+An instance of this class represents a line defined by two points.
+The points can be either points defined directly by the user
+(L<Math::Geometry::Construction::Point|Math::Geometry::Construction::Point>
+objects) or so-called derived points
+(L<Math::Geometry::Construction::DerivedPoint|Math::Geometry::Construction::DerivedPoint>
+objects), e.g. intersection points. This class is not supposed to be
+instantiated directly. Use the L<add_line
+method|Math::Geometry::Construction/add_line> of
+C<Math::Geometry::Construction> instead.
 
 
 =head1 INTERFACE
 
 =head2 Public Attributes
 
-=head2 Methods for Users
+=head3 support
 
-=head2 Methods for Subclass Developers
+Holds an array reference of the two points that define the line.
+Must be given to the constructor and should not be touched
+afterwards (the points can change their positions, of course). Must
+hold exactly two points (this is currently not checked, but expected
+e.g. during intersections).
 
-=head3 as_svg
+=head3 extend
+
+Often it looks nicer if the visual representation of a line extends
+somewhat beyond its end points. The length of this extent is set
+here. Defaults to C<0>.
+
+=head2 Methods
+
+=head3 draw
+
+Called by the C<Construction> object during output generation.
+Draws a line between the most extreme points on this line
+(including both support points and points derived from this line).
+The line is extended by length of L<extend|/extend> beyond these
+points.
 
 =head3 id_template
+
+Class method returning C<$ID_TEMPLATE>, which defaults to C<'L%09d'>.
 
 =head1 DIAGNOSTICS
 
