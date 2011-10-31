@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.007
+Version 0.009
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.009';
 
 
 ###########################################################################
@@ -33,6 +33,10 @@ has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
 			     handles => {points_of_interest => 'elements',
 					 add_poi            => 'push'});
 
+has 'hidden'             => (isa     => 'Bool',
+			     is      => 'rw',
+			     default => 0);
+
 has 'label'              => (isa       => 'Item',
 			     is        => 'rw',
 			     clearer   => 'clear_label',
@@ -43,10 +47,6 @@ has 'label_offset_x'     => (isa     => 'Num',
 			     default => 0);
 
 has 'label_offset_y'     => (isa     => 'Num',
-			     is      => 'rw',
-			     default => 0);
-
-has 'hidden'             => (isa     => 'Bool',
 			     is      => 'rw',
 			     default => 0);
 
@@ -100,19 +100,91 @@ __END__
 
 =pod
 
-=head1 SYNOPSIS
-
-
 =head1 DESCRIPTION
 
+This role provides attributes and methods that are common to all
+classes which actually draw something.
 
 =head1 INTERFACE
 
 =head2 Public Attributes
 
-=head2 Methods for Users
+=head3 hidden
 
-=head2 Methods for Subclass Developers
+If set to a true value, the respective object does not create any
+drawing output.
+
+=head3 style
+
+Hash reference with style settings. You can get the reference using
+the C<style_hash> accessor. However, the recommended way to set
+arguments after construction is to use the C<style> accessor to
+access single entries of the hash. (For people familiar with
+L<Moose|Moose>, this is the C<accessor> method of the C<Hash>
+trait.)
+
+Example:
+
+  $point->style(fill => 'red') if(!$point->style('fill'));
+
+The valid keys and values depend on the output type. From the point
+of view of C<Math::Geometry::Construction>, any defined strings for
+keys and values are allowed. For C<SVG> output, the hash is handed
+over as a style hash to the respective element (see L<SVG|SVG>). For
+C<TikZ> output, the style settings are realized by C<raw_mod> calls
+(see L<LaTeX::TikZ|LaTeX::TikZ>.
+
+=head2 Labels
+
+A label is a little piece of text next to an object. The default
+text anchor for the label is provided by the class consuming this
+role. The positioning of the label is a tricky task. For example,
+should the label of a point be printed left of right of the point,
+above or below etc.? - Ideally, wherever is most space left by lines
+and circles crossing that point. Obviously, the extension of the
+label's bounding box has to be taken into account.
+
+So far, I have not come up with a very convincing concept for
+achieving this. At the moment, the label positions provided by the
+objects are very primitive. For example, for a point, it is just the
+position of the point itself. This looks very ugly and has to be
+corrected by setting L<label_offset_x|/label_offset_x> and/or
+L<label_offset_y|/label_offset_y>. In the future, these might be
+estimated if not set by the user. Also possibly, the user might be
+able to provide some kind of direction and the distance is
+calculated automatically. All I can say at the moment is that label
+positioning is prone to change and that currently, you will only get
+decently looking results if you set the C<offset> values yourself.
+
+=head3 label
+
+Holds the label text. If not set nothing is drawn. If C<undef> the
+empty string is drawn. Usually there will be no visible
+difference. However, to really disable label output, call the
+C<clear_label> method instead of setting the label to C<undef>.
+
+=head3 label_offset_x
+
+Offset in x direction.
+
+=head3 label_offset_y
+
+Offset in y direction.
+
+=head3 label_style
+
+Style settings for the label. The comments for the L<style|/style>
+attribute also apply here.
+
+=head2 Methods
+
+=head3 draw_label
+
+Draws the label. Called by objects that have consumed this role.
+
+=head2 Attributes and Methods for Developers
+
+=head3 points_of_interest
 
 =head1 DIAGNOSTICS
 
