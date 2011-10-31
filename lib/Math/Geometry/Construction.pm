@@ -255,6 +255,16 @@ in a finite number of points, it fits into this concept.
 
 =head2 Output
 
+=head3 Output Formats
+
+The current output formats are C<SVG> and C<TikZ>. Especially the
+latter one is experimental and the interface might change in future
+versions. Other output engines could be written by subclassing
+L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>.
+However, documentation of the interface is not available, yet.
+
+=head3 How much to draw?
+
 Each line or similar object holds a number of "points of
 interest". These are - in case of the line - the two points that
 define the line and all intersection points the line is involved
@@ -264,15 +274,6 @@ C<extend> attribute allows to extend the line for a given length
 beyond these points because this often looks better. A similar
 concept will be implemented for circles, but currently, the full
 circle is drawn.
-
-Currently, the only output format is C<SVG>. I plan to implement
-C<LaTeX> output based on C<PGF/TikZ>, but I will have to learn how
-to use that package first.
-
-Eventually, the output generation should be based on some kind of
-plugin interface that allows to implement other output
-formats. Therefore, everything concerned with output generation is
-particularly prone to future API changes.
 
 =head2 Current Status
 
@@ -286,8 +287,6 @@ primitive and unsatisfactory withouth polishing by the user.
 =over 4
 
 =item * Extend documentation
-
-=item * pgf/tikz output
 
 =item * Improve performance
 
@@ -314,9 +313,10 @@ attributes. This is the default L<Moose|Moose> constructor.
 =head3 background
 
 By default the background is transparent. This attribute can hold a
-color to hold instead. Possible values depend on the output
+color to be used instead. Possible values depend on the output
 type. For C<SVG>, it can hold any valid C<SVG> color specifier,
-e.g. C<white> or C<rgb(255, 255, 255)>.
+e.g. C<white> or C<rgb(255, 255, 255)>. C<TikZ> currently ignores
+the C<background> attribute.
 
 =head3 objects
 
