@@ -191,9 +191,8 @@ This distribution serves two purposes:
 
 =item * Carrying out geometric constructions like with compass and
 straight edge. You can define points, lines through two points, and
-(in the future) circles around a given center and through a given
-point. You can let these objects intersect to gain new points to
-work with.
+circles around a given center and through a given point. You can let
+these objects intersect to gain new points to work with.
 
 =item * Creating illustrations for geometry. This task is similar to
 the one above, but not the same. For illustrations, the priorities
