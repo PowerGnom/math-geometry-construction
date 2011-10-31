@@ -118,10 +118,18 @@ sub derivates {
 					support => $p04);
 }
 
+sub convenience {
+    my $p01 = $construction->add_point('x' => 700, 'y' => 100);
+    my $p02 = $construction->add_derived_point
+	('TranslatedPoint', {input      => [$p01],
+			     translator => vector(0, -10, 0)});
+}
+
 line;
 intersection;
 circle;
 derivates;
+convenience;
 
 # width/height are on purpose not proportional to those of the
 # construction; this is to show how you can hand over SVG
