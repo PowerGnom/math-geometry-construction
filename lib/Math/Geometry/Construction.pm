@@ -365,6 +365,11 @@ L<Math::Geometry::Construction::Point|Math::Geometry::Construction::Point>.
 All parameters are handed over to the constructor after adding the
 C<construction> and C<order_index> arguments.
 
+Example:
+
+  $construction->add_point('x' => 10, 'y' => 20,
+                           style => {stroke => 'red'});
+
 =head3 add_line
 
   $construction->add_line(%args)
@@ -374,6 +379,11 @@ L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>.
 All parameters are handed over to the constructor after adding the
 C<construction> and C<order_index> arguments.
 
+Example:
+
+  $construction->add_line(support => [$point1, $point2],
+                          extend  => 10);
+
 =head3 add_circle
 
   $construction->add_circle(%args)
@@ -382,6 +392,11 @@ Returns a new
 L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>.
 All parameters are handed over to the constructor after adding the
 C<construction> and C<order_index> arguments.
+
+Example:
+
+  $construction->add_circle(center  => $point1,
+                            support => $point1);
 
 =head3 add_object
 
@@ -395,7 +410,7 @@ method with the appropriate class.
 
 =head3 add_derivate
 
-  $constructor->add_derivate($class, %args)
+  $construction->add_derivate($class, %args)
 
 Convenience shortcut for L<add_object|/add_object>. The only
 difference is that C<$class> is prepended with
@@ -408,6 +423,12 @@ instead of
   $construction->add_object
       ('Math::Geometry::Construction::Derivate::IntersectionCircleLine', %args)
 
+
+Example:
+
+  $construction->add_derivate('TranslatedPoint',
+                              input      => [$point1],
+                              translator => vector(10, -20, 0));
 
 =head3 add_derived_point
 
