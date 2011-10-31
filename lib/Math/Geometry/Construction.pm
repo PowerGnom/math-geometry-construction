@@ -58,8 +58,10 @@ sub draw {
 	? $type
 	: 'Math::Geometry::Construction::Draw::'.$type;
 
-    use Math::Geometry::Construction::Draw::SVG;
-    eval "require $class" or croak "Unable to load output class $class";
+    if($class =~ /^\s*[A-Za-z0-9\_\:]+\s*$/) {
+	eval "require $class" or croak "Unable to load module $class: $!";
+    }
+    else { croak "Class name $class did not pass regex check" }
 
     my $output = $self->_output($class->new(%args));
 
@@ -95,8 +97,11 @@ sub as_tikz { return(shift(@_)->draw('TikZ', @_)) }
 sub add_object {
     my ($self, $class, @args) = @_;
 
-    eval "require $class" or croak "Unable to load module $class: $!";
-
+    if($class =~ /^\s*[A-Za-z0-9\_\:]+\s*$/) {
+	eval "require $class" or croak "Unable to load module $class: $!";
+    }
+    else { croak "Class name $class did not pass regex check" }
+    
     my $object = $class->new(order_index  => $self->count_objects, 
 			     construction => $self,
 			     @args);
