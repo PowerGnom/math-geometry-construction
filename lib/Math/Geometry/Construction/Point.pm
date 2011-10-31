@@ -130,7 +130,10 @@ __END__
 
 An instance of this class represents a user defined free point, as
 opposed to a derived point, e.g. an intersection point. An instance
-of this class got its position directly from the user.
+of this class got its position directly from the user. It is created
+by using the L<add_point
+method|Math::Geometry::Construction/add_point> of
+C<Math::Geometry::Construction>.
 
 =head1 INTERFACE
 
