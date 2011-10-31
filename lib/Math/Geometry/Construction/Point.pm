@@ -114,9 +114,23 @@ __END__
 
 =head1 SYNOPSIS
 
+  my $p1 = $construction->add_point('x' => 100, 'y' => 150);
+
+  my $p2 = $construction->add_point('x' => 50, 'y' => 90,
+                                    hidden => 1);
+
+  my $p3 = $construction->add_point('x' => 50, 'y' => 90,
+                                    style          => {stroke => 'red'},
+                                    label          => 'A',
+	                            label_offset_x => 5,
+	                            label_offset_y => -5);
+
 
 =head1 DESCRIPTION
 
+An instance of this class represents a user defined free point, as
+opposed to a derived point, e.g. an intersection point. An instance
+of this class got its position directly from the user.
 
 =head1 INTERFACE
 
