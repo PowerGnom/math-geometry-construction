@@ -1,6 +1,10 @@
 Revision history for Math-Geometry-Construction
 
-0.009	 
+0.010	 
+	 This is a bugfix release, fixing two unprotected eval
+	 statements.
+
+0.009	 Mon Oct 31 20:00:38 NZDT 2011
 	 - 'radius' attribute of Math::Geometry::Construction::Point
 	   is deprecated in favour of 'size'
 	 - some convenience changes like default values and the
