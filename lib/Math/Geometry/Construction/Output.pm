@@ -132,7 +132,7 @@ of view of C<Math::Geometry::Construction>, any defined strings for
 keys and values are allowed. For C<SVG> output, the hash is handed
 over as a style hash to the respective element (see L<SVG|SVG>). For
 C<TikZ> output, the style settings are realized by C<raw_mod> calls
-(see L<LaTeX::TikZ|LaTeX::TikZ>.
+(see L<LaTeX::TikZ|LaTeX::TikZ>).
 
 =head2 Labels
 
