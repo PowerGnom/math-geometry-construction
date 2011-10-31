@@ -227,7 +227,7 @@ intersection point and which the second, so from the user point of
 view the choice is arbitrary. Or, for example, I have come across
 the situation where I needed to double an angle iteratively until it
 becomes larger than a given angle. Impossible in most macro
-languates. With this module, you have Perl as your "macro language".
+languages. With this module, you have Perl as your "macro language".
 
 =back
 
