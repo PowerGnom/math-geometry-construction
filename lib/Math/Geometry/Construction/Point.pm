@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Point> - a free user-defined point
 
 =head1 VERSION
 
-Version 0.007
+Version 0.009
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.009';
 
 
 ###########################################################################
@@ -38,13 +38,24 @@ sub id_template { return $ID_TEMPLATE }
 with 'Math::Geometry::Construction::Object';
 with 'Math::Geometry::Construction::Output';
 
-has 'position'    => (isa      => 'Math::VectorReal',
-		      is       => 'rw',
-		      required => 1);
+has 'position' => (isa      => 'Math::VectorReal',
+	           is       => 'rw',
+	           required => 1);
 
-has 'radius'      => (isa     => 'Num',
-		      is      => 'rw',
-		      default => 3);
+has 'size'     => (isa     => 'Num',
+	           is      => 'rw');
+
+has 'radius'   => (isa     => 'Num',
+	           is      => 'rw',
+		   trigger => \&_radius_trigger,
+	           default => 3);
+
+sub _radius_trigger {
+    warn("The 'radius' attribute of Math::Geometry::Construction::Point ".
+	 "is deprecated and might be removed in a future version. Use ".
+	 "'size' with the double value (diameter of the circle) ".
+	 "instead.\n");
+}
 
 sub BUILDARGS {
     my ($class, %args) = @_;
@@ -74,9 +85,11 @@ sub draw {
     return undef if $self->hidden;
 
     my $position = $self->position;
+    my $size     = $self->size;
+    my $radius   = defined($size) ? $size / 2 : $self->radius;
     $self->construction->draw_circle(cx    => $position->x,
 				     cy    => $position->y,
-				     r     => $self->radius,
+				     r     => $radius,
 				     style => $self->style_hash,
 				     id    => $self->id);
 
@@ -109,11 +122,31 @@ __END__
 
 =head2 Public Attributes
 
-=head2 Methods for Users
+=head3 position
 
-=head2 Methods for Subclass Developers
+Holds a L<Math::VectorReal|Math::VectorReal> object with the
+position of the point. The C<z> position is expected to be C<0>. As
+initialization arguments to the constructor, you can give C<x> and
+C<y> with numerical values instead of position with a
+C<Math::VectorReal> value. The object is then created by the
+constructor.
 
-=head3 as_svg
+=head3 size
+
+A point is currently always drawn as a circle. This might become
+more flexible in the future. C<size> determines the size of the
+point in the output. For a circle it is its diameter.
+
+=head3 radius
+
+This attribute is deprecated and might be removed in a future
+version. If L<size|/size> is not set then this attribute determines
+the radius of the output circle.
+
+
+=head2 Methods
+
+=head3 draw
 
 =head3 id_template
 
