@@ -166,7 +166,13 @@ L<Math::Geometry::Construction::Output|Math::Geometry::Construction::Output>.
 
 =head3 draw
 
+Called by the C<Construction> object during output generation.
+Currently draws a circle of diameter L<size|/size>, but this might
+become more flexible in the future.
+
 =head3 id_template
+
+Class method returning C<$ID_TEMPLATE>, which defaults to C<'P%09d'>.
 
 =head1 DIAGNOSTICS
 
