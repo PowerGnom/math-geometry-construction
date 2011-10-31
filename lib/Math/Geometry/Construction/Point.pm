@@ -119,7 +119,7 @@ __END__
   my $p2 = $construction->add_point('x' => 50, 'y' => 90,
                                     hidden => 1);
 
-  my $p3 = $construction->add_point('x' => 50, 'y' => 90,
+  my $p3 = $construction->add_point('x' => 70, 'y' => 130,
                                     style          => {stroke => 'red'},
                                     label          => 'A',
 	                            label_offset_x => 5,
