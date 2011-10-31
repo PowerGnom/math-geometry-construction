@@ -239,13 +239,13 @@ object that holds the intersecting partners and "knows" how to
 calculate the intersection points. Second, you create a
 L<Math::Geometry::Construction::DerivedPoint|Math::Geometry::Construction::DerivedPoint>
 from the C<Derivate>. The C<DerivedPoint> object holds information
-about which of the intersection points to use. This can be based
+about which of the intersection points to use. This can be based on
 distance to a given point, being the extreme point with respect to a
 given direction etc..
 
 The C<DerivedPoint> object only holds information about how to
-select the right point. Only when you actually ask for the position
-of the point it is actually calculated.
+select the right point. Only when you ask for the position of the
+point it is actually calculated.
 
 The classes are called C<Derivate> and C<DerivedPoint> because this
 concept is applicable beyond the case of intersections. It could,
