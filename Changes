@@ -1,7 +1,11 @@
 Revision history for Math-Geometry-Construction
 
 0.009	 
-	 - few convenience changes 
+	 - 'radius' attribute of Math::Geometry::Construction::Point
+	   is deprecated in favour of 'size'
+	 - some convenience changes like default values and the
+	   add_derived_point method
+	 - expanded docu considerably
 
 0.008	 Sun Oct 23 11:54:49 NZDT 2011
 	 - initial support for TikZ output; this is highly
