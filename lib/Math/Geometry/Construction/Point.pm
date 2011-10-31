@@ -143,6 +143,10 @@ This attribute is deprecated and might be removed in a future
 version. If L<size|/size> is not set then this attribute determines
 the radius of the output circle.
 
+=head2 General Output Attributes
+
+See
+L<Math::Geometry::Construction::Output|Math::Geometry::Construction::Output>.
 
 =head2 Methods
 
