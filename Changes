@@ -1,10 +1,12 @@
 Revision history for Math-Geometry-Construction
 
 0.010	 
-	 - Fixes two unprotected eval statements.
-	 - some more tests
+	 - Fixes two unprotected eval statements, please update.
 	 - All constructors that expect a Math::VectorReal object now also
 	   accept an ARRAY reference with [x, y] instead.
+	 - To construct a circle, you can now give a radius instead of
+	   a point on the periphery.
+	 - some more tests
 
 0.009	 Mon Oct 31 20:00:38 NZDT 2011
 	 - 'radius' attribute of Math::Geometry::Construction::Point
