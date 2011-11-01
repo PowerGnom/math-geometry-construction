@@ -409,10 +409,19 @@ L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>.
 All parameters are handed over to the constructor after adding the
 C<construction> and C<order_index> arguments.
 
-Example:
+The "standard" circle requires the center and a point "support"
+point on its perimeter. However, you can provide a radius instead of
+the support point, and the constructor of
+L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>
+will create a support point under the hood. Even if you move the
+center later on, the radius of the circle will stay constant.
+
+Examples:
 
   $construction->add_circle(center  => $point1,
-                            support => $point1);
+                            support => $point2);
+  $construction->add_circle(center  => $point1,
+                            radius  => 50);
 
 =head3 add_object
 
