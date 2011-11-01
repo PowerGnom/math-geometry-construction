@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionLineLine> - line line inte
 
 =head1 VERSION
 
-Version 0.006
+Version 0.011
 
 =cut
 
-our $VERSION = '0.006';
+our $VERSION = '0.011';
 
 
 ###########################################################################
@@ -39,7 +39,7 @@ sub positions {
 
     croak "Need two lines to intersect" if(@lines != 2);
     foreach(@lines) {
-	if(!$_->isa('Math::Geometry::Construction::Line')) {
+	if(!eval { $_->isa('Math::Geometry::Construction::Line') }) {
 	    croak sprintf("Need lines for LineLine intersection, no %s",
 			  ref($_));
 	}
