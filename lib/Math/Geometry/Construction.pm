@@ -534,8 +534,8 @@ otherwise. If none is given, no background is drawn.
   $construction->as_tikz(%args)
   $construction->draw('TikZ', %args)
 
-Shortcut for L<draw|/draw>. Returns an L<LaTeX|LaTeX> sequence
-object representing the construction. See
+Shortcut for L<draw|/draw>. Returns an L<LaTeX::TikZ|LaTeX::TikZ>
+sequence object representing the construction. See
 L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>
 and
 L<Math::Geometry::Construction::Draw::TikZ|Math::Geometry::Construction::Draw::TikZ>
