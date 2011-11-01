@@ -148,10 +148,18 @@ C<Math::Geometry::Construction>.
 
 Holds a L<Math::VectorReal|Math::VectorReal> object with the
 position of the point. The C<z> position is expected to be C<0>. As
-initialization arguments to the constructor, you can give C<x> and
-C<y> with numerical values instead of position with a
-C<Math::VectorReal> value. The object is then created by the
-constructor.
+initialization argument to the constructor, you can also give an
+array reference instead of a C<Math::VectorReal> object. The object
+is then created by the constructor. The C<z> value is optional.
+
+Example:
+
+  $construction->add_point(position => [1, 4]);
+
+Note that the conversion of a array reference is only done at
+construction time (at least currently). If you want to change the
+position later you have to provide a
+L<Math::VectorReal|Math::VectorReal> object.
 
 =head3 size
 
