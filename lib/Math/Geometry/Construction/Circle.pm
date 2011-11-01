@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.007
+Version 0.010
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.010';
 
 
 ###########################################################################
@@ -52,6 +52,21 @@ has 'support' => (isa      => 'Item',
 has 'extend'  => (isa     => 'Num',
 		  is      => 'rw',
 		  default => 0);
+
+sub BUILDARGS {
+    my ($class, %args) = @_;
+
+    if(exists($args{radius})) {
+	$args{support} = $args->construction->add_derived_point
+	    ('TranslatedPoint'
+	     {input      => [$args{center}],
+	      translator => [$radius, 0]},
+	     {hidden     => 1});
+	delete $args{radius};
+    }
+
+    return \%args;
+}
 
 sub BUILD {
     my ($self, $args) = @_;
