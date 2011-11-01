@@ -4,6 +4,7 @@ use Moose::Role;
 use 5.008008;
 
 use Carp;
+use Math::VectorReal;
 
 =head1 NAME
 
@@ -11,11 +12,11 @@ C<Math::Geometry::Construction::PositionSelection> - select position from list
 
 =head1 VERSION
 
-Version 0.006
+Version 0.010
 
 =cut
 
-our $VERSION = '0.006';
+our $VERSION = '0.010';
 
 
 ###########################################################################
@@ -51,8 +52,15 @@ sub indexed_position {
 
 sub extreme_position {
     my ($self, $direction) = @_;
-    my $norm               = $direction / $direction->length;
-    my @positions          = grep { defined($_) } $self->positions;
+    
+    if(ref($direction) eq 'ARRAY') {
+	$direction = vector($direction->[0],
+			    $direction->[1],
+			    $direction->[2] || 0);
+    }
+
+    my $norm      = $direction / $direction->length;
+    my @positions = grep { defined($_) } $self->positions;
 
     if(!@positions) {
 	warn sprintf("No positions to select from in %s.\n", $self->id);
