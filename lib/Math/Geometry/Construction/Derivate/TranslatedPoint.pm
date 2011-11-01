@@ -5,6 +5,7 @@ extends 'Math::Geometry::Construction::Derivate';
 use 5.008008;
 
 use Carp;
+use Math::VectorReal;
 
 =head1 NAME
 
