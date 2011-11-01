@@ -376,10 +376,15 @@ L<Math::Geometry::Construction::Point|Math::Geometry::Construction::Point>.
 All parameters are handed over to the constructor after adding the
 C<construction> and C<order_index> arguments.
 
-Example:
+Examples:
 
-  $construction->add_point('x' => 10, 'y' => 20,
+  $construction->add_point(position => [10, 20]);
+  $construction->add_point('x' => 50, 'y' => 30,
                            style => {stroke => 'red'});
+
+  # requires 'use Math::VectorReal' in this package
+  $construction->add_point(position => vector(-15, 23, 0),
+                           hidden   => 1);
 
 =head3 add_line
 
