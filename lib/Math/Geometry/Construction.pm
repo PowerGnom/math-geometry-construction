@@ -563,9 +563,62 @@ provided.
 
 =head1 DIAGNOSTICS
 
-Sorry, not documented, yet.
-
 =head2 Exceptions
+
+Currently, C<Math::Geometry::Construction> does not use any advanced
+exception framework, it just croaks if it is unhappy. The error
+messages are listed below in alphabetical order.
+
+=over 4
+
+=item * Class name %s did not pass regex check
+
+=item * Need circles for CircleCircle intersection, no %s
+
+=item * Need one circle and one line to intersect
+The C<input> for circle line intersection has to be exactly one
+L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>
+(or subclass) object and one
+L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>
+(or subclass) object. This exception is thrown in all other
+cases. It might be split into more specific exceptions in the
+future. The exception is thrown only when the positions of the
+intersections are calculated.
+
+=item * Need lines for LineLine intersection, no %s
+The C<input> for
+line line intersection has to consist of exactly two
+L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>
+(or subclass) objects. If the correct number of items is given, but
+one of them is of an incorrect type then this exception is thrown.
+
+=item * Need one line for PointOnLine"
+
+=item * Need one point
+
+=item * Need something with a position, no %s
+
+=item * Need two circles to intersect
+
+=item * Need two lines to intersect
+The C<input> for line line intersection has to consist of exactly
+two
+L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>
+(or subclass) objects. If the wrong number of C<input> items
+(ignoring their values) is given then this exception is thrown. The
+exception is thrown only when the position of the intersection is
+calculated.
+
+=item * No way to determine position of PointOnLine %s
+
+=item * Position of PointOnLine has to be set somehow
+When constructing a
+L<Math::Geometry::Construction::Derivate::PointOnLine|Math::Geometry::Construction::Derivate::PointOnLine>
+object, one of the attributes C<distance>, C<quantile>, C<x>, and
+C<y> has to be specified. Otherwise this exception is thrown.
+
+=item * Unable to load module %s: %s
+
 
 =head2 Warnings
 
