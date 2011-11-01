@@ -1,8 +1,10 @@
 Revision history for Math-Geometry-Construction
 
 0.010	 
-	 This is a bugfix release, fixing two unprotected eval
-	 statements.
+	 - Fixes two unprotected eval statements.
+	 - some more tests
+	 - All constructors that expect a Math::VectorReal object now also
+	   accept an ARRAY reference with [x, y] instead.
 
 0.009	 Mon Oct 31 20:00:38 NZDT 2011
 	 - 'radius' attribute of Math::Geometry::Construction::Point
