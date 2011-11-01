@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 40;
+use Test::More tests => 47;
 use Math::Geometry::Construction;
 use Math::VectorReal;
 
@@ -85,5 +85,32 @@ sub line {
     isa_ok($support[1], 'Math::Geometry::Construction::Point');
 }
 
+sub circle {
+    my $construction = Math::Geometry::Construction->new(width  => 800,
+							 height => 300);
+
+    my $c;
+    my $p;
+    my $ci;
+
+    $c = $construction->add_point(position => [10, 10]);
+    $p = $construction->add_point(position => [40, 50]);
+
+    $ci = $construction->add_circle(center  => $c,
+				    support => $p);
+    ok(defined($ci), 'circle is defined');
+    isa_ok($ci, 'Math::Geometry::Construction::Circle');
+    is($ci->radius, 50, 'calculated radius');
+
+    $ci = $construction->add_circle(center => $c,
+				    radius => 20);
+    ok(defined($ci), 'circle is defined');
+    isa_ok($ci, 'Math::Geometry::Construction::Circle');
+    is($ci->radius, 20, 'set radius');
+    $c->position(vector(100, 100, 0));
+    is($ci->radius, 20, 'set radius after moving');
+}
+
 point;
 line;
+circle;
