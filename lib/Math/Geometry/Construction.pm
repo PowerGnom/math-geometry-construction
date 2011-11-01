@@ -484,7 +484,7 @@ Example:
 
   $derived_point = $construction->add_derived_point
       ('IntersectionLineLine',
-       {input      => [$line1, $line2]},
+       {input => [$line1, $line2]},
        {position_selector => ['indexed_point', [0]]});
 
 In this example, the last hash reference can be omitted:
@@ -504,13 +504,11 @@ is returned.
 
 Example:
 
-  use Math::VectorReal;
-
   @derived_points = $construction->add_derived_point
       ('IntersectionCircleLine',
-       {input      => [$circle, $line]},
-       [{position_selector => ['extreme_point', [vector(0, -1, 0)]]},
-        {position_selector => ['extreme_point', [vector(0,  1, 0)]]}]);
+       {input => [$circle, $line]},
+       [{position_selector => ['extreme_point', [[0, -1]]]},
+        {position_selector => ['extreme_point', [[0,  1]]]}]);
 
 In this case, we ask for the two intersection points between a
 circle and a line. The C<extreme_point> position selector will give
@@ -525,7 +523,8 @@ intersection point.
 
 Draws the construction. The return value depends on the output type
 and might be an object or a stringified version. Currently, the only
-output type is C<SVG>. See L<as_svg|/as_svg>.
+output types are C<SVG> and C<TikZ>. See L<as_svg|/as_svg> and
+L<as_tikz|/as_tikz>.
 
 If the type does not contain a C<::> then it is prepended by
 C<Math::Geometry::Construction::Draw::> before requiring the module.
@@ -563,6 +562,8 @@ for supported parameters. At least C<width> and C<height> should be
 provided.
 
 =head1 DIAGNOSTICS
+
+Sorry, not documented, yet.
 
 =head2 Exceptions
 
