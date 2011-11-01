@@ -576,6 +576,7 @@ messages are listed below in alphabetical order.
 =item * Need circles for CircleCircle intersection, no %s
 
 =item * Need one circle and one line to intersect
+
 The C<input> for circle line intersection has to be exactly one
 L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>
 (or subclass) object and one
@@ -586,8 +587,9 @@ future. The exception is thrown only when the positions of the
 intersections are calculated.
 
 =item * Need lines for LineLine intersection, no %s
-The C<input> for
-line line intersection has to consist of exactly two
+
+The C<input> for line line intersection has to consist of exactly
+two
 L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>
 (or subclass) objects. If the correct number of items is given, but
 one of them is of an incorrect type then this exception is thrown.
@@ -601,6 +603,7 @@ one of them is of an incorrect type then this exception is thrown.
 =item * Need two circles to intersect
 
 =item * Need two lines to intersect
+
 The C<input> for line line intersection has to consist of exactly
 two
 L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>
@@ -612,6 +615,7 @@ calculated.
 =item * No way to determine position of PointOnLine %s
 
 =item * Position of PointOnLine has to be set somehow
+
 When constructing a
 L<Math::Geometry::Construction::Derivate::PointOnLine|Math::Geometry::Construction::Derivate::PointOnLine>
 object, one of the attributes C<distance>, C<quantile>, C<x>, and
@@ -619,8 +623,37 @@ C<y> has to be specified. Otherwise this exception is thrown.
 
 =item * Unable to load module %s: %s
 
+=back
+
 
 =head2 Warnings
+
+=over 4
+
+=item * A line needs two support points, skipping.
+
+=item * sprintf(Undefined support point in line %s, .
+
+=item * Failed to parse viewBox attribute.
+
+=item * Undefined position of derived point %s, nothing to draw.
+
+=item * No positions to select from in %s.
+
+=item * Position index out of range in %s.
+
+=item * No positions to select from in %s.
+
+=item * The 'radius' attribute of
+Math::Geometry::Construction::Point is deprecated and might be
+removed in a future version. Use 'size' with the double
+value (diameter of the circle) instead.
+
+=item * Undefined center of circle %s, nothing to draw.
+
+=item * Undefined support of circle %s, nothing to draw.
+
+=back
 
 
 =head1 BUGS AND LIMITATIONS
