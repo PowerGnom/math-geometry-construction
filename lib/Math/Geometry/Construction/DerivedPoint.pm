@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::DerivedPoint> - point derived from other objects
 
 =head1 VERSION
 
-Version 0.009
+Version 0.011
 
 =cut
 
-our $VERSION = '0.009';
+our $VERSION = '0.011';
 
 
 ###########################################################################
@@ -78,7 +78,7 @@ sub draw {
 
     my $position = $self->position;
     if(!defined($position)) {
-	warn sprintf("Undefined position of derived point  %s, ".
+	warn sprintf("Undefined position of derived point %s, ".
 		     "nothing to draw.\n", $self->id);
 	return undef;
     }
