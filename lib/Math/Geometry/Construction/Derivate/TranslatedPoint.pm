@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate::TranslatedPoint> - point translated by
 
 =head1 VERSION
 
-Version 0.007
+Version 0.010
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.010';
 
 
 ###########################################################################
@@ -28,6 +28,18 @@ our $VERSION = '0.007';
 has 'translator' => (isa      => 'Item',
 		     is       => 'rw',
 		     required => 1);
+
+sub BUILDARGS {
+    my ($class, %args) = @_;
+
+    if(defined($args{translator}) and ref($args{translator}) eq 'ARRAY') {
+	$args{translator} = vector($args{translator}->[0],
+				   $args{translator}->[1],
+				   $args{translator}->[2] || 0);
+    }
+
+    return \%args;
+}
 
 ###########################################################################
 #                                                                         #
