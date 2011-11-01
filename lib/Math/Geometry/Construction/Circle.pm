@@ -57,10 +57,10 @@ sub BUILDARGS {
     my ($class, %args) = @_;
 
     if(exists($args{radius})) {
-	$args{support} = $args->construction->add_derived_point
-	    ('TranslatedPoint'
+	$args{support} = $args{construction}->add_derived_point
+	    ('TranslatedPoint',
 	     {input      => [$args{center}],
-	      translator => [$radius, 0]},
+	      translator => [$args{radius}, 0]},
 	     {hidden     => 1});
 	delete $args{radius};
     }
