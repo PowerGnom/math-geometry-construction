@@ -54,6 +54,36 @@ has 'extend'      => (isa     => 'Num',
 		      is      => 'rw',
 		      default => 0);
 
+sub BUILDARGS {
+    my ($class, %args) = @_;
+    my $point_class    = 'Math::Geometry::Construction::Point';
+    
+    foreach(@{$args{support}}) {
+	if(!eval { $_->isa($point_class) }) {
+	    $_ = $args{construction}->add_point
+		(position => $_,
+		 hidden   => 1);
+	}
+    }
+
+    if(exists($args{radius})) {
+	$args{support} = $args{construction}->add_derived_point
+	    ('TranslatedPoint',
+	     {input      => [$args{center}],
+	      translator => [$args{radius}, 0]},
+	     {hidden     => 1});
+	delete $args{radius};
+    }
+
+    if(!eval { $args{support}->isa($point_class) }) {
+	$args{support} = $args{construction}->add_point
+	    (position => $args{support},
+	     hidden   => 1);
+    }
+
+    return \%args;
+}
+
 sub BUILD {
     my ($self, $args) = @_;
 
