@@ -649,15 +649,7 @@ provided reference is undefined.
 
 =item * A line needs two support points, skipping.
 
-=item * sprintf(Undefined support point in line %s, .
-
 =item * Failed to parse viewBox attribute.
-
-=item * Undefined position of derived point %s, nothing to draw.
-
-=item * No positions to select from in %s.
-
-=item * Position index out of range in %s.
 
 =item * No positions to select from in %s.
 
@@ -666,6 +658,8 @@ positions. For example, if you are using an intersection point of
 two circles, but the circles do not intersect. The position selector
 will print this warning and return undef. Your downstream code must
 be able to handle undefined positions.
+
+=item * Position index out of range in %s.
 
 =item * The 'radius' attribute of
 Math::Geometry::Construction::Point is deprecated and might be
@@ -676,7 +670,11 @@ I think this message speaks for itself :-).
 
 =item * Undefined center of circle %s, nothing to draw.
 
+=item * Undefined position of derived point %s, nothing to draw.
+
 =item * Undefined support of circle %s, nothing to draw.
+
+=item * Undefined support point in line %s, nothing to draw.
 
 =back
 
