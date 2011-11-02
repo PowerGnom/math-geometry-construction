@@ -629,6 +629,11 @@ The C<extreme_position> position selector expects a direction
 vector. This exception is raised if the provided direction is
 undefined.
 
+=item * Undefined index in 'indexed_position' selector"
+
+The C<indexed_position> position selector expects an index. This
+exception is raised if the provided index is undefined.
+
 =item * Undefined reference position in '%s' selector
 
 The C<close_position> and C<distant_position> position selectors
@@ -656,10 +661,18 @@ provided reference is undefined.
 
 =item * No positions to select from in %s.
 
+This warning is issued by the position selectors if there is are no
+positions. For example, if you are using an intersection point of
+two circles, but the circles do not intersect. The position selector
+will print this warning and return undef. Your downstream code must
+be able to handle undefined positions.
+
 =item * The 'radius' attribute of
 Math::Geometry::Construction::Point is deprecated and might be
 removed in a future version. Use 'size' with the double
 value (diameter of the circle) instead.
+
+I think this message speaks for itself :-).
 
 =item * Undefined center of circle %s, nothing to draw.
 
