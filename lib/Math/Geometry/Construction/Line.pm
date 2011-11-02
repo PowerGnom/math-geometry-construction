@@ -5,6 +5,7 @@ use 5.008008;
 
 use Carp;
 use List::MoreUtils qw(any);
+use Scalar::Util qw(blessed);
 
 use Math::Geometry::Construction::Derivate::IntersectionLineLine;
 use Math::Geometry::Construction::Derivate::IntersectionCircleLine;
@@ -58,9 +59,9 @@ sub BUILDARGS {
     my ($class, %args) = @_;
     my $point_class    = 'Math::Geometry::Construction::Point';
     
-    foreach(@{$args{support}}) {
-	if(!eval { $_->isa($point_class) }) {
-	    $_ = $args{construction}->add_point
+    for(my $i=0;$i<@{$args{support}};$i++) {
+	if(!blessed($args{support}->[$i])) {
+	    $args{support}->[$i] = $args{construction}->add_point
 		(position => $_,
 		 hidden   => 1);
 	}
