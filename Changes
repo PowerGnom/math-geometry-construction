@@ -1,6 +1,7 @@
 Revision history for Math-Geometry-Construction
 
 0.011	 
+	 - close_position and distant_position selectors
 	 - docu corrections and extension
 
 0.010	 Tue Nov  1 21:32:18 NZDT 2011
