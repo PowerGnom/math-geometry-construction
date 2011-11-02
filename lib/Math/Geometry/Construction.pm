@@ -623,6 +623,18 @@ C<y> has to be specified. Otherwise this exception is thrown.
 
 =item * Unable to load module %s: %s
 
+=item * Undefined direction in 'extreme_position' selector
+
+The C<extreme_position> position selector expects a direction
+vector. This exception is raised if the provided direction is
+undefined.
+
+=item * Undefined reference position in '%s' selector
+
+The C<close_position> and C<distant_position> position selectors
+expect a reference position. This exception is raised if the
+provided reference is undefined.
+
 =back
 
 
