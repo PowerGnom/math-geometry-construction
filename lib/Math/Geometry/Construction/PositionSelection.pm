@@ -38,6 +38,9 @@ sub indexed_position {
     my ($self, $index) = @_;
     my @positions      = grep { defined($_) } $self->positions;
 
+    croak "Undefined index in 'indexed_position' selector"
+	if(!defined($index));
+    
     if(!@positions) {
 	warn sprintf("No positions to select from in %s.\n", $self->id);
 	return undef;
