@@ -56,7 +56,6 @@ has 'extend'  => (isa     => 'Num',
 
 sub BUILDARGS {
     my ($class, %args) = @_;
-    my $point_class    = 'Math::Geometry::Construction::Point';
     
     if(!blessed($args{center})) {
 	$args{center} = $args{construction}->add_point
