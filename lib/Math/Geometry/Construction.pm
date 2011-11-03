@@ -6,6 +6,7 @@ use Carp;
 use Moose;
 use Math::VectorReal;
 use SVG;
+use MooseX::Params::Validate;
 
 =head1 NAME
 
@@ -53,6 +54,8 @@ has 'output'     => (isa     => 'Item',
 
 sub draw {
     my ($self, $type, %args) = @_;
+
+    ($type) = pos_validated_list([$type], {isa => 'Str'});
 
     my $class = $type =~ /\:\:/
 	? $type
