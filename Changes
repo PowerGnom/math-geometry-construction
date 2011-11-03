@@ -1,6 +1,6 @@
 Revision history for Math-Geometry-Construction
 
-0.011	 
+0.011	 Thu Nov  3 19:35:09 NZDT 2011
 	 - creation of multiple derived points in one go was
 	   documented, but actually not implemented
 	 - close_position and distant_position selectors
