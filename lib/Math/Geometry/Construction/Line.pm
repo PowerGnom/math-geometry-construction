@@ -16,11 +16,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.009
+Version 0.011
 
 =cut
 
-our $VERSION = '0.009';
+our $VERSION = '0.011';
 
 
 ###########################################################################
