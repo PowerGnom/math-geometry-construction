@@ -140,7 +140,14 @@ sub add_derived_point {
     my ($self, $class, $derivate_args, $point_args) = @_;
 
     my $derivate = $self->add_derivate($class, %$derivate_args);
-    return $derivate->create_derived_point(%{$point_args || {}});
+    
+    if(!defined($point_args) or ref($point_args) eq 'HASH') {
+	return $derivate->create_derived_point(%{$point_args || {}});
+    }
+    else {
+	return(map { $derivate->create_derived_point(%{$_ || {}}) }
+	       @$point_args);
+    }
 }
 
 1;
