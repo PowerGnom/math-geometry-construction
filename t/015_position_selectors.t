@@ -2,9 +2,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
-use Math::Geometry::Construction;
+use Test::More tests => 37;
 use Math::VectorReal;
+use List::Util qw(min max);
+use Math::Geometry::Construction;
 
 sub is_close {
     my ($value, $reference, $message, $limit) = @_;
@@ -18,25 +19,96 @@ sub indexed_position {
 
     my $l;
     my $c;
-    
+    my @ips;
+    my $pos;
+
     $l = $construction->add_line(support => [[10, 20], [30, 20]]);
     $c = $construction->add_circle(center => [20, 20], radius => 100);
-
-=for later
-
-
-    my @ipp = sort { $a->x <=> $b->x }
-              map  { $_->position    }
-              $construction->add_derived_points
-		  ('IntersectionCircleLine',
-		   {input => [$l, $c]},
-		   [{position_selector => ['indexed_point', [0]]},
-		    {position_selector => ['indexed_point', [1]]}]);
     
-    is_close($ipp[0]->x, -80, 'left x');
+    @ips = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$l, $c]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
 
-=cut
-
+    is(scalar(@ips), 2, 'two intersection points');
+    foreach(@ips) {
+	ok(defined($_), 'defined');
+	isa_ok($_, 'Math::Geometry::Construction::DerivedPoint');
+	$pos = $_->position;
+	ok(defined($pos), 'position defined');
+	isa_ok($pos, 'Math::VectorReal');
+	# cannot test x because I don't know which point I got
+	is_close($pos->y, 20, 'intersection y');
+    }
 }
 
-indexed_position;
+sub extreme_position {
+    my $construction = Math::Geometry::Construction->new(width  => 800,
+							 height => 300);
+
+    my $l;
+    my $c;
+    my @ips;
+    my @ipps;
+
+    $l = $construction->add_line(support => [[10, 20], [30, 20]]);
+    $c = $construction->add_circle(center => [20, 20], radius => 100);
+    
+    @ips = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$l, $c]},
+	 [{position_selector => ['extreme_position', [vector(1, 0, 0)]]},
+	  {position_selector => ['extreme_position', [[-1, 0]]]}]);
+
+    is(scalar(@ips), 2, 'two intersection points');
+    foreach(@ips) {
+	ok(defined($_), 'defined');
+	isa_ok($_, 'Math::Geometry::Construction::DerivedPoint');
+    }
+    foreach(@ipps = map { $_->position } @ips) {
+	ok(defined($_), 'position defined');
+	isa_ok($_, 'Math::VectorReal');
+    }
+    is_close($ipps[0]->x, 120, 'intersection x');
+    is_close($ipps[0]->y, 20, 'intersection y');
+    is_close($ipps[1]->x, -80, 'intersection x');
+    is_close($ipps[1]->y, 20, 'intersection y');
+}
+
+sub dist_position {
+    my $construction = Math::Geometry::Construction->new(width  => 800,
+							 height => 300);
+
+    my $l;
+    my $c;
+    my @ips;
+    my @ipps;
+
+    $l = $construction->add_line(support => [[10, 20], [30, 20]]);
+    $c = $construction->add_circle(center => [20, 20], radius => 100);
+    
+    @ips = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$l, $c]},
+	 [{position_selector => ['close_position', [vector(-80, 20, 0)]]},
+	  {position_selector => ['distant_position', [[-80, 20]]]}]);
+
+    is(scalar(@ips), 2, 'two intersection points');
+    foreach(@ips) {
+	ok(defined($_), 'defined');
+	isa_ok($_, 'Math::Geometry::Construction::DerivedPoint');
+    }
+    foreach(@ipps = map { $_->position } @ips) {
+	ok(defined($_), 'position defined');
+	isa_ok($_, 'Math::VectorReal');
+    }
+    is_close($ipps[0]->x, -80, 'intersection x');
+    is_close($ipps[0]->y, 20, 'intersection y');
+    is_close($ipps[1]->x, 120, 'intersection x');
+    is_close($ipps[1]->y, 20, 'intersection y');
+}
+
+indexed_position;  # this has already been tested in 010
+extreme_position;
+dist_position;
