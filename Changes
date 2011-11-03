@@ -1,8 +1,12 @@
 Revision history for Math-Geometry-Construction
 
 0.011	 
+	 - creation of multiple derived points in one go was
+	   documented, but actually not implemented
 	 - close_position and distant_position selectors
 	 - docu corrections and extension
+	 - test suite is still far from exhaustive, but at least
+	   might deserve the title 'test suite' now
 
 0.010	 Tue Nov  1 21:32:18 NZDT 2011
 	 - Fixes two unprotected eval statements, please update.
