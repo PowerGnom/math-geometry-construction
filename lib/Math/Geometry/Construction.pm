@@ -46,6 +46,10 @@ has 'output'     => (isa     => 'Item',
 				 draw_circle => 'circle',
 				 draw_text   => 'text'});
 
+has 'point_size' => (isa     => 'Num',
+		     is      => 'rw');
+		     
+
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #

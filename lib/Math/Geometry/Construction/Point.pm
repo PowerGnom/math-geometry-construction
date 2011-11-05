@@ -37,25 +37,11 @@ sub id_template { return $ID_TEMPLATE }
 
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::Output';
+with 'Math::Geometry::Construction::Role::DrawPoint';
 
 has 'position' => (isa      => 'Math::VectorReal',
 	           is       => 'rw',
 	           required => 1);
-
-has 'size'     => (isa     => 'Num',
-	           is      => 'rw');
-
-has 'radius'   => (isa     => 'Num',
-	           is      => 'rw',
-		   trigger => \&_radius_trigger,
-	           default => 3);
-
-sub _radius_trigger {
-    warn("The 'radius' attribute of Math::Geometry::Construction::Point ".
-	 "is deprecated and might be removed in a future version. Use ".
-	 "'size' with the double value (diameter of the circle) ".
-	 "instead.\n");
-}
 
 sub BUILDARGS {
     my ($class, %args) = @_;
@@ -75,8 +61,7 @@ sub BUILDARGS {
 sub BUILD {
     my ($self, $args) = @_;
 
-    $self->style('stroke', 'black') unless($self->style('stroke'));
-    $self->style('fill', 'white')   unless($self->style('fill'));
+    $self->set_default_point_style;
 }
 
 ###########################################################################

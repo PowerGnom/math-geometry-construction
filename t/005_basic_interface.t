@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 57;
 use Math::Geometry::Construction;
 use Math::VectorReal;
 
@@ -48,7 +48,7 @@ sub point {
     is($pos->y, 10, 'y coordinate');
     is($pos->z, 11, 'z coordinate');
     ok(!$p->hidden, 'not hidden');
-    ok(!defined($p->size), 'size undef');  # to be changed when radius goes
+    is($p->size, 6, 'default size');
 
     $p = $construction->add_point(x => 12, 'y' => 13, hidden => 1,
 				  size => 10);
@@ -61,6 +61,27 @@ sub point {
     is($pos->z, 0, 'z coordinate');
     ok($p->hidden, 'hidden');
     is($p->size, 10, 'size 10');
+
+    # defaults
+    is($p->style('stroke'), 'black', 'default stroke black');
+    is($p->style('fill'), 'white', 'default stroke white');
+
+    $p = $construction->add_point(position => [0, 0]);
+    is($p->size, 6, 'default point size 6');
+    is($p->radius, 3, 'default radius 3');
+    $construction->point_size(7.5);
+    $p = $construction->add_point(position => [0, 0]);
+    is($p->size, 7.5, 'default point size 7.5');
+    is($p->radius, 3.75, 'default radius 3.75');
+    $p->size(12);
+    is($p->size, 12, 'adjusted point size 12');
+    is($p->radius, 6, 'adjusted point size 6');
+    $p = $construction->add_point(position => [0, 0], size => 13.35);
+    is($p->size, 13.35, 'constructed point size 13.35');
+    is($p->radius, 6.675, 'constructed point size 6.675');
+}
+
+sub derived_point {
 }
 
 sub line {
