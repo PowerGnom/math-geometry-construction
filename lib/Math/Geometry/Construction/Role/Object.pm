@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Object;
+package Math::Geometry::Construction::Role::Object;
 use Moose::Role;
 
 use 5.008008;
@@ -7,15 +7,15 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Object> - shared administrative issues
+C<Math::Geometry::Construction::Role::Object> - shared administrative issues
 
 =head1 VERSION
 
-Version 0.002
+Version 0.012
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.012';
 
 
 ###########################################################################

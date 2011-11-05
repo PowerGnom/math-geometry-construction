@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::PositionSelection;
+package Math::Geometry::Construction::Role::PositionSelection;
 use Moose::Role;
 
 use 5.008008;
@@ -8,15 +8,15 @@ use Math::VectorReal;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::PositionSelection> - select position from list
+C<Math::Geometry::Construction::Role::PositionSelection> - select position from list
 
 =head1 VERSION
 
-Version 0.011
+Version 0.012
 
 =cut
 
-our $VERSION = '0.011';
+our $VERSION = '0.012';
 
 
 ###########################################################################

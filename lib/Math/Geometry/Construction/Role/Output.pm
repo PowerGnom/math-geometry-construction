@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Output;
+package Math::Geometry::Construction::Role::Output;
 use Moose::Role;
 
 use 5.008008;
@@ -7,15 +7,15 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Output> - graphical output issues
+C<Math::Geometry::Construction::Role::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.009
+Version 0.012
 
 =cut
 
-our $VERSION = '0.009';
+our $VERSION = '0.012';
 
 
 ###########################################################################
