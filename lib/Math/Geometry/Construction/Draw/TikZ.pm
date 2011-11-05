@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Draw::TikZ> - TikZ output
 
 =head1 VERSION
 
-Version 0.009
+Version 0.012
 
 =cut
 
-our $VERSION = '0.009';
+our $VERSION = '0.012';
 
 
 ###########################################################################
@@ -98,21 +98,29 @@ sub transform_y_length {
 }
 
 sub process_style {
-    my ($self, %style) = @_;
-    my $svg_mode       = $self->svg_mode;
+    my ($self, $element, %style) = @_;
+    my $svg_mode                 = $self->svg_mode;
 
-    if(exists($style{stroke})) {
-	$style{color} = $style{stroke} if($svg_mode);
-	delete($style{stroke});
-    }
-
-    # for some reason 'none' does not work although it should
-    if($style{color} and $style{color} eq 'none') {
-	if($style{fill} and $style{fill} ne 'none') {
-	    $style{color} = $style{fill};
+    if($element eq 'text') {
+	if(exists($style{fill})) {
+	    $style{color} = $style{fill} if($svg_mode);
+	    delete($style{fill});
 	}
-	else  {
-	    delete($style{color})
+    }
+    else {
+	if(exists($style{stroke})) {
+	    $style{color} = $style{stroke} if($svg_mode);
+	    delete($style{stroke});
+	}
+
+	# for some reason 'none' does not work although it should
+	if($style{color} and $style{color} eq 'none') {
+	    if($style{fill} and $style{fill} ne 'none') {
+		$style{color} = $style{fill};
+	    }
+	    else  {
+		delete($style{color})
+	    }
 	}
     }
 
@@ -130,7 +138,7 @@ sub line {
 	([$self->transform_coordinates($args{x1}, $args{y1})],
 	 [$self->transform_coordinates($args{x2}, $args{y2})]);
 
-    my %style = $self->process_style(%{$args{style}});
+    my %style = $self->process_style('line', %{$args{style}});
     while(my ($key, $value) = each(%style)) {
 	$line->mod(TikZ->raw_mod("$key=$value"));
     }
@@ -147,7 +155,7 @@ sub circle {
 		 $self->transform_x_length($args{r}),
 		 $self->transform_y_length($args{r})));
 	
-    my %style = $self->process_style(%{$args{style}});
+    my %style = $self->process_style('circle', %{$args{style}});
     while(my ($key, $value) = each(%style)) {
 	next if($key eq 'fill');
 	$raw->mod(TikZ->raw_mod("$key=$value"));
@@ -161,6 +169,7 @@ sub circle {
 
 sub text {
     my ($self, %args) = @_;
+    my $svg_mode      = $self->svg_mode;
     my $template      = $self->math_mode
 	? '(%f, %f) node {$%s$}' : '(%f, %f) node {%s}';
 
@@ -169,7 +178,7 @@ sub text {
 	 $self->transform_coordinates($args{x}, $args{y}),
 	 $args{text});
     my $raw = TikZ->raw($content);
-    my %style = $self->process_style(%{$args{style}});
+    my %style = $self->process_style('text', %{$args{style}});
     while(my ($key, $value) = each(%style)) {
 	$raw->mod(TikZ->raw_mod("$key=$value"));
     }
