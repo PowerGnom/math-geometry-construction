@@ -1,12 +1,13 @@
 Revision history for Math-Geometry-Construction
 
-0.012	 Sat Nov  5 19:31:11 NZDT 2011
+0.012	 Sat Nov  5 19:49:47 NZDT 2011
 	 - a default point size can be set on construction level
 	 - all roles have been moved into the
 	   Math::Geometry::Construction::Role namespace; this should
 	   have been done from the start
 	 - new role DrawPoint to homogenize the treatment of Point
 	   and DerivedPoint
+	 - fixed filling in TikZ output
 
 0.011	 Thu Nov  3 19:35:09 NZDT 2011
 	 - creation of multiple derived points in one go was
