@@ -149,7 +149,11 @@ sub circle {
 	
     my %style = $self->process_style(%{$args{style}});
     while(my ($key, $value) = each(%style)) {
+	next if($key eq 'fill');
 	$raw->mod(TikZ->raw_mod("$key=$value"));
+    }
+    if($style{fill}) {
+	$raw->mod(TikZ->fill($style{fill}));
     }
 
     $self->output->add($raw);
