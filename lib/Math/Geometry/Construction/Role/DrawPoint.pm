@@ -49,10 +49,7 @@ sub _size_trigger {
 sub _build_size {
     my ($self) = @_;
 
-    if(defined(my $size = $self->construction->point_size)) {
-	return $size;
-    }
-    return 6;
+    return $self->construction->point_size;
 }
 
 sub _radius_trigger {

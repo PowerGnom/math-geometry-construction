@@ -47,7 +47,8 @@ has 'output'     => (isa     => 'Item',
 				 draw_text   => 'text'});
 
 has 'point_size' => (isa     => 'Num',
-		     is      => 'rw');
+		     is      => 'rw',
+		     default => 6);
 		     
 
 ###########################################################################
