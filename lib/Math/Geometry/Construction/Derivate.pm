@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate> - derive points from objects
 
 =head1 VERSION
 
-Version 0.006
+Version 0.012
 
 =cut
 
-our $VERSION = '0.006';
+our $VERSION = '0.012';
 
 
 ###########################################################################
@@ -35,8 +35,8 @@ sub id_template { return $ID_TEMPLATE }
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Object';
-with 'Math::Geometry::Construction::PositionSelection';
+with 'Math::Geometry::Construction::Role::Object';
+with 'Math::Geometry::Construction::Role::PositionSelection';
 
 has 'input' => (isa      => 'ArrayRef[Item]',
 		is       => 'bare',

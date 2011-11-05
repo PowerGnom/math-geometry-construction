@@ -7,20 +7,17 @@ use Carp;
 use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
 
-use Math::Geometry::Construction::Derivate::IntersectionLineLine;
-use Math::Geometry::Construction::Derivate::IntersectionCircleLine;
-
 =head1 NAME
 
 C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.011
+Version 0.012
 
 =cut
 
-our $VERSION = '0.011';
+our $VERSION = '0.012';
 
 
 ###########################################################################
@@ -39,9 +36,9 @@ sub id_template { return $ID_TEMPLATE }
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Object';
-with 'Math::Geometry::Construction::PositionSelection';
-with 'Math::Geometry::Construction::Output';
+with 'Math::Geometry::Construction::Role::Object';
+with 'Math::Geometry::Construction::Role::PositionSelection';
+with 'Math::Geometry::Construction::Role::Output';
 
 has 'support'     => (isa      => 'ArrayRef[Item]',
 		      is       => 'bare',

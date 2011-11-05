@@ -6,20 +6,17 @@ use 5.008008;
 use Carp;
 use Scalar::Util qw(blessed);
 
-use Math::Geometry::Construction::Derivate::IntersectionCircleCircle;
-use Math::Geometry::Construction::Derivate::IntersectionCircleLine;
-
 =head1 NAME
 
 C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.011
+Version 0.012
 
 =cut
 
-our $VERSION = '0.011';
+our $VERSION = '0.012';
 
 
 ###########################################################################
@@ -38,9 +35,9 @@ sub id_template { return $ID_TEMPLATE }
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Object';
-with 'Math::Geometry::Construction::PositionSelection';
-with 'Math::Geometry::Construction::Output';
+with 'Math::Geometry::Construction::Role::Object';
+with 'Math::Geometry::Construction::Role::PositionSelection';
+with 'Math::Geometry::Construction::Role::Output';
 
 has 'center'  => (isa      => 'Item',
 		  is       => 'rw',

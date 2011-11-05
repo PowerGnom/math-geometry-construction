@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Point> - a free user-defined point
 
 =head1 VERSION
 
-Version 0.010
+Version 0.012
 
 =cut
 
-our $VERSION = '0.010';
+our $VERSION = '0.012';
 
 
 ###########################################################################
@@ -35,8 +35,8 @@ sub id_template { return $ID_TEMPLATE }
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Object';
-with 'Math::Geometry::Construction::Output';
+with 'Math::Geometry::Construction::Role::Object';
+with 'Math::Geometry::Construction::Role::Output';
 
 has 'position' => (isa      => 'Math::VectorReal',
 	           is       => 'rw',
