@@ -592,6 +592,14 @@ messages are listed below in alphabetical order.
 
 =over 4
 
+=item * A line needs exactly two support points
+
+Thrown by the constructor of
+L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>
+if the array referenced by the C<support> parameter does not contain
+exactly two elements. The type of the elements is (not yet) checked
+by L<Moose|Moose>.
+
 =item * Class name %s did not pass regex check
 
 =item * Need circles for CircleCircle intersection, no %s
