@@ -676,8 +676,6 @@ provided reference is undefined.
 
 =over 4
 
-=item * A line needs two support points, skipping.
-
 =item * Failed to parse viewBox attribute.
 
 =item * No positions to select from in %s.
