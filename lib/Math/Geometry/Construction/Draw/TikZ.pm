@@ -126,7 +126,8 @@ sub process_style {
 
     while(my ($key, $value) = each(%style)) {
 	if($value and ref($value) eq 'ARRAY' and @$value == 3) {
-	    $value = sprintf('{rgb,255:red,%d;green,%d;blue,%d}', @$value);
+	    $style{$key} = sprintf('{rgb,255:red,%d;green,%d;blue,%d}',
+				   @$value);
 	}
     }
 
@@ -144,7 +145,7 @@ sub line {
 	([$self->transform_coordinates($args{x1}, $args{y1})],
 	 [$self->transform_coordinates($args{x2}, $args{y2})]);
 
-    my %style = $self->process_style('line', %{$args{style}});
+    my %style = $self->process_style('line', %{$args{style} || {}});
     while(my ($key, $value) = each(%style)) {
 	$line->mod(TikZ->raw_mod("$key=$value"));
     }
@@ -161,7 +162,7 @@ sub circle {
 		 $self->transform_x_length($args{r}),
 		 $self->transform_y_length($args{r})));
 	
-    my %style = $self->process_style('circle', %{$args{style}});
+    my %style = $self->process_style('circle', %{$args{style} || {}});
     while(my ($key, $value) = each(%style)) {
 	next if($key eq 'fill');
 	$raw->mod(TikZ->raw_mod("$key=$value"));
@@ -184,7 +185,7 @@ sub text {
 	 $self->transform_coordinates($args{x}, $args{y}),
 	 $args{text});
     my $raw = TikZ->raw($content);
-    my %style = $self->process_style('text', %{$args{style}});
+    my %style = $self->process_style('text', %{$args{style} || {}});
     while(my ($key, $value) = each(%style)) {
 	$raw->mod(TikZ->raw_mod("$key=$value"));
     }
