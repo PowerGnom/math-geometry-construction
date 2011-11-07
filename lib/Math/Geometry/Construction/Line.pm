@@ -40,6 +40,7 @@ sub id_template { return $ID_TEMPLATE }
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
+with 'Math::Geometry::Construction::Role::ImplicitPoint';
 
 has 'support'     => (isa      => 'ArrayRef[Item]',
 		      is       => 'bare',
@@ -57,11 +58,8 @@ sub BUILDARGS {
     my ($class, %args) = @_;
     
     for(my $i=0;$i<@{$args{support}};$i++) {
-	if(!blessed($args{support}->[$i])) {
-	    $args{support}->[$i] = $args{construction}->add_point
-		(position => $args{support}->[$i],
-		 hidden   => 1);
-	}
+	$args{support}->[$i] = $class->import_point
+	    ($args{construction}, $args{support}->[$i]);
     }
 
     return \%args;
