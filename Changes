@@ -1,5 +1,11 @@
 Revision history for Math-Geometry-Construction
 
+0.013	 
+	 - Line offers a "normal" method now.
+	 - Draw::SVG and Draw::TikZ can both process RGB arrays as
+	   colors; this allows uniform color specification for both
+	   output types
+
 0.012	 Sat Nov  5 21:32:25 NZDT 2011
 	 - a default point size can be set on construction level
 	 - all roles have been moved into the
