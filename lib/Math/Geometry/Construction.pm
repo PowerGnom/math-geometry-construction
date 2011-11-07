@@ -5,6 +5,7 @@ use 5.008008;
 use Carp;
 use Moose;
 use Math::VectorReal;
+use Math::Vector::Real;
 use SVG;
 use MooseX::Params::Validate;
 
@@ -14,11 +15,11 @@ C<Math::Geometry::Construction> - intersecting lines and circles
 
 =head1 VERSION
 
-Version 0.013
+Version 0.014
 
 =cut
 
-our $VERSION = '0.013';
+our $VERSION = '0.014';
 
 
 ###########################################################################
