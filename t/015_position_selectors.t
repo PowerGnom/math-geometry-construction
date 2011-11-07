@@ -37,9 +37,9 @@ sub indexed_position {
 	isa_ok($_, 'Math::Geometry::Construction::DerivedPoint');
 	$pos = $_->position;
 	ok(defined($pos), 'position defined');
-	isa_ok($pos, 'Math::VectorReal');
+	isa_ok($pos, 'Math::Vector::Real');
 	# cannot test x because I don't know which point I got
-	is_close($pos->y, 20, 'intersection y');
+	is_close($pos->[1], 20, 'intersection y');
     }
 }
 
@@ -68,12 +68,12 @@ sub extreme_position {
     }
     foreach(@ipps = map { $_->position } @ips) {
 	ok(defined($_), 'position defined');
-	isa_ok($_, 'Math::VectorReal');
+	isa_ok($_, 'Math::Vector::Real');
     }
-    is_close($ipps[0]->x, 120, 'intersection x');
-    is_close($ipps[0]->y, 20, 'intersection y');
-    is_close($ipps[1]->x, -80, 'intersection x');
-    is_close($ipps[1]->y, 20, 'intersection y');
+    is_close($ipps[0]->[0], 120, 'intersection x');
+    is_close($ipps[0]->[1], 20, 'intersection y');
+    is_close($ipps[1]->[0], -80, 'intersection x');
+    is_close($ipps[1]->[1], 20, 'intersection y');
 }
 
 sub dist_position {
@@ -101,12 +101,12 @@ sub dist_position {
     }
     foreach(@ipps = map { $_->position } @ips) {
 	ok(defined($_), 'position defined');
-	isa_ok($_, 'Math::VectorReal');
+	isa_ok($_, 'Math::Vector::Real');
     }
-    is_close($ipps[0]->x, -80, 'intersection x');
-    is_close($ipps[0]->y, 20, 'intersection y');
-    is_close($ipps[1]->x, 120, 'intersection x');
-    is_close($ipps[1]->y, 20, 'intersection y');
+    is_close($ipps[0]->[0], -80, 'intersection x');
+    is_close($ipps[0]->[1], 20, 'intersection y');
+    is_close($ipps[1]->[0], 120, 'intersection x');
+    is_close($ipps[1]->[1], 20, 'intersection y');
 }
 
 indexed_position;  # this has already been tested in 010
