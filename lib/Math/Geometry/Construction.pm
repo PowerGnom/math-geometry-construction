@@ -28,33 +28,28 @@ our $VERSION = '0.014';
 #                                                                         #
 ###########################################################################
 
-has 'background'       => (isa => 'Str|ArrayRef',
-			   is  => 'rw');
+has 'background' => (isa => 'Str|ArrayRef',
+		     is  => 'rw');
 
-has 'objects'          => (isa     => 'HashRef[Item]',
-			   is      => 'bare',
-			   traits  => ['Hash'],
-			   default => sub { {} },
-			   handles => {count_objects => 'count',
-				       object        => 'accessor',
-				       object_ids    => 'keys',
-				       objects       => 'values'});
+has 'objects'    => (isa     => 'HashRef[Item]',
+		     is      => 'bare',
+		     traits  => ['Hash'],
+		     default => sub { {} },
+		     handles => {count_objects => 'count',
+				 object        => 'accessor',
+				 object_ids    => 'keys',
+				 objects       => 'values'});
 
-has 'next_order_index' => (isa     => 'Int',
-			   is      => 'rw',
-			   writer  => '_next_order_index',
-			   default => 0);
+has 'output'     => (isa     => 'Item',
+		     is      => 'rw',
+		     writer  => '_output',
+		     handles => {draw_line   => 'line',
+				 draw_circle => 'circle',
+				 draw_text   => 'text'});
 
-has 'output'           => (isa     => 'Item',
-			   is      => 'rw',
-			   writer  => '_output',
-			   handles => {draw_line   => 'line',
-				       draw_circle => 'circle',
-				       draw_text   => 'text'});
-
-has 'point_size'       => (isa     => 'Num',
-			   is      => 'rw',
-			   default => 6);
+has 'point_size' => (isa     => 'Num',
+		     is      => 'rw',
+		     default => 6);
 
 
 ###########################################################################
@@ -117,8 +112,7 @@ sub add_object {
     else { croak "Class name $class did not pass regex check" }
     
     my $object = $class->new(construction => $self, @args);
-    # The following call of id is crucial to trigger the generation
-    # of order_index and id of the object;
+    $object->order_index($self->count_objects);
     $self->object($object->id, $object);
 
     return $object;
