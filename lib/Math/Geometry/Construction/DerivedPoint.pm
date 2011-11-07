@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::DerivedPoint> - point derived from other objects
 
 =head1 VERSION
 
-Version 0.012
+Version 0.014
 
 =cut
 
-our $VERSION = '0.012';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -79,14 +79,14 @@ sub draw {
 	return undef;
     }
 
-    $self->construction->draw_circle(cx    => $position->x,
-				     cy    => $position->y,
+    $self->construction->draw_circle(cx    => $position->[0],
+				     cy    => $position->[1],
 				     r     => $self->radius,
 				     style => $self->style_hash,
 				     id    => $self->id);
 
-    $self->draw_label('x' => $position->x,
-		      'y' => $position->y);
+    $self->draw_label('x' => $position->[0],
+		      'y' => $position->[1]);
 
     return undef;
 }
