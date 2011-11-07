@@ -35,7 +35,9 @@ has 'id'           => (isa      => 'Str',
 
 has 'order_index'  => (isa      => 'Int',
 		       is       => 'rw',
-		       required => 1);
+		       required => 1,
+		       lazy     => 1,
+		       builder  => '_fetch_order_index');
 
 has 'construction' => (isa      => 'Item',
 		       is       => 'ro',
@@ -52,6 +54,12 @@ sub _generate_id {
     my ($self) = @_;
     
     return sprintf($self->id_template, $self->order_index);
+}
+
+sub _fetch_order_index {
+    my ($self) = @_;
+
+    return $self->construction->count_objects;
 }
 
 ###########################################################################

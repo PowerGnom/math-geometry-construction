@@ -116,11 +116,9 @@ sub add_object {
     }
     else { croak "Class name $class did not pass regex check" }
     
-    my $order_index = $self->next_order_index;
-    $self->_next_order_index($order_index + 1);
-    my $object = $class->new(order_index  => $order_index, 
-			     construction => $self,
-			     @args);
+    my $object = $class->new(construction => $self, @args);
+    # The following call of id is crucial to trigger the generation
+    # of order_index and id of the object;
     $self->object($object->id, $object);
 
     return $object;

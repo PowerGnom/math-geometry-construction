@@ -23,7 +23,7 @@ sub point {
     $p = $construction->add_point(position => vector(1, 2, 3));
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 0, 'id');
+    is($p->order_index, 0, 'order index');
     is($p->id, 'P000000000', 'id');
     $root = $p->construction;
     ok(defined($root), 'construction defined');
@@ -45,7 +45,7 @@ sub point {
 				  style    => {stroke => 'blue'});
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 1, 'id');
+    is($p->order_index, 1, 'order index');
     is($p->id, 'P000000001', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
@@ -56,7 +56,7 @@ sub point {
     $p = $construction->add_point(position => [7, 8]);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 2, 'id');
+    is($p->order_index, 2, 'order index');
     is($p->id, 'P000000002', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
@@ -67,7 +67,7 @@ sub point {
     $p = $construction->add_point(x => 9, 'y' => 10, z => 11);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 3, 'id');
+    is($p->order_index, 3, 'order index');
     is($p->id, 'P000000003', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
@@ -81,7 +81,7 @@ sub point {
 				  size => 10);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 4, 'id');
+    is($p->order_index, 4, 'order index');
     is($p->id, 'P000000004', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
@@ -94,7 +94,7 @@ sub point {
     $p = $construction->add_point(position => V(14, 15));
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 5, 'id');
+    is($p->order_index, 5, 'order index');
     is($p->id, 'P000000005', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
@@ -106,7 +106,7 @@ sub point {
 				  id       => 'foo');
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 6, 'id');
+    is($p->order_index, 6, 'order index');
     is($p->id, 'foo', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
@@ -117,7 +117,7 @@ sub point {
     $p = $construction->object('foo');
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 6, 'id');
+    is($p->order_index, 6, 'order index');
     is($p->id, 'foo', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
@@ -167,7 +167,7 @@ sub line {
 					     $construction->object('P2')]);
     ok(defined($l));
     isa_ok($l, 'Math::Geometry::Construction::Line');
-    is($l->order_index, 2, 'id');
+    is($l->order_index, 2, 'order index');
     is($l->id, 'L000000002', 'id');
     $root = $l->construction;
     ok(defined($root), 'construction defined');
@@ -204,7 +204,7 @@ sub line {
     $l = $construction->add_line(support => [[3, 5], V(-1, 12)]);
     ok(defined($l));
     isa_ok($l, 'Math::Geometry::Construction::Line');
-    is($l->order_index, 5, 'id');
+    is($l->order_index, 5, 'order index');
     is($l->id, 'L000000005', 'id');
     $root = $l->construction;
     ok(defined($root), 'construction defined');
