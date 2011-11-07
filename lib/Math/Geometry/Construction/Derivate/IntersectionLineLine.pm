@@ -56,7 +56,7 @@ sub positions {
 	
 	my $this_normal = $_->normal;
 	push(@normals, $this_normal);
-	push(@constants, $this_normal . $support_positions[0]);
+	push(@constants, $this_normal * $support_positions[0]);
     }
 
     my $matrix = Math::MatrixReal->new_from_rows([map { [@$_] } @normals]);
