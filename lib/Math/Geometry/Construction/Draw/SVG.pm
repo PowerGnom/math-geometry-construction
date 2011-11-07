@@ -58,7 +58,7 @@ sub process_style {
 sub line {
     my ($self, %args) = @_;
 
-    %{$args{style}} = $self->process_style('line', %{$args{style}})
+    $args{style} = {$self->process_style('line', %{$args{style}})}
 	if($args{style});
     $self->output->line(%args);
 }
@@ -66,7 +66,7 @@ sub line {
 sub circle {
     my ($self, %args) = @_;
 
-    %{$args{style}} = $self->process_style('circle', %{$args{style}})
+    $args{style} = {$self->process_style('circle', %{$args{style}})}
 	if($args{style});
     $self->output->circle(%args);
 }
@@ -74,7 +74,7 @@ sub circle {
 sub text {
     my ($self, %args) = @_;
 
-    %{$args{style}} = $self->process_style('text', %{$args{style}})
+    $args{style} = {$self->process_style('text', %{$args{style}})}
 	if($args{style});
 
     my $data = delete $args{text};
