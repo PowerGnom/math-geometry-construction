@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Role::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.013
+Version 0.014
 
 =cut
 
-our $VERSION = '0.013';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -58,7 +58,7 @@ has 'style'              => (isa     => 'HashRef[Str|ArrayRef]',
 			     default => sub { {} },
 			     handles => {style => 'accessor'});
 
-has 'label_style'        => (isa     => 'HashRef[Str]',
+has 'label_style'        => (isa     => 'HashRef[Str|ArrayRef]',
 			     is      => 'rw',
 			     reader  => 'label_style_hash',
 			     writer  => '_label_style_hash',
