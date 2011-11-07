@@ -695,11 +695,16 @@ value (diameter of the circle) instead.
 
 I think this message speaks for itself :-).
 
+=item * Support points of line %s are identical, cannot determine
+normal.
+
 =item * Undefined center of circle %s, nothing to draw.
 
 =item * Undefined position of derived point %s, nothing to draw.
 
 =item * Undefined support of circle %s, nothing to draw.
+
+=item *	Undefined support point in line %s, cannot determine normal.
 
 =item * Undefined support point in line %s, nothing to draw.
 
