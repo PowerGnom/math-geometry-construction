@@ -5,7 +5,6 @@ extends 'Math::Geometry::Construction::Derivate';
 use 5.008008;
 
 use Carp;
-use Math::VectorReal ':all';
 
 =head1 NAME
 
@@ -13,11 +12,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleLine> - circle line 
 
 =head1 VERSION
 
-Version 0.007
+Version 0.014
 
 =cut
 
-our $VERSION = '0.007';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -55,20 +54,22 @@ sub positions {
     else { croak "Need one circle and one line to intersect"  }
        
     my $c_center_p  = $circle->center->position;
-    my $c_support_p = $circle->support->position;
+    my $c_radius    = $circle->radius;
     my @l_support_p = map { $_->position } $line->support;
 
-    foreach($c_center_p, $c_support_p, @l_support_p) {
+    foreach($c_center_p, $c_radius, @l_support_p) {
 	return if(!defined($_));
     }
 
-    # TODO: support points might be equal
-    my $l_parallel = ($l_support_p[1] - $l_support_p[0])->norm;
-    my $l_normal   = vector(-$l_parallel->y, $l_parallel->x, 0);
-    my $l_constant = $l_normal . $l_support_p[0];
-    my $c_radius   = ($c_support_p - $c_center_p)->length;
+    my $l_distance = $l_support_p[1] - $l_support_p[0];
+    my $d          = abs($l_distance);
+    return if($d == 0);
 
-    my $a   = $l_normal . $c_center_p - $l_constant;
+    my $l_parallel = $l_distance / $d;
+    my $l_normal   = $l_parallel->normal_base;
+    my $l_constant = $l_normal * $l_support_p[0];
+
+    my $a   = $l_normal * $c_center_p - $l_constant;
     my $rad = $c_radius ** 2 - $a ** 2;
     return if($rad < 0);
     my $b   = sqrt($rad);
