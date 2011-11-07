@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 52;
+use Test::More tests => 59;
 use Math::VectorReal;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
@@ -14,8 +14,7 @@ sub is_close {
 }
 
 sub line_line {
-    my $construction = Math::Geometry::Construction->new(width  => 800,
-							 height => 300);
+    my $construction = Math::Geometry::Construction->new;
 
     my $l1;
     my $l2;
