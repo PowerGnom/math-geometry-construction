@@ -38,6 +38,7 @@ sub id_template { return $ID_TEMPLATE }
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::DrawPoint';
+with 'Math::Geometry::Construction::Role::VectorFormats';
 
 has 'position' => (isa      => 'Math::Vector::Real',
 	           is       => 'rw',
@@ -46,15 +47,7 @@ has 'position' => (isa      => 'Math::Vector::Real',
 sub BUILDARGS {
     my ($class, %args) = @_;
 
-    if(defined($args{position}) and ref($args{position}) eq 'ARRAY') {
-	$args{position} = V(@{$args{position}}[0, 1]);
-    }
-    if(defined($args{position}) and
-       eval { $args{position}->isa('Math::VectorReal') })
-    {
-	$args{position} = V($args{position}->x,
-			    $args{position}->y);
-    }
+    $args{position} = $class->import_vector($args{position});
     if(defined($args{x}) and defined($args{y})) {
 	$args{position} = V($args{x}, $args{y});
     }
