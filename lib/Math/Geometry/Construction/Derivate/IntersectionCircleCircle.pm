@@ -5,7 +5,8 @@ extends 'Math::Geometry::Construction::Derivate';
 use 5.008008;
 
 use Carp;
-use Math::VectorReal ':all';
+
+use Math::Vector::Real;
 
 =head1 NAME
 
@@ -13,11 +14,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleCircle> - circle cir
 
 =head1 VERSION
 
-Version 0.006
+Version 0.014
 
 =cut
 
-our $VERSION = '0.006';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -48,16 +49,14 @@ sub positions {
     my @center_p = map { $_->center->position  } @circles;
     my @radii    = map { $_->radius            } @circles;
 
-    foreach(@center_p, @radii) {
-	return if(!defined($_));
-    }
+    foreach(@center_p, @radii) { return if(!defined($_)) }
 
-    my $distance = ($center_p[1] - $center_p[0]);
-    my $d        = $distance->length;
+    my $distance = $center_p[1] - $center_p[0];
+    my $d        = abs($distance);
     return if($d == 0);
 
     my $parallel = $distance / $d;
-    my $normal   = vector(-$parallel->y, $parallel->x, 0);
+    my $normal   = $parallel->normal_base;
 
     my $x   = ($d**2 - $radii[1]**2 + $radii[0]**2) / (2 * $d);
     my $rad = $radii[0]**2 - $x**2;
