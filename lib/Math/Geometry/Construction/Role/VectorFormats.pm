@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Role::VectorFormat;
+package Math::Geometry::Construction::Role::VectorFormats;
 use Moose::Role;
 
 use 5.008008;
@@ -8,7 +8,7 @@ use Math::Vector::Real;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Role::VectorFormat> - transform different formats to Math::Vector::Real
+C<Math::Geometry::Construction::Role::VectorFormats> - transform different formats to Math::Vector::Real
 
 =head1 VERSION
 
@@ -24,7 +24,7 @@ sub import_vector {
 
     return undef if(!defined($value));
     return $value if(eval { $value->isa('Math::Vector::Real') });
-    return V(@{$value}[0, 1]) if(ref($value) eq 'ARRAY') {
+    return V(@{$value}[0, 1]) if(ref($value) eq 'ARRAY');
     return V($value->x, $value->y)
 	if(eval { $value->isa('Math::VectorReal') });
     croak sprintf('Unsupported vector format %s', ref($value));
