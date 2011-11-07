@@ -26,6 +26,8 @@ our $VERSION = '0.014';
 #                                                                         #
 ###########################################################################
 
+with 'Math::Geometry::Construction::Role::VectorFormats';
+
 has 'translator' => (isa      => 'Item',
 		     is       => 'rw',
 		     required => 1);
@@ -33,15 +35,7 @@ has 'translator' => (isa      => 'Item',
 sub BUILDARGS {
     my ($class, %args) = @_;
 
-    if(defined($args{translator}) and ref($args{translator}) eq 'ARRAY') {
-	$args{translator} = V(@{$args{translator}}[0, 1]);
-    }
-    if(defined($args{translator}) and
-       eval { $args{translator}->isa('Math::VectorReal') })
-    {
-	$args{translator} = V($args{translator}->x,
-			      $args{translator}->y);
-    }
+    $args{translator} = $class->import_vector($args{translator});
 
     return \%args;
 }
