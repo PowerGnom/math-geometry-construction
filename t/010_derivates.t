@@ -34,9 +34,10 @@ sub line_line {
     isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
     $pos = $ip->position;
     ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::VectorReal');
-    is_close($pos->x, 20, 'intersection x');
-    is_close($pos->y, 30, 'intersection y');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is_close($pos->[0], 20, 'intersection x');
+    is_close($pos->[1], 30, 'intersection y');
     
     # without position selector
     $l1 = $construction->add_line(support => [[110, 130], [130, 130]]);
@@ -51,9 +52,10 @@ sub line_line {
     isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
     $pos = $ip->position;
     ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::VectorReal');
-    is_close($pos->x, 120, 'intersection x');
-    is_close($pos->y, 130, 'intersection y');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is_close($pos->[0], 120, 'intersection x');
+    is_close($pos->[1], 130, 'intersection y');
     
     # without point_args
     $l1 = $construction->add_line(support => [[210, 230], [230, 230]]);
@@ -67,9 +69,10 @@ sub line_line {
     isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
     $pos = $ip->position;
     ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::VectorReal');
-    is_close($pos->x, 220, 'intersection x');
-    is_close($pos->y, 230, 'intersection y');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is_close($pos->[0], 220, 'intersection x');
+    is_close($pos->[1], 230, 'intersection y');
 }
 
 sub circle_line {
@@ -93,9 +96,10 @@ sub circle_line {
     isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
     $pos = $ip->position;
     ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::VectorReal');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
     # cannot test x because I don't know which point I got
-    is_close($pos->y, 30, 'intersection y');
+    is_close($pos->[1], 30, 'intersection y');
 
     @ips = $construction->add_derived_point
 	('IntersectionCircleLine',
@@ -108,13 +112,13 @@ sub circle_line {
 	isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
 	$pos = $ip->position;
 	ok(defined($pos), 'position defined');
-	isa_ok($pos, 'Math::VectorReal');
+	isa_ok($pos, 'Math::Vector::Real');
 	# cannot test x because I don't know which point I got
-	is_close($pos->y, 30, 'intersection y');
+	is_close($pos->[1], 30, 'intersection y');
     }
 
-    is_close(min(map { $_->position->x } @ips), -10, 'intersection x');
-    is_close(max(map { $_->position->x } @ips), 50, 'intersection x');
+    is_close(min(map { $_->position->[0] } @ips), -10, 'intersection x');
+    is_close(max(map { $_->position->[0] } @ips), 50, 'intersection x');
 }
 
 sub circle_circle {
@@ -138,9 +142,10 @@ sub circle_circle {
     isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
     $pos = $ip->position;
     ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::VectorReal');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
     # cannot test x because I don't know which point I got
-    is_close($pos->y, 4, 'intersection y');
+    is_close($pos->[1], 4, 'intersection y');
 
     @ips = $construction->add_derived_point
 	('IntersectionCircleCircle',
@@ -153,13 +158,14 @@ sub circle_circle {
 	isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
 	$pos = $ip->position;
 	ok(defined($pos), 'position defined');
-	isa_ok($pos, 'Math::VectorReal');
+	isa_ok($pos, 'Math::Vector::Real');
+	is(@$pos, 2, 'two components');
 	# cannot test x because I don't know which point I got
-	is_close($pos->y, 4, 'intersection y');
+	is_close($pos->[1], 4, 'intersection y');
     }
 
-    is_close(min(map { $_->position->x } @ips), -3, 'intersection x');
-    is_close(max(map { $_->position->x } @ips), 3, 'intersection x');
+    is_close(min(map { $_->position->[0] } @ips), -3, 'intersection x');
+    is_close(max(map { $_->position->[0] } @ips), 3, 'intersection x');
 }
 
 line_line;
