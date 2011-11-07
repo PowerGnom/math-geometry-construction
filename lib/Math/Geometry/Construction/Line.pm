@@ -6,6 +6,7 @@ use 5.008008;
 use Carp;
 use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
+use Math::VectorReal;
 
 =head1 NAME
 
@@ -13,11 +14,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.012
+Version 0.013
 
 =cut
 
-our $VERSION = '0.012';
+our $VERSION = '0.013';
 
 
 ###########################################################################
@@ -70,6 +71,12 @@ sub BUILD {
     my ($self, $args) = @_;
 
     $self->style('stroke', 'black') unless($self->style('stroke'));
+
+    my @support = $self->support;
+    if(@support != 2) {
+	croak "A line needs exactly two support points";
+	return undef;
+    }
 }
 
 ###########################################################################
@@ -90,17 +97,35 @@ sub positions {
     return map { $_->position } $self->points;
 }
 
+sub normal {
+    my ($self)            = @_;
+    my @support_positions = map { $_->position } $self->support;
+
+    # check for defined positions
+    if(any { !defined($_) } @support_positions) {
+	warn sprintf("Undefined support point in line %s, ".
+		     "cannot determine normal.\n", $self->id);
+	return undef;
+    }
+
+    my $direction = $support_positions[1] - $support_positions[0];
+    my $normal    = vector(-$direction->y, $direction->x, 0);
+    my $length    = $normal->length;
+
+    if($length == 0) {
+	warn sprintf("Support points of line %s are identical, ".
+		     "cannot determine normal.\n", $self->id);
+	return undef;
+    }
+    
+    return($normal / $length);
+}
+
 sub draw {
     my ($self, %args) = @_;
     return undef if $self->hidden;
 
-    my @support = $self->support;
-    if(@support != 2) {
-	warn "A line needs two support points, skipping.\n";
-	return undef;
-    }
-
-    my @support_positions = map { $_->position } @support;
+    my @support_positions = map { $_->position } $self->support;
 
     # check for defined positions
     if(any { !defined($_) } @support_positions) {
@@ -179,8 +204,7 @@ C<Math::Geometry::Construction> instead.
 Holds an array reference of the two points that define the line.
 Must be given to the constructor and should not be touched
 afterwards (the points can change their positions, of course). Must
-hold exactly two points (this is currently not checked, but expected
-e.g. during intersections).
+hold exactly two points.
 
 =head3 extend
 
@@ -189,6 +213,11 @@ somewhat beyond its end points. The length of this extent is set
 here. Defaults to C<0>.
 
 =head2 Methods
+
+=head3 normal
+
+Returns a L<Math::VectorReal|Math::VectorReal> of length C<1> that
+is orthogonal to the line.
 
 =head3 draw
 
