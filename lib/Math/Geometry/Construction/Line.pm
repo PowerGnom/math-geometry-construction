@@ -6,7 +6,7 @@ use 5.008008;
 use Carp;
 use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
-use Math::VectorReal;
+use Math::Vector::Real;
 
 =head1 NAME
 
@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.013
+Version 0.014
 
 =cut
 
-our $VERSION = '0.013';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -109,8 +109,8 @@ sub normal {
     }
 
     my $direction = $support_positions[1] - $support_positions[0];
-    my $normal    = vector(-$direction->y, $direction->x, 0);
-    my $length    = $normal->length;
+    my $ortho     = V(-$direction->[1], $direction->[0]);
+    my $length    = abs($ortho);
 
     if($length == 0) {
 	warn sprintf("Support points of line %s are identical, ".
@@ -118,7 +118,7 @@ sub normal {
 	return undef;
     }
     
-    return($normal / $length);
+    return($ortho / $length);
 }
 
 sub draw {
@@ -143,15 +143,16 @@ sub draw {
 		     $self->extreme_position(-$direction)
 		     - $direction * $self->extend);
 
-    $self->construction->draw_line(x1    => $positions[0]->x,
-				   y1    => $positions[0]->y,
-				   x2    => $positions[1]->x,
-				   y2    => $positions[1]->y,
+    $self->construction->draw_line(x1    => $positions[0]->[0],
+				   y1    => $positions[0]->[1],
+				   x2    => $positions[1]->[0],
+				   y2    => $positions[1]->[1],
 				   style => $self->style_hash,
 				   id    => $self->id);
     
-    $self->draw_label('x' => ($positions[0]->x + $positions[1]->x) / 2,
-		      'y' => ($positions[0]->y + $positions[1]->y) / 2);
+    $self->draw_label
+	('x' => ($positions[0]->[0] + $positions[1]->[0]) / 2,
+	 'y' => ($positions[0]->[1] + $positions[1]->[1]) / 2);
 }
 
 ###########################################################################
@@ -216,8 +217,8 @@ here. Defaults to C<0>.
 
 =head3 normal
 
-Returns a L<Math::VectorReal|Math::VectorReal> of length C<1> that
-is orthogonal to the line.
+Returns a L<Math::Vector::Real|Math::Vector::Real> of length C<1>
+that is orthogonal to the line.
 
 =head3 draw
 
