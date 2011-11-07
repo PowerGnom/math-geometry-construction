@@ -4,7 +4,7 @@ use Moose::Role;
 use 5.008008;
 
 use Carp;
-use Math::VectorReal;
+use Math::Vector::Real;
 
 =head1 NAME
 
@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::PositionSelection> - select position from 
 
 =head1 VERSION
 
-Version 0.012
+Version 0.014
 
 =cut
 
-our $VERSION = '0.012';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -24,6 +24,8 @@ our $VERSION = '0.012';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+with 'Math::Geometry::Construction::Role::VectorFormats';
 
 requires 'id';
 requires 'positions';
@@ -58,14 +60,13 @@ sub extreme_position {
     
     croak "Undefined direction in 'extreme_position' selector"
 	if(!defined($direction));
-    
-    if(ref($direction) eq 'ARRAY') {
-	$direction = vector($direction->[0],
-			    $direction->[1],
-			    $direction->[2] || 0);
-    }
 
-    my $norm      = $direction / $direction->length;
+    $direction = $self->import_vector($direction);
+
+    my $d         = abs($direction);
+    return undef if($d == 0);
+
+    my $norm      = $direction / $d;
     my @positions = grep { defined($_) } $self->positions;
 
     if(!@positions) {
@@ -75,7 +76,7 @@ sub extreme_position {
 
     return((map  { $_->[0] }
 	    sort { $b->[1] <=> $a->[1] }
-	    map  { [$_, $_ . $norm] }
+	    map  { [$_, $_ * $norm] }
 	    @positions)[0]);
 }
 
@@ -85,11 +86,7 @@ sub close_position {
     croak "Undefined reference position in 'close_position' selector"
 	if(!defined($reference));
     
-    if(ref($reference) eq 'ARRAY') {
-	$reference = vector($reference->[0],
-			    $reference->[1],
-			    $reference->[2] || 0);
-    }
+    $reference = $self->import_vector($reference);
 
     my @positions = grep { defined($_) } $self->positions;
 
@@ -100,7 +97,7 @@ sub close_position {
 
     return((map  { $_->[0] }
 	    sort { $a->[1] <=> $b->[1] }
-	    map  { [$_, ($_ - $reference)->length] }
+	    map  { [$_, abs($_ - $reference)] }
 	    @positions)[0]);
 }
 
@@ -110,11 +107,7 @@ sub distant_position {
     croak "Undefined reference position in 'distant_position' selector"
 	if(!defined($reference));
     
-    if(ref($reference) eq 'ARRAY') {
-	$reference = vector($reference->[0],
-			    $reference->[1],
-			    $reference->[2] || 0);
-    }
+    $reference = $self->import_vector($reference);
 
     my @positions = grep { defined($_) } $self->positions;
 
@@ -125,7 +118,7 @@ sub distant_position {
 
     return((map  { $_->[0] }
 	    sort { $b->[1] <=> $a->[1] }
-	    map  { [$_, ($_ - $reference)->length] }
+	    map  { [$_, abs($_ - $reference)] }
 	    @positions)[0]);
 }
 
