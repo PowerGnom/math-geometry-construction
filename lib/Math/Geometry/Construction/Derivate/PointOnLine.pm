@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate::PointOnLine> - point on a line
 
 =head1 VERSION
 
-Version 0.008
+Version 0.014
 
 =cut
 
-our $VERSION = '0.008';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -97,7 +97,7 @@ sub positions {
     my $s_distance = ($support_p[1] - $support_p[0]);
 
     if($self->has_distance) {
-	my $d = $s_distance->length;
+	my $d = abs($s_distance);
 	return if($d == 0);
 
 	return($support_p[0] + $s_distance / $d * $self->distance);
@@ -106,17 +106,17 @@ sub positions {
         return($support_p[0] + $s_distance * $self->quantile);
     }
     elsif($self->has_x) {
-	my $sx = $s_distance->x;
+	my $sx = $s_distance->[0];
 	return if($sx == 0);
 
-	my $scale = ($self->x - $support_p[0]->x) / $sx;
+	my $scale = ($self->x - $support_p[0]->[0]) / $sx;
 	return($support_p[0] + $s_distance * $scale);
     }
     elsif($self->has_y) {
-	my $sy = $s_distance->y;
+	my $sy = $s_distance->[1];
 	return if($sy == 0);
 
-	my $scale = ($self->y - $support_p[0]->y) / $sy;
+	my $scale = ($self->y - $support_p[0]->[1]) / $sy;
 	return($support_p[0] + $s_distance * $scale);
     }
     else {
