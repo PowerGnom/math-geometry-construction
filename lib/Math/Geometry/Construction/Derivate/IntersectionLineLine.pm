@@ -5,7 +5,8 @@ extends 'Math::Geometry::Construction::Derivate';
 use 5.008008;
 
 use Carp;
-use Math::VectorReal ':all';
+use List::MoreUtils qw(any);
+use Math::VectorReal;
 use Math::MatrixReal;
 
 =head1 NAME
@@ -14,11 +15,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionLineLine> - line line inte
 
 =head1 VERSION
 
-Version 0.011
+Version 0.013
 
 =cut
 
-our $VERSION = '0.011';
+our $VERSION = '0.013';
 
 
 ###########################################################################
@@ -45,28 +46,30 @@ sub positions {
 	}
     }
 
-    my @support = map { [map { $_->position } $_->support] } @lines;
+    my @normals   = ();
+    my @constants = ();
+    foreach(@lines) {
+	my @support           = $_->support;
+	my @support_positions = map { $_->position } @support;
 
-    foreach my $line (@support) {
-	foreach my $position (@$line) {
-	    return if(!defined($position));
-	}
+	return undef if(any { !defined($_) } @support_positions);
+	
+	my $this_normal = $_->normal;
+	push(@normals, $this_normal);
+	push(@constants, $this_normal . $support_positions[0]);
     }
 
-    my @normal   = map { $_->norm }
-	           map { (plane(Z, O, $_->[1] - $_->[0]))[0] } @support;
-    my @constant = map { $normal[$_] . $support[$_]->[0] } (0, 1);
-    my $matrix   = Math::MatrixReal->new_from_rows
-	([map { [$_->x, $_->y] } @normal]);
+    my $matrix = Math::MatrixReal->new_from_rows
+	([map { [$_->x, $_->y] } @normals]);
 
-    return if($matrix->det == 0);
+    return if($matrix->det == 0);  # check to prevent carp from inverse
     my $inverse = $matrix->inverse;
     return if(!$inverse);  # only possible - if at all - for num. reasons
 
-    return(vector($inverse->element(1, 1) * $constant[0] +
-		  $inverse->element(1, 2) * $constant[1],
-		  $inverse->element(2, 1) * $constant[0] +
-		  $inverse->element(2, 2) * $constant[1],
+    return(vector($inverse->element(1, 1) * $constants[0] +
+		  $inverse->element(1, 2) * $constants[1],
+		  $inverse->element(2, 1) * $constants[0] +
+		  $inverse->element(2, 2) * $constants[1],
 		  0));
 }
 
