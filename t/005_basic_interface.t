@@ -2,9 +2,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 57;
+use Test::More tests => 63;
 use Math::Geometry::Construction;
 use Math::VectorReal;
+use Math::Vector::Real;
 
 sub point {
     my $construction = Math::Geometry::Construction->new(width  => 800,
@@ -16,37 +17,37 @@ sub point {
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
     $pos = $p->position;
-    isa_ok($pos, 'Math::VectorReal');
-    is($pos->x, 1, 'x coordinate');
-    is($pos->y, 2, 'y coordinate');
-    is($pos->z, 3, 'z coordinate');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is($pos->[0], 1, 'x coordinate');
+    is($pos->[1], 2, 'y coordinate');
 
     $p = $construction->add_point(position => [4, 5, 6]);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
     $pos = $p->position;
-    isa_ok($pos, 'Math::VectorReal');
-    is($pos->x, 4, 'x coordinate');
-    is($pos->y, 5, 'y coordinate');
-    is($pos->z, 6, 'z coordinate');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is($pos->[0], 4, 'x coordinate');
+    is($pos->[1], 5, 'y coordinate');
 
     $p = $construction->add_point(position => [7, 8]);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
     $pos = $p->position;
-    isa_ok($pos, 'Math::VectorReal');
-    is($pos->x, 7, 'x coordinate');
-    is($pos->y, 8, 'y coordinate');
-    is($pos->z, 0, 'z coordinate');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is($pos->[0], 7, 'x coordinate');
+    is($pos->[1], 8, 'y coordinate');
 
     $p = $construction->add_point(x => 9, 'y' => 10, z => 11);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
     $pos = $p->position;
-    isa_ok($pos, 'Math::VectorReal');
-    is($pos->x, 9, 'x coordinate');
-    is($pos->y, 10, 'y coordinate');
-    is($pos->z, 11, 'z coordinate');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is($pos->[0], 9, 'x coordinate');
+    is($pos->[1], 10, 'y coordinate');
     ok(!$p->hidden, 'not hidden');
     is($p->size, 6, 'default size');
 
@@ -55,12 +56,21 @@ sub point {
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
     $pos = $p->position;
-    isa_ok($pos, 'Math::VectorReal');
-    is($pos->x, 12, 'x coordinate');
-    is($pos->y, 13, 'y coordinate');
-    is($pos->z, 0, 'z coordinate');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is($pos->[0], 12, 'x coordinate');
+    is($pos->[1], 13, 'y coordinate');
     ok($p->hidden, 'hidden');
     is($p->size, 10, 'size 10');
+
+    $p = $construction->add_point(position => V(14, 15));
+    ok(defined($p), 'point is defined');
+    isa_ok($p, 'Math::Geometry::Construction::Point');
+    $pos = $p->position;
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is($pos->[0], 14, 'x coordinate');
+    is($pos->[1], 15, 'y coordinate');
 
     # defaults
     is($p->style('stroke'), 'black', 'default stroke black');
@@ -128,7 +138,7 @@ sub circle {
     ok(defined($ci), 'circle is defined');
     isa_ok($ci, 'Math::Geometry::Construction::Circle');
     is($ci->radius, 20, 'set radius');
-    $c->position(vector(100, 100, 0));
+    $c->position(V(100, 100));
     is($ci->radius, 20, 'set radius after moving');
 }
 
