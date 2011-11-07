@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Draw::SVG> - SVG output
 
 =head1 VERSION
 
-Version 0.008
+Version 0.013
 
 =cut
 
-our $VERSION = '0.008';
+our $VERSION = '0.013';
 
 
 ###########################################################################
@@ -43,20 +43,36 @@ sub set_background {
 			fill   => $color);
 }
 
+sub process_style {
+    my ($self, $element, %style) = @_;
+
+    while(my ($key, $value) = each(%style)) {
+	if($value and ref($value) eq 'ARRAY' and @$value == 3) {
+	    $value = sprintf('rgb(%d, %d, %d)', @$value);
+	}
+    }
+
+    return %style;
+}
+
 sub line {
     my ($self, %args) = @_;
 
+    %{$args{style}} = $self->process_style('line', %{$args{style}});
     $self->output->line(%args);
 }
 
 sub circle {
     my ($self, %args) = @_;
 
+    %{$args{style}} = $self->process_style('circle', %{$args{style}});
     $self->output->circle(%args);
 }
 
 sub text {
     my ($self, %args) = @_;
+
+    %{$args{style}} = $self->process_style('text', %{$args{style}});
 
     my $data = delete $args{text};
     my $text = $self->output->text(%args);
