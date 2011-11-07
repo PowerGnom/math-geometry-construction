@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Draw::TikZ> - TikZ output
 
 =head1 VERSION
 
-Version 0.012
+Version 0.013
 
 =cut
 
-our $VERSION = '0.012';
+our $VERSION = '0.013';
 
 
 ###########################################################################
@@ -121,6 +121,12 @@ sub process_style {
 	    else  {
 		delete($style{color})
 	    }
+	}
+    }
+
+    while(my ($key, $value) = each(%style)) {
+	if($value and ref($value) eq 'ARRAY' and @$value == 3) {
+	    $value = sprintf('{rgb,255:red,%d;green,%d;blue,%d}', @$value);
 	}
     }
 
