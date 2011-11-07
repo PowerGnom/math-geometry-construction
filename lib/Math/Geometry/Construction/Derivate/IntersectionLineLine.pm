@@ -6,7 +6,7 @@ use 5.008008;
 
 use Carp;
 use List::MoreUtils qw(any);
-use Math::VectorReal;
+use Math::Vector::Real;
 use Math::MatrixReal;
 
 =head1 NAME
@@ -15,11 +15,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionLineLine> - line line inte
 
 =head1 VERSION
 
-Version 0.013
+Version 0.014
 
 =cut
 
-our $VERSION = '0.013';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -59,18 +59,16 @@ sub positions {
 	push(@constants, $this_normal . $support_positions[0]);
     }
 
-    my $matrix = Math::MatrixReal->new_from_rows
-	([map { [$_->x, $_->y] } @normals]);
+    my $matrix = Math::MatrixReal->new_from_rows([map { [@$_] } @normals]);
 
     return if($matrix->det == 0);  # check to prevent carp from inverse
     my $inverse = $matrix->inverse;
     return if(!$inverse);  # only possible - if at all - for num. reasons
 
-    return(vector($inverse->element(1, 1) * $constants[0] +
-		  $inverse->element(1, 2) * $constants[1],
-		  $inverse->element(2, 1) * $constants[0] +
-		  $inverse->element(2, 2) * $constants[1],
-		  0));
+    return V($inverse->element(1, 1) * $constants[0] +
+	     $inverse->element(1, 2) * $constants[1],
+	     $inverse->element(2, 1) * $constants[0] +
+	     $inverse->element(2, 2) * $constants[1]);
 }
 
 ###########################################################################
