@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.012
+Version 0.014
 
 =cut
 
-our $VERSION = '0.012';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -110,7 +110,7 @@ sub radius {
     my $support_p = $self->support->position;
 
     return if(!$center_p or !$support_p);
-    return(($support_p - $center_p)->length);
+    return(abs($support_p - $center_p));
 }
 
 sub draw {
@@ -120,28 +120,26 @@ sub draw {
     my $center_position  = $self->center->position;
     my $support_position = $self->support->position;
 
-    if(!defined($center_position)) {
+    if(!$center_position) {
 	warn sprintf("Undefined center of circle %s, ".
 		     "nothing to draw.\n", $self->id);
 	return undef;
     }
-    if(!defined($support_position)) {
+    if(!$support_position) {
 	warn sprintf("Undefined support of circle %s, ".
 		     "nothing to draw.\n", $self->id);
 	return undef;
     }
 
-    my $radius = ($support_position - $center_position)->length;
-
     # currently, we just draw the full circle
-    $self->construction->draw_circle(cx    => $center_position->x,
-				     cy    => $center_position->y,
-				     r     => $radius,
+    $self->construction->draw_circle(cx    => $center_position->[0],
+				     cy    => $center_position->[1],
+				     r     => $self->radius,
 				     style => $self->style_hash,
 				     id    => $self->id);
 
-    $self->draw_label('x'    => $support_position->x,
-		      'y'    => $support_position->y);
+    $self->draw_label('x' => $support_position->[0],
+		      'y' => $support_position->[1]);
 }
 
 ###########################################################################
