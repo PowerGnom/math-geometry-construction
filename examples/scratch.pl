@@ -18,9 +18,10 @@ sub line {
 				      style    => {stroke => 'none',
 						   fill   => 'blue',
 						   'fill-opacity' => 0.5});
-    my $l1 = $construction->add_line(extend  => 50,
-				     support => [$p1, $p2],
-				     style   => {stroke => 'red'});
+    my $l1 = $construction->add_line
+	(extend  => 50,
+	 support => [$p1, $p2],
+	 style   => {stroke => [218, 112, 214]});
 }
 
 sub intersection {
