@@ -3,7 +3,7 @@ package Math::Geometry::Construction::Point;
 use 5.008008;
 
 use Moose;
-use Math::VectorReal;
+use Math::Vector::Real;
 use Carp;
 
 =head1 NAME
@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Point> - a free user-defined point
 
 =head1 VERSION
 
-Version 0.012
+Version 0.014
 
 =cut
 
-our $VERSION = '0.012';
+our $VERSION = '0.014';
 
 
 ###########################################################################
@@ -39,7 +39,7 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::DrawPoint';
 
-has 'position' => (isa      => 'Math::VectorReal',
+has 'position' => (isa      => 'Math::Vector::Real',
 	           is       => 'rw',
 	           required => 1);
 
@@ -47,12 +47,16 @@ sub BUILDARGS {
     my ($class, %args) = @_;
 
     if(defined($args{position}) and ref($args{position}) eq 'ARRAY') {
-	$args{position} = vector($args{position}->[0],
-				 $args{position}->[1],
-				 $args{position}->[2] || 0);
+	$args{position} = V(@{$args{position}}[0, 1]);
+    }
+    if(defined($args{position}) and
+       eval { $args{position}->isa('Math::VectorReal') })
+    {
+	$args{position} = V($args{position}->x,
+			    $args{position}->y);
     }
     if(defined($args{x}) and defined($args{y})) {
-	$args{position} = vector($args{x}, $args{y}, $args{z} || 0);
+	$args{position} = V($args{x}, $args{y});
     }
 
     return \%args;
@@ -75,16 +79,13 @@ sub draw {
     return undef if $self->hidden;
 
     my $position = $self->position;
-    my $size     = $self->size;
-    my $radius   = defined($size) ? $size / 2 : $self->radius;
-    $self->construction->draw_circle(cx    => $position->x,
-				     cy    => $position->y,
-				     r     => $radius,
+    $self->construction->draw_circle(cx    => $position->[0],
+				     cy    => $position->[1],
+				     r     => $self->size / 2,
 				     style => $self->style_hash,
 				     id    => $self->id);
 
-    $self->draw_label('x' => $position->x,
-		      'y' => $position->y);
+    $self->draw_label('x' => $position->[0], 'y' => $position->[1]);
 
     return undef;
 }
@@ -104,7 +105,7 @@ __END__
 
 =head1 SYNOPSIS
 
-  my $p1 = $construction->add_point('x' => 100, 'y' => 150);
+  my $p1 = $construction->add_point(position => [100, 150]);
 
   my $p2 = $construction->add_point('x' => 50, 'y' => 90,
                                     hidden => 1);
@@ -131,20 +132,39 @@ C<Math::Geometry::Construction>.
 
 =head3 position
 
-Holds a L<Math::VectorReal|Math::VectorReal> object with the
-position of the point. The C<z> position is expected to be C<0>. As
-initialization argument to the constructor, you can also give an
-array reference instead of a C<Math::VectorReal> object. The object
-is then created by the constructor. The C<z> value is optional.
+Holds a L<Math::Vector::Real|Math::Vector::Real> object with the
+position of the point. As initialization argument to the
+constructor, you can also give either an array reference or a
+C<Math::VectorReal|Math::VectorReal> (C<VectorReal> one word instead
+of C<Vector::Real>) object. In the first case, the first two
+elements of the array are used to construct the
+L<Math::Vector::Real|Math::Vector::Real> object, further elements
+are silently ignored. In the second case, the C<x> and C<y>
+attributes are used, C<z> is ignored.
 
-Example:
+As a further option, you can give C<x> and C<y> explicitly.
 
+Examples:
+
+  # Math::Vector::Real object
+  $construction->add_point(position => V(1, 4));
+  # arrayref
   $construction->add_point(position => [1, 4]);
+  # Math::VectorReal object
+  $construction->add_point(position => vector(1, 4, 0));
+  # x and y
+  $construction->add_point('x' => 1, 'y' => 4);
 
-Note that the conversion of a array reference is only done at
-construction time (at least currently). If you want to change the
-position later you have to provide a
-L<Math::VectorReal|Math::VectorReal> object.
+Note that these conversions are only done at construction time (at
+least currently). If you want to change the position later you have
+to hand a L<Math::Vector::Real|Math::Vector::Real> object to the
+mutator method.
+
+Note that you must not alter the elements of the
+C<Math::Vector::Real> object directly although the class interface
+allows it. This will circumvent the tracking of changes that
+C<Math::Geometry::Construction> performs in order to improve
+performance.
 
 =head3 size
 
@@ -157,9 +177,8 @@ will default to C<6>.
 
 =head3 radius
 
-This attribute is deprecated and might be removed in a future
-version. If L<size|/size> is not set then this attribute determines
-the radius of the output circle. Defaults to C<3>.
+Half of L<size|/size>. This attribute is deprecated and might be
+removed in a future version. Use L<size|/size> instead.
 
 =head2 General Output Attributes
 
