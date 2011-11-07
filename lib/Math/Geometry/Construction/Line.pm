@@ -97,51 +97,46 @@ sub positions {
     return map { $_->position } $self->points;
 }
 
-sub normal {
+sub parallel {
     my ($self)            = @_;
     my @support_positions = map { $_->position } $self->support;
 
     # check for defined positions
     if(any { !defined($_) } @support_positions) {
-	warn sprintf("Undefined support point in line %s, ".
-		     "cannot determine normal.\n", $self->id);
+	warn sprintf("Undefined support point in line %s.\n", $self->id);
 	return undef;
     }
 
     my $direction = $support_positions[1] - $support_positions[0];
-    my $ortho     = V(-$direction->[1], $direction->[0]);
-    my $length    = abs($ortho);
+    my $length    = abs($direction);
 
     if($length == 0) {
-	warn sprintf("Support points of line %s are identical, ".
-		     "cannot determine normal.\n", $self->id);
+	warn sprintf("Support points of line %s are identical.\n",
+		     $self->id);
 	return undef;
     }
     
-    return($ortho / $length);
+    return($direction / $length);
+}
+
+sub normal {
+    my ($self)   = @_;
+    my $parallel = $self->parallel;
+
+    return $parallel ? V(-$parallel->[1], $parallel->[0]) : undef;
 }
 
 sub draw {
     my ($self, %args) = @_;
     return undef if $self->hidden;
 
-    my @support_positions = map { $_->position } $self->support;
+    my $parallel = $self->parallel;
+    return undef if(!$parallel);
 
-    # check for defined positions
-    if(any { !defined($_) } @support_positions) {
-	warn sprintf("Undefined support point in line %s, ".
-		     "nothing to draw.\n", $self->id);
-	return undef;
-    }
-
-    my $direction = ($support_positions[1] - $support_positions[0])->norm;
-
-    # I don't need to check for defined points here because at least
-    # the support points are there and will show up as extremes.
-    my @positions = ($self->extreme_position($direction)
-		     + $direction * $self->extend,
-		     $self->extreme_position(-$direction)
-		     - $direction * $self->extend);
+    my @positions = ($self->extreme_position($parallel)
+		     + $parallel * $self->extend,
+		     $self->extreme_position(-$parallel)
+		     - $parallel * $self->extend);
 
     $self->construction->draw_line(x1    => $positions[0]->[0],
 				   y1    => $positions[0]->[1],
