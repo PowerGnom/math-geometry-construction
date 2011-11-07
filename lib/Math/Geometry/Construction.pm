@@ -670,6 +670,8 @@ The C<close_position> and C<distant_position> position selectors
 expect a reference position. This exception is raised if the
 provided reference is undefined.
 
+=item * Unsupported vector format %s
+
 =back
 
 
