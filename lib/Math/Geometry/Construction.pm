@@ -410,9 +410,15 @@ Examples:
   $construction->add_point('x' => 50, 'y' => 30,
                            style => {stroke => 'red'});
 
-  # requires 'use Math::VectorReal' in this package
-  $construction->add_point(position => vector(-15, 23, 0),
+  # requires 'use Math::Vector::Real' in this package
+  $construction->add_point(position => V(-15, 23),
                            hidden   => 1);
+
+  # NB: use of Math::VectorReal is still supported, but discouraged
+  # in favor of Math::Vector::Real
+  # requires 'use Math::VectorReal' in this package
+  $construction->add_point(position => vector(-1.3, 2.7, 0),
+                           size     => 10);
 
 =head3 add_line
 
@@ -461,36 +467,12 @@ C<order_index> arguments. In fact, L<add_point|/add_point>,
 L<add_line|/add_line>, and L<add_circle|/add_circle> just call this
 method with the appropriate class.
 
-=head3 add_derivate
-
-  $construction->add_derivate($class, %args)
-
-Convenience shortcut for L<add_object|/add_object>. The only
-difference is that C<$class> is prepended with
-C<Math::Geometry::Construction::Derivate::>. Therefore you can call
-
-  $construction->add_derivate('IntersectionCircleLine', %args)
-
-instead of
-
-  $construction->add_object
-      ('Math::Geometry::Construction::Derivate::IntersectionCircleLine', %args)
-
-
-Example:
-
-  $construction->add_derivate('TranslatedPoint',
-                              input      => [$point1],
-                              translator => vector(10, -20, 0));
-
 =head3 add_derived_point
 
   $construction->add_derived_point($class, $derivate_args, $point_args)
 
 Combines the creation of a C<Derivate> object and a C<DerivedPoint>
-object in one step. This is particularly useful if the derivate only
-holds one point, e.g. the intersection of two lines, a translated
-point, a point on a line etc..
+object in one step.
 
 The method expects three parameters:
 
@@ -540,10 +522,39 @@ Example:
 
 In this case, we ask for the two intersection points between a
 circle and a line. The C<extreme_point> position selector will give
-as the most extreme of the intersection points in the given
+us the most extreme of the intersection points in the given
 direction. Therefore, in C<SVG> coordinates, C<$derived_points[0]>
 will hold the "northern", C<$derived_points[1]> the "southern"
 intersection point.
+
+=head3 add_derivate
+
+  $construction->add_derivate($class, %args)
+
+Creates and returns a
+L<Math::Geometry::Construction::Derivate|Math::Geometry::Construction::Derivate>
+subclass instance. This can be used to create C<DerivedPoint>
+objects. In most cases, it is convenient to perform these two steps
+in one go, see L<add_derived_point|/add_derived_point>.
+
+This method is a convenience shortcut for L<add_object|/add_object>.
+The only difference is that C<$class> is prepended with
+C<Math::Geometry::Construction::Derivate::>. Therefore you can call
+
+  $construction->add_derivate('IntersectionCircleLine', %args)
+
+instead of
+
+  $construction->add_object
+      ('Math::Geometry::Construction::Derivate::IntersectionCircleLine', %args)
+
+
+Example:
+
+  $derivate = $construction->add_derivate('TranslatedPoint',
+                                          input      => [$point],
+                                          translator => [10, -20]);
+  $point    = $derivate->create_derived_point;
 
 =head3 draw
 
