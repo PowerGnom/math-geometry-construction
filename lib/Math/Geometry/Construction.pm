@@ -6,7 +6,7 @@ use Carp;
 use Moose;
 use Math::Vector::Real '0.03';
 use SVG;
-use MooseX::Params::Validate;
+use MooseX::Params::Validate '0.16';
 
 =head1 NAME
 
