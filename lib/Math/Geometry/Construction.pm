@@ -204,9 +204,17 @@ This is alpha software. The API is likely to change, input checks
 and documentation are sparse, the test suite barely exists. But
 release early, release often, so here we go.
 
-So far, the development has been fast and focused on adding
-features. On the downside, the code has to be considered
-fragile. Please report any problems you encounter.
+Please note: In version 0.014, the underlying vector class has been
+changed from L<Math::VectorReal|Math::VectorReal> to
+L<Math::Vector::Real|Math::Vector::Real>. The advantage of the
+latter is that it natively supports 2D
+vectors. C<Math::Geometry::Construction> continues to accept
+L<Math::VectorReal|Math::VectorReal> objects in constructors, but
+the relevant accessors and mutators will return or accept only
+L<Math::Vector::Real|Math::Vector::Real> objects. Many basic
+applications will not make use of these features and therefore will
+continue to work without change. Applications making use of them,
+however, will need to be adapted.
 
 =head2 Aims
 
