@@ -4,8 +4,7 @@ use 5.008008;
 
 use Carp;
 use Moose;
-use Math::VectorReal;
-use Math::Vector::Real;
+use Math::Vector::Real '0.03';
 use SVG;
 use MooseX::Params::Validate;
 
