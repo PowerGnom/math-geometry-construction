@@ -4,9 +4,9 @@ use 5.008008;
 
 use Carp;
 use Moose;
-use Math::Vector::Real '0.03';
+use Math::Vector::Real 0.03;
 use SVG;
-use MooseX::Params::Validate '0.16';
+use Params::Validate qw(validate validate_pos :types);
 
 =head1 NAME
 
@@ -60,16 +60,15 @@ has 'point_size' => (isa     => 'Num',
 sub draw {
     my ($self, $type, %args) = @_;
 
-    ($type) = pos_validated_list([$type], {isa => 'Str'});
-
+    ($type) = validate_pos(@{[$type]},
+			   {type   => SCALAR,
+			    regex => qr/^\s*[A-Za-z0-9\_\:]+\s*$/});
+    
     my $class = $type =~ /\:\:/
 	? $type
 	: 'Math::Geometry::Construction::Draw::'.$type;
 
-    if($class =~ /^\s*[A-Za-z0-9\_\:]+\s*$/) {
-	eval "require $class" or croak "Unable to load module $class: $!";
-    }
-    else { croak "Class name $class did not pass regex check" }
+    eval "require $class" or croak "Unable to load module $class: $!";
 
     my $output = $self->_output($class->new(%args));
 
