@@ -5,7 +5,6 @@ use warnings;
 use Test::More tests => 55;
 use Test::Exception;
 use Math::Geometry::Construction;
-use Math::VectorReal;
 use Math::Vector::Real;
 
 sub is_close {
@@ -21,13 +20,10 @@ sub line {
     my @support;
     my $dir;
 
-    $construction->add_point(id       => 'P1',
-			     position => [0.1, 0.2]);
-    $construction->add_point(id       => 'P2',
-			     position => [0.3, 0.4]);
-    $l = $construction->add_line(support => [$construction->object('P1'),
-					     $construction->object('P2')]);
-    ok(defined($l));
+    @support = ($construction->add_point(position => [0.1, 0.2]),
+		$construction->add_point(position => [0.3, 0.4]));
+    $l = $construction->add_line(support => [@support]);
+    ok(defined($l), 'line defined');
     isa_ok($l, 'Math::Geometry::Construction::Line');
     $root = $l->construction;
     ok(defined($root), 'construction defined');
@@ -62,7 +58,7 @@ sub line {
     is_close($dir->[1],  0.2 / (sqrt(2 * 0.2**2)), 'y direction');
 
     $l = $construction->add_line(support => [[3, 5], V(-1, 12)]);
-    ok(defined($l));
+    ok(defined($l), 'line defined');
     isa_ok($l, 'Math::Geometry::Construction::Line');
     $root = $l->construction;
     ok(defined($root), 'construction defined');

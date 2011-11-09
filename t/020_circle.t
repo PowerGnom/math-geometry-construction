@@ -5,7 +5,6 @@ use warnings;
 use Test::More tests => 44;
 use Test::Exception;
 use Math::Geometry::Construction;
-use Math::VectorReal;
 use Math::Vector::Real;
 
 sub is_close {
