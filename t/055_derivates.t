@@ -16,17 +16,16 @@ sub is_close {
 sub line_line {
     my $construction = Math::Geometry::Construction->new;
 
-    my $l1;
-    my $l2;
+    my $lines;
     my $ip;
     my $pos;
 
-    $l1 = $construction->add_line(support => [[10, 30], [30, 30]]);
-    $l2 = $construction->add_line(support => [[20, 10], [20, 40]]);
+    @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
+	      $construction->add_line(support => [[20, 10], [20, 40]]));
     
     $ip = $construction->add_derived_point
 	('IntersectionLineLine',
-	 {input => [$l1, $l2]},
+	 {input => [@lines]},
 	 {position_selector => ['indexed_position', [0]]});
 
     ok(defined($ip), 'derived point defined');
