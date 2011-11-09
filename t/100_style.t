@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 60;
+use Test::More tests => 19;
 use Test::Exception;
 use Math::Geometry::Construction;
 use Math::VectorReal;
