@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 173;
+use Test::More tests => 60;
 use Test::Exception;
 use Math::Geometry::Construction;
 use Math::VectorReal;
@@ -23,8 +23,6 @@ sub point {
     $p = $construction->add_point(position => vector(1, 2, 3));
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 0, 'order index');
-    is($p->id, 'P000000000', 'id');
     $root = $p->construction;
     ok(defined($root), 'construction defined');
     isa_ok($root, 'Math::Geometry::Construction');
@@ -45,8 +43,6 @@ sub point {
 				  style    => {stroke => 'blue'});
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 1, 'order index');
-    is($p->id, 'P000000001', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
@@ -56,8 +52,6 @@ sub point {
     $p = $construction->add_point(position => [7, 8]);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 2, 'order index');
-    is($p->id, 'P000000002', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
@@ -67,8 +61,6 @@ sub point {
     $p = $construction->add_point(x => 9, 'y' => 10, z => 11);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 3, 'order index');
-    is($p->id, 'P000000003', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
@@ -81,8 +73,6 @@ sub point {
 				  size => 10);
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 4, 'order index');
-    is($p->id, 'P000000004', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
@@ -94,36 +84,11 @@ sub point {
     $p = $construction->add_point(position => V(14, 15));
     ok(defined($p), 'point is defined');
     isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 5, 'order index');
-    is($p->id, 'P000000005', 'id');
     $pos = $p->position;
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
     is($pos->[0], 14, 'x coordinate');
     is($pos->[1], 15, 'y coordinate');
-
-    $p = $construction->add_point(position => [-1, -2],
-				  id       => 'foo');
-    ok(defined($p), 'point is defined');
-    isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 6, 'order index');
-    is($p->id, 'foo', 'id');
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], -1, 'x coordinate');
-    is($pos->[1], -2, 'y coordinate');
-
-    $p = $construction->object('foo');
-    ok(defined($p), 'point is defined');
-    isa_ok($p, 'Math::Geometry::Construction::Point');
-    is($p->order_index, 6, 'order index');
-    is($p->id, 'foo', 'id');
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], -1, 'x coordinate');
-    is($pos->[1], -2, 'y coordinate');
 
     # defaults
     is($p->style('stroke'), 'black', 'default stroke black');
@@ -148,6 +113,10 @@ sub point {
     lives_ok(sub { $construction->as_tikz(width => 800, height => 300) },
 	     'as_tikz');
 }
+
+point;
+
+__END__
 
 sub derived_point {
 }
@@ -321,7 +290,6 @@ sub style {
     is($p->label_style('stroke'), 'yellow', 'color');
 }
 
-point;
 line;
 circle;
 style;
