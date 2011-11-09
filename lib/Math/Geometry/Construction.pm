@@ -39,17 +39,16 @@ has 'objects'    => (isa     => 'HashRef[Item]',
 				 object_ids    => 'keys',
 				 objects       => 'values'});
 
-has 'output'     => (isa     => 'Item',
-		     is      => 'rw',
-		     writer  => '_output',
-		     handles => {draw_line   => 'line',
-				 draw_circle => 'circle',
-				 draw_text   => 'text'});
-
 has 'point_size' => (isa     => 'Num',
 		     is      => 'rw',
 		     default => 6);
 
+
+has '_output'    => (isa     => 'Item',
+		     is      => 'rw',
+		     handles => {draw_line   => 'line',
+				 draw_circle => 'circle',
+				 draw_text   => 'text'});
 
 ###########################################################################
 #                                                                         #
