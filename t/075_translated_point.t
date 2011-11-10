@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 42;
+use Test::More tests => 50;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
 
@@ -104,4 +104,37 @@ sub translated_point {
     }
 }
 
+sub id {
+    my $construction = Math::Geometry::Construction->new;
+    my $p;
+    my $d;
+    my $dp;
+
+    $p = $construction->add_point(position => [1, -3]);
+    is($p->id, 'P000000000', 'point id');
+
+    $d = $construction->add_derivate
+	('TranslatedPoint', input => [$p], translator => [3, 4]);
+    is($d->id, 'D000000001', 'derivate id');
+
+    $dp = $d->create_derived_point;
+    is($dp->id, 'S000000002', 'derived point id');
+
+    $dp = $construction->add_derived_point
+	('TranslatedPoint', {input => [$p], translator => [1, 3]});
+    is($dp->id, 'S000000004', 'derived point id');
+    ok(defined($construction->object('D000000003')), 'derivate exists');
+
+    $dp = $construction->add_derived_point
+	('TranslatedPoint',
+	 {input => [$construction->add_point(position => [10, 21])]});
+    foreach('P000000005',
+	    'D000000006',
+	    'S000000007')
+    {
+	ok(defined($construction->object($_)), "$_ defined");
+    }
+}
+
 translated_point;
+id;
