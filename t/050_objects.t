@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 42;
+use Test::More tests => 43;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -50,6 +50,9 @@ sub id {
     is($object->id, 'P000000000', '...and has the expected id');
     is($object->position->[0], 5, 'position x');
     is($object->position->[1], -7, 'position y');
+
+    $object = $construction->object('L000000000');
+    ok(!defined($object), 'object by invalid id undefined');
 
     $object = $construction->add_point(position => [6, -8]);
     is($construction->count_objects, 2, '2 objects');
