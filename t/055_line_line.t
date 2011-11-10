@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use Test::More tests => 49;
-use List::Util qw(min max);
 use Math::Geometry::Construction;
 
 sub is_close {
