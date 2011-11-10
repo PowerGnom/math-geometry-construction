@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 59;
+use Test::More tests => 20;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -59,3 +59,4 @@ sub circle_circle {
     is_close(max(map { $_->position->[0] } @ips), 3, 'intersection x');
 }
 
+circle_circle;
