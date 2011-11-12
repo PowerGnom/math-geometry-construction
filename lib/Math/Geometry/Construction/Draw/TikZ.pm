@@ -26,11 +26,6 @@ our $VERSION = '0.013';
 #                                                                         #
 ###########################################################################
 
-has 'transform' => (isa     => 'ArrayRef[Num]',
-		    is      => 'ro',
-		    lazy    => 1,
-		    builder => '_build_transform');
-
 has 'svg_mode'  => (isa     => 'Bool',
 		    is      => 'ro',
 		    default => 0);
@@ -38,19 +33,6 @@ has 'svg_mode'  => (isa     => 'Bool',
 has 'math_mode' => (isa     => 'Bool',
 		    is      => 'ro',
 		    default => 1);
-
-sub _build_transform {
-    my ($self) = @_;
-
-    if(my $vb = $self->view_box) {
-	my $scale = [$self->width / $vb->[2],
-		     $self->height / $vb->[3]];
-	return([@$scale,
-		$vb->[0] * $scale->[0],
-		$vb->[1] * $scale->[1]]);
-    }
-    else { return [1, 1, 0, 0] }
-}
 
 sub BUILD {
     my ($self, $args) = @_;
