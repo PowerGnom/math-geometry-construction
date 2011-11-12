@@ -1,6 +1,12 @@
 Revision history for Math-Geometry-Construction
 
-0.013	 
+0.014	 Sat Nov 12 16:24:30 NZDT 2011
+	 - switched the underlying vector class from
+	   Math::VectorReal to Math::Vector::Real because the latter
+	   supports 2D vectors natively
+	 - expanded the test suite substantially
+
+0.013	 unpublished
 	 - Line offers a "normal" method now.
 	 - Draw::SVG and Draw::TikZ can both process RGB arrays as
 	   colors; this allows uniform color specification for both
