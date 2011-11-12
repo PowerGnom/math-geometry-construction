@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Draw> - base class for drawing
 
 =head1 VERSION
 
-Version 0.009
+Version 0.015
 
 =cut
 
-our $VERSION = '0.009';
+our $VERSION = '0.015';
 
 
 ###########################################################################
@@ -30,33 +30,17 @@ our $VERSION = '0.009';
 #                                                                         #
 ###########################################################################
 
-has 'output'            => (isa    => 'Item',
-			    is     => 'rw',
-			    writer => '_output');
+has 'output'            => (isa      => 'Item',
+			    is       => 'rw',
+			    writer   => '_output');
 
 has ['width', 'height'] => (isa      => 'Str',
 			    is       => 'ro',
 			    required => 1);
 
-has 'view_box'          => (isa => 'ArrayRef[Str]',
-			    is  => 'ro');
-
-sub BUILDARGS {
-    my ($class, %args) = @_;
-
-   if($args{viewBox}) {
-	my $f = '[^\s\,]+';
-	my $w = '(?:\s+|\s*\,\*)';
-	if($args{viewBox} =~ /^\s*($f)$w($f)$w($f)$w($f)\s*$/) {
-	    $args{view_box} = [$1, $2, $3, $4];
-	}
-	else { warn "Failed to parse viewBox attribute.\n"  }
-    }
-
-    $args{view_box} ||= [0, 0, $args{width} || 0, $args{height} || 0];
-
-    return \%args;
-}
+has 'transform'         => (isa      => 'ArrayRef[Num]',
+			    is       => 'ro',
+			    default  => sub { [1, 0, 0, 1, 0, 0] });
 
 
 ###########################################################################
@@ -64,6 +48,12 @@ sub BUILDARGS {
 #                            Generate Output                              #
 #                                                                         #
 ###########################################################################
+
+sub transform_coordinates {
+    my ($self, $x, $y) = @_;
+
+    return($x, $y);
+}
 
 sub line {}
 sub circle {}
