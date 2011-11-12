@@ -4,7 +4,6 @@ use 5.008008;
 
 use Moose;
 use Carp;
-use Math::Vector::Real;
 
 =head1 NAME
 
@@ -51,11 +50,11 @@ has 'transform'         => (isa      => 'ArrayRef[Num]',
 ###########################################################################
 
 sub transform_coordinates {
-    my ($self, $v) = @_;
-    my $t          = $self->transform;
+    my ($self, $x, $y) = @_;
+    my $t              = $self->transform;
 
-    return(V($t->[0] * $v->[0] + $t->[2] * $v->[1], $t->[4],
-	     $t->[1] * $v->[0] + $t->[3] * $v->[1], $t->[5]));
+    return($t->[0] * $x + $t->[2] * $y, $t->[4],
+	   $t->[1] * $x + $t->[3] * $y, $t->[5]);
 }
 
 sub line {}
