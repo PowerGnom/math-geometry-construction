@@ -1,5 +1,10 @@
 Revision history for Math-Geometry-Construction
 
+0.015	 
+	 - the view_box attribute for Math::Geometry::Construction
+	   and its subclasses has gone; use the transform attribute
+	   instead
+
 0.014	 Sat Nov 12 16:24:30 NZDT 2011
 	 - switched the underlying vector class from
 	   Math::VectorReal to Math::Vector::Real because the latter
