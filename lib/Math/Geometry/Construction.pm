@@ -581,7 +581,7 @@ L<SVG|SVG> constructor. At least C<width> and C<height> should be
 provided.
 
 If a L<background color|/background> is specified then a rectangle
-of of that color is drawn as background. The size is taken from the
+of that color is drawn as background. The size is taken from the
 C<viewBox> attribute if specified, from C<width> and C<height>
 otherwise. If none is given, no background is drawn.
 
