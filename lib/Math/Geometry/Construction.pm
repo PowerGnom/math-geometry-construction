@@ -694,8 +694,6 @@ provided reference is undefined.
 
 =over 4
 
-=item * Failed to parse viewBox attribute.
-
 =item * No positions to select from in %s.
 
 This warning is issued by the position selectors if there is are no
