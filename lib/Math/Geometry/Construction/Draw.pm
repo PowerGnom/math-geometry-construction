@@ -57,6 +57,18 @@ sub transform_coordinates {
 	   $t->[1] * $x + $t->[3] * $y, $t->[5]);
 }
 
+sub transform_x_length {
+    my ($self, $l) = @_;
+
+    return(abs($l * $self->transform->[0]));
+}
+
+sub transform_y_length {
+    my ($self, $l) = @_;
+
+    return(abs($l * $self->transform->[3]));
+}
+
 sub line {}
 sub circle {}
 sub text {}
