@@ -52,9 +52,15 @@ has 'transform'         => (isa      => 'ArrayRef[Num]',
 sub transform_coordinates {
     my ($self, $x, $y) = @_;
     my $t              = $self->transform;
+    my $split          = qr/(.*?)(\s*[a-zA-Z]*)$/;
 
-    return($t->[0] * $x + $t->[2] * $y, $t->[4],
-	   $t->[1] * $x + $t->[3] * $y, $t->[5]);
+    my @x_parts = $x =~ $split;
+    my @y_parts = $y =~ $split;
+
+    my $xt = $t->[0] * $x_parts[0] + $t->[2] * $y_parts[0] + $t->[4];
+    my $yt = $t->[1] * $x_parts[0] + $t->[3] * $y_parts[0] + $t->[5];
+
+    return("$xt$x_parts[1]", "$yt$y_parts[1]");
 }
 
 sub transform_x_length {
