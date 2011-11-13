@@ -4,6 +4,10 @@ Revision history for Math-Geometry-Construction
 	 - the view_box attribute for Math::Geometry::Construction
 	   and its subclasses has gone; use the transform attribute
 	   instead
+	 - transform attribute allows simple coordinate
+	   transformations, specifically a swap to a "normal"
+	   mathematic right-handed system as opposed to SVG's
+	   matrix-like system (positive y axis pointing down)
 
 0.014	 Sat Nov 12 16:24:30 NZDT 2011
 	 - switched the underlying vector class from
