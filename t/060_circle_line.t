@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use Test::More tests => 18;
-use Math::VectorReal;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
