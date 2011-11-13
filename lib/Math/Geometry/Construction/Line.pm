@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.014
+Version 0.015
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.015';
 
 
 ###########################################################################
@@ -131,10 +131,10 @@ sub draw {
     my $parallel = $self->parallel;
     return undef if(!$parallel);
 
-    my @positions = ($self->extreme_position($parallel)
-		     + $parallel * $self->extend,
-		     $self->extreme_position(-$parallel)
-		     - $parallel * $self->extend);
+    my @positions = ($self->extreme_position(-$parallel)
+		     - $parallel * $self->extend,
+		     $self->extreme_position($parallel)
+		     + $parallel * $self->extend);
 
     $self->construction->draw_line(x1    => $positions[0]->[0],
 				   y1    => $positions[0]->[1],
