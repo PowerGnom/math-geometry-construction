@@ -1,6 +1,6 @@
 Revision history for Math-Geometry-Construction
 
-0.015	 
+0.015	 Sun Nov 13 15:23:37 NZDT 2011
 	 - the view_box attribute for Math::Geometry::Construction
 	   and its subclasses has gone; use the transform attribute
 	   instead
