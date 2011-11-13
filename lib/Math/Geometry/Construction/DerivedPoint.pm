@@ -3,7 +3,6 @@ package Math::Geometry::Construction::DerivedPoint;
 use 5.008008;
 
 use Moose;
-use Math::VectorReal;
 use Carp;
 
 =head1 NAME
