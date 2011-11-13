@@ -3,7 +3,6 @@ package Math::Geometry::Construction::Derivate;
 use 5.008008;
 
 use Moose;
-use Math::VectorReal;
 use Carp;
 
 =head1 NAME
@@ -12,11 +11,11 @@ C<Math::Geometry::Construction::Derivate> - derive points from objects
 
 =head1 VERSION
 
-Version 0.012
+Version 0.016
 
 =cut
 
-our $VERSION = '0.012';
+our $VERSION = '0.016';
 
 
 ###########################################################################
@@ -97,8 +96,6 @@ __END__
 =head2 Methods for Subclass Developers
 
 =head3 create_derived_point
-
-=head3 as_svg
 
 =head3 id_template
 
