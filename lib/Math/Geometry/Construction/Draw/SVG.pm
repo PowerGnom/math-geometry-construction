@@ -28,24 +28,37 @@ our $VERSION = '0.015';
 sub BUILD {
     my ($self, $args) = @_;
 
-    delete($args->{view_box});
+    my $bg = delete $args->{background};  # modifies given hash!
     $self->_output(SVG->new(%$args));
+    $self->_set_background($bg, %$args);
 }
 
-sub set_background {
-    my ($self, $color) = @_;
+sub _set_background {
+    my ($self, $color, %args) = @_;
 
-=for repair
+    return if(!$color);
+    if(ref($color) eq 'ARRAY' and @$color == 3) {
+	$color = sprintf('rgb(%d, %d, %d)', @$color);
+    }
 
-    my $vb             = $self->view_box;
+    my $x = 0;
+    my $y = 0;
+    my $w = $args{width};
+    my $h = $args{height};
+    if($args{viewBox}) {
+	my $wsp = qr/\s+|\s*\,\s*/;
+	if($args{viewBox} =~ /^\s*(.*)$wsp(.*)$wsp(.*)$wsp(.*?)\s*$/) {
+	    ($x, $y, $w, $h) = ($1, $2, $3, $4);
+	}
+	else { warn "Failed to parse viewBox attribute.\n" }
+    }
 
-    $self->output->rect('x' => $vb->[0], 'y' => $vb->[1],
-			width  => $vb->[2],
-			height => $vb->[3],
+    $self->output->rect('x'    => $x,
+			'y'    => $y,
+			width  => $w,
+			height => $h,
 			stroke => 'none',
 			fill   => $color);
-
-=cut
 
 }
 
