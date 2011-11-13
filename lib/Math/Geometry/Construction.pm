@@ -69,12 +69,8 @@ sub draw {
 
     eval "require $class" or croak "Unable to load module $class: $!";
 
-    my $output = $self->_output($class->new(%args));
-
-    if(my $bg = $self->background) {
-	$output->set_background($bg);
-    }
-    
+    my $output  = $self->_output
+	($class->new(background => $self->background, %args));
     my @objects = sort { $a->order_index <=> $b->order_index }
         $self->objects;
 
@@ -693,6 +689,8 @@ provided reference is undefined.
 =head2 Warnings
 
 =over 4
+
+=item * Failed to parse viewBox attribute.
 
 =item * No positions to select from in %s.
 
