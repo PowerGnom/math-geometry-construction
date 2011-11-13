@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::DerivedPoint> - point derived from other objects
 
 =head1 VERSION
 
-Version 0.014
+Version 0.016
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.016';
 
 
 ###########################################################################
@@ -118,7 +118,7 @@ __END__
 
 =head2 Methods for Subclass Developers
 
-=head3 as_svg
+=head3 draw
 
 =head3 id_template
 
