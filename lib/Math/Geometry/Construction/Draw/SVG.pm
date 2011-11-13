@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Draw::SVG> - SVG output
 
 =head1 VERSION
 
-Version 0.013
+Version 0.015
 
 =cut
 
-our $VERSION = '0.013';
+our $VERSION = '0.015';
 
 
 ###########################################################################
@@ -34,6 +34,9 @@ sub BUILD {
 
 sub set_background {
     my ($self, $color) = @_;
+
+=for repair
+
     my $vb             = $self->view_box;
 
     $self->output->rect('x' => $vb->[0], 'y' => $vb->[1],
@@ -41,6 +44,9 @@ sub set_background {
 			height => $vb->[3],
 			stroke => 'none',
 			fill   => $color);
+
+=cut
+
 }
 
 sub process_style {
@@ -60,6 +66,12 @@ sub line {
 
     $args{style} = {$self->process_style('line', %{$args{style}})}
 	if($args{style});
+
+    ($args{x1}, $args{y1}) = $self->transform_coordinates
+	($args{x1}, $args{y1});
+    ($args{x2}, $args{y2}) = $self->transform_coordinates
+	($args{x2}, $args{y2});
+
     $self->output->line(%args);
 }
 
@@ -68,7 +80,14 @@ sub circle {
 
     $args{style} = {$self->process_style('circle', %{$args{style}})}
 	if($args{style});
-    $self->output->circle(%args);
+
+    ($args{cx}, $args{cy}) = $self->transform_coordinates
+	($args{cx}, $args{cy});
+    $args{rx} = $self->transform_x_length($args{r});
+    $args{ry} = $self->transform_y_length($args{r});
+    delete $args{r};
+
+    $self->output->ellipse(%args);
 }
 
 sub text {
@@ -76,6 +95,9 @@ sub text {
 
     $args{style} = {$self->process_style('text', %{$args{style}})}
 	if($args{style});
+
+    ($args{x}, $args{y}) = $self->transform_coordinates
+	($args{x}, $args{y});
 
     my $data = delete $args{text};
     my $text = $self->output->text(%args);
