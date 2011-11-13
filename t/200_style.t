@@ -5,8 +5,6 @@ use warnings;
 use Test::More tests => 19;
 use Test::Exception;
 use Math::Geometry::Construction;
-use Math::VectorReal;
-use Math::Vector::Real;
 
 sub style {
     my $construction = Math::Geometry::Construction->new;
