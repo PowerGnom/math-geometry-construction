@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Role::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.014
+Version 0.015
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.015';
 
 
 ###########################################################################
@@ -25,6 +25,7 @@ our $VERSION = '0.014';
 ###########################################################################
 
 requires 'construction';
+requires 'id';
 
 has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
 			     is      => 'bare',
@@ -81,7 +82,8 @@ sub draw_label {
 	    ('x'   => $args{x} + $self->label_offset_x,
 	     'y'   => $args{y} + $self->label_offset_y,
 	     style => $self->label_style_hash,
-	     text  => defined($label) ? $label : '');
+	     text  => defined($label) ? $label : '',
+	     id    => $self->id.'_label');
     }
 
     return;
