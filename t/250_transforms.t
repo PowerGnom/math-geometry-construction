@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 56;
+use Test::More tests => 24;
 use Math::Geometry::Construction;
 
 sub is_close {
@@ -11,167 +11,77 @@ sub is_close {
     cmp_ok(abs($value - $reference), '<', ($limit || 1e-12), $message);
 }
 
-sub line_line {
+sub right_handed {
     my $construction = Math::Geometry::Construction->new;
 
-    my $line;
-    my $d;
-    my $dp;
-    my $pos;
+    my $p;
+    my $ci;
+    my $svg;
+    my $element;
 
-    $line = $construction->add_line(support => [[10, 30], [90, 90]]);
-    
-    $d  = $construction->add_derivate
-	('PointOnLine', input => [$line], distance => 50);
-    $dp = $d->create_derived_point
-	(position_selector => ['indexed_position', [0]]);
+    $p = $construction->add_point(position => [10, 20], id => 'P01');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
-    
-    $dp = $d->create_derived_point;
+    $svg = $construction->as_svg(width => 100, height => 80);
+    $element = $svg->getElementByID('P01');
+    ok(defined($element), 'found element');
+    is($element->attrib('cx'), 10, 'cx attribute');
+    is($element->attrib('cy'), 20, 'cy attribute');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
-    
-    $dp = $construction->add_derived_point
-	('PointOnLine',
-	 {input => [$line], distance => 50},
-	 {position_selector => ['indexed_position', [0]]});
+    $svg = $construction->as_svg(width     => 100,
+				 height    => 80,
+				 transform => [1, 0, 0, -1, 0, 80]);
+    $element = $svg->getElementByID('P01');
+    ok(defined($element), 'found element');
+    is($element->attrib('cx'), 10, 'cx attribute');
+    is($element->attrib('cy'), 60, 'cy attribute');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
-    
-    $dp = $construction->add_derived_point
-	('PointOnLine',
-	 {input => [$line], distance => 50},
-	 {});
+    $ci = $construction->add_circle(center => [300, 450],
+				    radius => 50,
+				    id     => 'C01');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
-    
-    $dp = $construction->add_derived_point
-	('PointOnLine',
-	 {input => [$line], distance => 50});
+    $svg = $construction->as_svg(width     => 100,
+				 height    => 80,
+				 transform => [0.1, 0, 0, -0.1, 0, 80]);
+    $element = $svg->getElementByID('C01');
+    ok(defined($element), 'found element');
+    is($element->attrib('cx'), 30, 'cx attribute');
+    is($element->attrib('cy'), 35, 'cy attribute');
+    is($element->attrib('rx'), 5, 'rx attribute');
+    is($element->attrib('ry'), 5, 'ry attribute');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
-    
-    $dp = $construction->add_derived_point
-	('PointOnLine',
-	 {input => [$line], quantile => 1.5});
+    $svg = $construction->as_svg(width     => 100,
+				 height    => 80,
+				 transform => [0.2, 0, 0, -0.1, 0, 80]);
+    $element = $svg->getElementByID('C01');
+    ok(defined($element), 'found element');
+    is($element->attrib('cx'), 60, 'cx attribute');
+    is($element->attrib('cy'), 35, 'cy attribute');
+    is($element->attrib('rx'), 10, 'rx attribute');
+    is($element->attrib('ry'), 5, 'ry attribute');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 130, 'intersection x');
-    is_close($pos->[1], 120, 'intersection y');
-    
-    $dp = $construction->add_derived_point
-	('PointOnLine',
-	 {input => [$line], x => 90});
+    $ci = $construction->add_line(support => [[300, 450], [200, 100]],
+				  id      => 'L01');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 90, 'intersection x');
-    is_close($pos->[1], 90, 'intersection y');
-    
-    $dp = $construction->add_derived_point
-	('PointOnLine',
-	 {input => [$line], 'y' => 120});
+    $svg = $construction->as_svg(width     => 100,
+				 height    => 80,
+				 transform => [0.1, 0, 0, -0.1, 0, 80]);
+    $element = $svg->getElementByID('L01');
+    ok(defined($element), 'found element');
+    is($element->attrib('x1'), 30, 'x1 attribute');
+    is($element->attrib('y1'), 35, 'y1 attribute');
+    is($element->attrib('x2'), 20, 'x2 attribute');
+    is($element->attrib('y2'), 70, 'y2 attribute');
 
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 130, 'intersection x');
-    is_close($pos->[1], 120, 'intersection y');
+    $p = $construction->add_point(position => [500, 600],
+				  id       => 'P02',
+				  label    => 'P02');
+    $svg = $construction->as_svg(width     => 100,
+				 height    => 80,
+				 transform => [0.1, 0, 0, -0.1, 0, 80]);
+    $element = $svg->getElementByID('P02_label');
+    ok(defined($element), 'found element');
+    is($element->attrib('x'), 50, 'x attribute');
+    is($element->attrib('y'), 20, 'y attribute');
 }
 
-sub id {
-
-=for later
-
-    my $construction = Math::Geometry::Construction->new;
-    my @lines;
-    my $d;
-    my $dp;
-
-    @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
-	      $construction->add_line(support => [[20, 10], [20, 40]]));
-    is($lines[0]->id, 'L000000002', 'line id');
-    is($lines[1]->id, 'L000000005', 'line id');
-
-    $d = $construction->add_derivate
-	('IntersectionLineLine', input => [@lines]);
-    is($d->id, 'D000000006', 'derivate id');
-
-    $dp = $d->create_derived_point;
-    is($dp->id, 'S000000007', 'derived point id');
-
-    $dp = $construction->add_derived_point
-	('IntersectionLineLine', {input => [@lines]});
-    is($dp->id, 'S000000009', 'derived point id');
-    ok(defined($construction->object('D000000008')), 'derivate exists');
-
-    $dp = $construction->add_derived_point
-	('IntersectionLineLine',
-	 {input => [$construction->add_line(support => [[1, 2], [3, 4]]),
-		    $construction->add_line(support => [[5, 6], [7, 8]])]});
-    foreach('P000000010',
-	    'P000000011',
-	    'L000000012',
-	    'P000000013',
-	    'P000000014',
-	    'L000000015',
-	    'D000000016',
-	    'S000000017')
-    {
-	ok(defined($construction->object($_)), "$_ defined");
-    }
-
-=cut
-
-}
-
-line_line;
-id;
+right_handed;
