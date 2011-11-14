@@ -76,6 +76,8 @@ sub BUILD {
 	croak "A line needs exactly two support points";
 	return undef;
     }
+
+    $self->register_point(@support);
 }
 
 ###########################################################################
