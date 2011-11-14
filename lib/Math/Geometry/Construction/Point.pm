@@ -20,10 +20,21 @@ our $VERSION = '0.016';
 
 ###########################################################################
 #                                                                         #
+#                      Class Variables and Methods                        # 
+#                                                                         #
+###########################################################################
+
+our $ID_TEMPLATE = 'P%09d';
+
+sub id_template { return $ID_TEMPLATE }
+
+###########################################################################
+#                                                                         #
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
 
+with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::Output';
 
 has 'size'     => (isa     => 'Num',

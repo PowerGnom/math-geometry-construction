@@ -1,8 +1,9 @@
 package Math::Geometry::Construction::FixedPoint;
+use Moose;
+extends 'Math::Geometry::Construction::Point';
 
 use 5.008008;
 
-use Moose;
 use Math::Vector::Real;
 use Carp;
 
@@ -21,21 +22,10 @@ our $VERSION = '0.016';
 
 ###########################################################################
 #                                                                         #
-#                      Class Variables and Methods                        # 
-#                                                                         #
-###########################################################################
-
-our $ID_TEMPLATE = 'P%09d';
-
-sub id_template { return $ID_TEMPLATE }
-
-###########################################################################
-#                                                                         #
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::VectorFormats';
 
 has 'position' => (isa      => 'Math::Vector::Real',
@@ -51,12 +41,6 @@ sub BUILDARGS {
     }
 
     return \%args;
-}
-
-sub BUILD {
-    my ($self, $args) = @_;
-
-    $self->set_default_point_style;
 }
 
 ###########################################################################
