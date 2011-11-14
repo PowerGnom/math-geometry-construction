@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Draw::SVG> - SVG output
 
 =head1 VERSION
 
-Version 0.015
+Version 0.016
 
 =cut
 
-our $VERSION = '0.015';
+our $VERSION = '0.016';
 
 
 ###########################################################################
@@ -29,6 +29,7 @@ sub BUILD {
     my ($self, $args) = @_;
 
     my $bg = delete $args->{background};  # modifies given hash!
+    delete $args->{transform};
     $self->_output(SVG->new(%$args));
     $self->_set_background($bg, %$args);
 }
