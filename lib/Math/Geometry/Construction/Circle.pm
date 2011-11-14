@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.014
+Version 0.017
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.017';
 
 
 ###########################################################################
@@ -38,6 +38,7 @@ sub id_template { return $ID_TEMPLATE }
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
+with 'Math::Geometry::Construction::Role::PointSet';
 
 has 'center'  => (isa      => 'Item',
 		  is       => 'rw',
@@ -94,7 +95,7 @@ sub BUILD {
 sub points {
     my ($self) = @_;
 
-    return($self->support, $self->points_of_interest);
+    return($self->support, $self->members);
 }
 
 sub positions {
