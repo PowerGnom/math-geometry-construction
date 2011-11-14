@@ -74,12 +74,11 @@ sub draw {
     my @objects = sort { $a->order_index <=> $b->order_index }
         $self->objects;
 
-    my %is_point = ('Math::Geometry::Construction::Point'        => 1,
-		    'Math::Geometry::Construction::DerivedPoint' => 1);
-    foreach(grep { !$is_point{blessed($_)} } @objects) {
+    my $point_class = 'Math::Geometry::Construction::Point';
+    foreach(grep { !eval { $_->isa($point_class) } } @objects) {
 	$_->draw(output => $output) if($_->can('draw'));
     }
-    foreach(grep { $is_point{blessed($_)} } @objects) {
+    foreach(grep { eval { $_->isa($point_class) } } @objects) {
 	$_->draw(output => $output) if($_->can('draw'));
     }
 
