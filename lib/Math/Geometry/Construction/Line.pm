@@ -84,12 +84,6 @@ sub BUILD {
 #                                                                         #
 ###########################################################################
 
-sub points {
-    my ($self) = @_;
-
-    return($self->support, $self->members);
-}
-
 sub positions {
     my ($self) = @_;
 
