@@ -1,6 +1,6 @@
 Revision history for Math-Geometry-Construction
 
-0.016	 
+0.016	 Mon Nov 14 19:41:12 NZDT 2011
 	 - fixed bug in SVG generation: if the transform attribute
 	   was specified it leaked through to the SVG object and
 	   made renderers choke
