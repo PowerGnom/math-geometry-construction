@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Role::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.015
+Version 0.017
 
 =cut
 
-our $VERSION = '0.015';
+our $VERSION = '0.017';
 
 
 ###########################################################################
@@ -27,45 +27,38 @@ our $VERSION = '0.015';
 requires 'construction';
 requires 'id';
 
-has 'points_of_interest' => (isa     => 'ArrayRef[Item]',
-			     is      => 'bare',
-			     traits  => ['Array'],
-			     default => sub { [] },
-			     handles => {points_of_interest => 'elements',
-					 add_poi            => 'push'});
+has 'hidden'         => (isa     => 'Bool',
+		         is      => 'rw',
+		         default => 0);
 
-has 'hidden'             => (isa     => 'Bool',
-			     is      => 'rw',
-			     default => 0);
+has 'label'          => (isa       => 'Item',
+		         is        => 'rw',
+		         clearer   => 'clear_label',
+		         predicate => 'has_label');
 
-has 'label'              => (isa       => 'Item',
-			     is        => 'rw',
-			     clearer   => 'clear_label',
-			     predicate => 'has_label');
+has 'label_offset_x' => (isa     => 'Num',
+		         is      => 'rw',
+		         default => 0);
 
-has 'label_offset_x'     => (isa     => 'Num',
-			     is      => 'rw',
-			     default => 0);
+has 'label_offset_y' => (isa     => 'Num',
+		         is      => 'rw',
+		         default => 0);
 
-has 'label_offset_y'     => (isa     => 'Num',
-			     is      => 'rw',
-			     default => 0);
+has 'style'          => (isa     => 'HashRef[Str|ArrayRef]',
+		         is      => 'rw',
+		         reader  => 'style_hash',
+		         writer  => '_style_hash',
+		         traits  => ['Hash'],
+		         default => sub { {} },
+		         handles => {style => 'accessor'});
 
-has 'style'              => (isa     => 'HashRef[Str|ArrayRef]',
-			     is      => 'rw',
-			     reader  => 'style_hash',
-			     writer  => '_style_hash',
-			     traits  => ['Hash'],
-			     default => sub { {} },
-			     handles => {style => 'accessor'});
-
-has 'label_style'        => (isa     => 'HashRef[Str|ArrayRef]',
-			     is      => 'rw',
-			     reader  => 'label_style_hash',
-			     writer  => '_label_style_hash',
-			     traits  => ['Hash'],
-			     default => sub { {} },
-			     handles => {label_style => 'accessor'});
+has 'label_style'    => (isa     => 'HashRef[Str|ArrayRef]',
+		         is      => 'rw',
+		         reader  => 'label_style_hash',
+		         writer  => '_label_style_hash',
+		         traits  => ['Hash'],
+		         default => sub { {} },
+		         handles => {label_style => 'accessor'});
 
 ###########################################################################
 #                                                                         #
@@ -183,10 +176,6 @@ attribute also apply here.
 =head3 draw_label
 
 Draws the label. Called by objects that have consumed this role.
-
-=head2 Attributes and Methods for Developers
-
-=head3 points_of_interest
 
 =head1 DIAGNOSTICS
 
