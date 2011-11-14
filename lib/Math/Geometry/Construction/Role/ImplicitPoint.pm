@@ -12,19 +12,18 @@ C<Math::Geometry::Construction::Role::ImplicitPoint> - transform different forma
 
 =head1 VERSION
 
-Version 0.014
+Version 0.016
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.016';
 
 sub import_point {
     my ($self, $construction, $value) = @_;
-    my @point_classes = ('Math::Geometry::Construction::Point',
-			 'Math::Geometry::Construction::DerivedPoint');
 
     return undef if(!defined($value));
-    foreach(@point_classes) { return $value if(eval { $value->isa($_) }) }
+    return $value
+	if(eval { $value->isa('Math::Geometry::Construction::Point') });
     return $construction->add_point(position => $value, hidden => 1);
 }
 
