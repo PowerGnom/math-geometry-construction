@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::VectorFormats> - transform different forma
 
 =head1 VERSION
 
-Version 0.014
+Version 0.016
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.016';
 
 
 sub import_vector {
