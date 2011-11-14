@@ -84,6 +84,8 @@ sub BUILD {
 
     $self->style('stroke', 'black') unless($self->style('stroke'));
     $self->style('fill',   'none')  unless($self->style('fill'));
+
+    $self->register_point($self->support);
 }
 
 ###########################################################################
@@ -91,12 +93,6 @@ sub BUILD {
 #                             Retrieve Data                               #
 #                                                                         #
 ###########################################################################
-
-sub points {
-    my ($self) = @_;
-
-    return($self->support, $self->members);
-}
 
 sub positions {
     my ($self) = @_;
