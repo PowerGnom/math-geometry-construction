@@ -62,7 +62,7 @@ sub create_derived_point {
 	 %args);
 
     foreach($self->input) {
-	$_->add_member($point);
+	$_->register_point($point);
     }
 
     return $point;
