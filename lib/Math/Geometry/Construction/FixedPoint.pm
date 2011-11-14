@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Point;
+package Math::Geometry::Construction::FixedPoint;
 
 use 5.008008;
 
@@ -8,15 +8,15 @@ use Carp;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Point> - a free user-defined point
+C<Math::Geometry::Construction::FixedPoint> - independent user-defined point
 
 =head1 VERSION
 
-Version 0.014
+Version 0.016
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.016';
 
 
 ###########################################################################
@@ -36,8 +36,6 @@ sub id_template { return $ID_TEMPLATE }
 ###########################################################################
 
 with 'Math::Geometry::Construction::Role::Object';
-with 'Math::Geometry::Construction::Role::Output';
-with 'Math::Geometry::Construction::Role::DrawPoint';
 with 'Math::Geometry::Construction::Role::VectorFormats';
 
 has 'position' => (isa      => 'Math::Vector::Real',
@@ -66,22 +64,6 @@ sub BUILD {
 #                             Retrieve Data                               #
 #                                                                         #
 ###########################################################################
-
-sub draw {
-    my ($self, %args) = @_;
-    return undef if $self->hidden;
-
-    my $position = $self->position;
-    $self->construction->draw_circle(cx    => $position->[0],
-				     cy    => $position->[1],
-				     r     => $self->size / 2,
-				     style => $self->style_hash,
-				     id    => $self->id);
-
-    $self->draw_label('x' => $position->[0], 'y' => $position->[1]);
-
-    return undef;
-}
 
 ###########################################################################
 #                                                                         #
