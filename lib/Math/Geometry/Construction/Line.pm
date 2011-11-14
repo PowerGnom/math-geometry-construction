@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.015
+Version 0.017
 
 =cut
 
-our $VERSION = '0.015';
+our $VERSION = '0.017';
 
 
 ###########################################################################
@@ -40,6 +40,7 @@ sub id_template { return $ID_TEMPLATE }
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
+with 'Math::Geometry::Construction::Role::PointSet';
 with 'Math::Geometry::Construction::Role::ImplicitPoint';
 
 has 'support'     => (isa      => 'ArrayRef[Item]',
@@ -86,7 +87,7 @@ sub BUILD {
 sub points {
     my ($self) = @_;
 
-    return($self->support, $self->points_of_interest);
+    return($self->support, $self->members);
 }
 
 sub positions {
