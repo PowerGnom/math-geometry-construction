@@ -29,7 +29,7 @@ sub angle_bisector {
 
     my $c1 = $construction->add_circle(center  => $b,
 				       support => $a,
-				       style   => $style);
+				       style   => {%$style});
     my $ba = $construction->add_line(support => [$b, $a],
 				     hidden  => 1);
     my $bc = $construction->add_line(support => [$b, $c],
@@ -38,19 +38,19 @@ sub angle_bisector {
 	('IntersectionCircleLine',
 	 {input => [$c1, $bc]},
 	 {position_selector => ['extreme_position', [$bc->parallel]],
-	  style             => $style});
+	  style             => {%$style}});
 
     my $c2 = $construction->add_circle(center  => $a,
 				       support => $p1,
-				       style   => $style);
+				       style   => {%$style});
     my $c3 = $construction->add_circle(center  => $p1,
 				       support => $a,
-				       style   => $style);
+				       style   => {%$style});
     return $construction->add_derived_point
 	('IntersectionCircleCircle',
 	 {input => [$c2, $c3]},
 	 {position_selector => ['distant_position', [$b->position]],
-	  style             => $style});
+	  style             => {%$style}});
 }
 
 sub circles1 {
@@ -63,26 +63,26 @@ sub circles1 {
     $style = {stroke => 'blue'};
     my $absap = angle_bisector($construction, $c, $a, $b, $style);
     my $absa  = $construction->add_line(support => [$a, $absap],
-					style   => $style);
+					style   => {%$style});
     my $absbp = angle_bisector($construction, $a, $b, $c, $style);
     my $absb  = $construction->add_line(support => [$b, $absbp],
-					style   => $style);
+					style   => {%$style});
     my $abscp = angle_bisector($construction, $b, $c, $a, $style);
     my $absc  = $construction->add_line(support => [$c, $abscp],
-					style   => $style);
+					style   => {%$style});
 
     my $center = $construction->add_derived_point
 	('IntersectionLineLine',
 	 {input => [$absa, $absb]},
-	 {style => $style});
+	 {style => {%$style}});
 
     $style = {stroke => 'green'};
     my $absah2p = angle_bisector($construction, $center, $a, $b, $style);
     my $absah2  = $construction->add_line(support => [$a, $absah2p],
-					  style   => $style);
+					  style   => {%$style});
     my $absbh1p = angle_bisector($construction, $a, $b, $center, $style);
     my $absbh1  = $construction->add_line(support => [$b, $absbh1p],
-					  style   => $style);
+					  style   => {%$style});
 }
 
 my $construction = Math::Geometry::Construction->new;
