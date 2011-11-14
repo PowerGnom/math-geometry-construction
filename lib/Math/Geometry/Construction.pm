@@ -693,6 +693,10 @@ provided reference is undefined.
 
 =item * Failed to parse viewBox attribute.
 
+=item * Method position must be overloaded
+
+=item * Method id must be overloaded
+
 =item * No positions to select from in %s.
 
 This warning is issued by the position selectors if there is are no
@@ -715,7 +719,7 @@ normal.
 
 =item * Undefined center of circle %s, nothing to draw.
 
-=item * Undefined position of derived point %s, nothing to draw.
+=item * Undefined position of point %s, nothing to draw.
 
 =item * Undefined support of circle %s, nothing to draw.
 
