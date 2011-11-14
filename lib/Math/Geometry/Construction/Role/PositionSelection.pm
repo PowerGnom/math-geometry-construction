@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::PositionSelection> - select position from 
 
 =head1 VERSION
 
-Version 0.014
+Version 0.016
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.016';
 
 
 ###########################################################################
@@ -85,7 +85,14 @@ sub close_position {
 
     croak "Undefined reference position in 'close_position' selector"
 	if(!defined($reference));
-    
+
+    # I do not want to put the first part into import_vector, because
+    # this would evaluate the position at the time when import_vector
+    # is called. That would be right here, but could lead to subtle
+    # errors at other places.
+    my $point_class = 'Math::Geometry::Construction::Point';
+    $reference = $reference->position
+	if(eval { $reference->isa($point_class) });
     $reference = $self->import_vector($reference);
 
     my @positions = grep { defined($_) } $self->positions;
@@ -107,6 +114,13 @@ sub distant_position {
     croak "Undefined reference position in 'distant_position' selector"
 	if(!defined($reference));
     
+    # I do not want to put the first part into import_vector, because
+    # this would evaluate the position at the time when import_vector
+    # is called. That would be right here, but could lead to subtle
+    # errors at other places.
+    my $point_class = 'Math::Geometry::Construction::Point';
+    $reference = $reference->position
+	if(eval { $reference->isa($point_class) });
     $reference = $self->import_vector($reference);
 
     my @positions = grep { defined($_) } $self->positions;
