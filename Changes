@@ -4,6 +4,7 @@ Revision history for Math-Geometry-Construction
 	 - fixed bug in SVG generation: if the transform attribute
 	   was specified it leaked through to the SVG object and
 	   made renderers choke
+	 - started example script on Malfatti's problem
 
 0.015	 Sun Nov 13 15:23:37 NZDT 2011
 	 - the view_box attribute for Math::Geometry::Construction
