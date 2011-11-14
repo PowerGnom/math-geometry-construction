@@ -27,12 +27,12 @@ our $VERSION = '0.017';
 requires 'construction';
 requires 'id';
 
-has 'members' => (isa     => 'ArrayRef[Item]',
-		  is      => 'bare',
-		  traits  => ['Array'],
-		  default => sub { [] },
-		  handles => {members    => 'elements',
-			      add_member => 'push'});
+has 'points' => (isa     => 'ArrayRef[Item]',
+		 is      => 'bare',
+		 traits  => ['Array'],
+		 default => sub { [] },
+		 handles => {points         => 'elements',
+			     register_point => 'push'});
 
 1;
 
@@ -52,19 +52,19 @@ objects are the same.
 
 =head2 Public Attributes
 
-=head3 members
+=head3 points
 
 An array of C<Point> objects that lie on this object. This is not
-meant in strict geometrical sense. For a line, the members are the
+meant in strict geometrical sense. For a line, the C<points> are the
 two support points and all points derived from and lying on this
 line, e.g. C<PointOnLine> constructions and intersection
 points. However, the points must lie on that line. If, for example,
 a point is reflected at this line then the reflected point is also
-somehow associated with this line, but not a member. Similarly, the
-center of a circle is not a member.
+somehow associated with this line, but not a C<point> in the sense
+of this list. Similarly, the center of a circle is not a C<point>.
 
-The C<members> accessor will return the array (not a reference), the
-C<add_member> method pushes to the array.
+The C<points> accessor will return the array (not a reference), the
+C<register_point> method pushes to the array.
 
 =head2 Methods
 
