@@ -114,20 +114,22 @@ sub add_object {
 sub add_point {
     my ($self, @args) = @_;
 
-    return $self->add_object('Math::Geometry::Construction::Point', @args);
+    return $self->add_object
+	('Math::Geometry::Construction::FixedPoint', @args);
 }
 
 sub add_line {
     my ($self, @args) = @_;
 
-    return $self->add_object('Math::Geometry::Construction::Line', @args);
+    return $self->add_object
+	('Math::Geometry::Construction::Line', @args);
 }
 
 sub add_circle {
     my ($self, @args) = @_;
 
-    return $self->add_object('Math::Geometry::Construction::Circle',
-			     @args);
+    return $self->add_object
+	('Math::Geometry::Construction::Circle', @args);
 }
 
 sub add_derivate {
