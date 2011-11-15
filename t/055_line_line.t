@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 49;
+use Test::More tests => 51;
 use Math::Geometry::Construction;
 
 sub is_close {
@@ -132,5 +132,23 @@ sub id {
     }
 }
 
+sub register_derived_point {
+    my $construction = Math::Geometry::Construction->new;
+    my @lines;
+    my $ip;
+
+    @lines = ($construction->add_line(support => [[1, 2], [3, 4]]),
+	      $construction->add_line(support => [[5, 6], [7, 8]]));
+    $ip = $construction->add_derived_point
+	('IntersectionLineLine',
+	 {input => [@lines]});
+
+    is(scalar(grep { $_->id eq $ip->id } $lines[0]->points), 1,
+       'derived point is registered');
+    is(scalar(grep { $_->id eq $ip->id } $lines[1]->points), 1,
+       'derived point is registered');
+}
+
 line_line;
 id;
+register_derived_point;
