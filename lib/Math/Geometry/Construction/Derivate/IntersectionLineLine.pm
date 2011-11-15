@@ -15,11 +15,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionLineLine> - line line inte
 
 =head1 VERSION
 
-Version 0.014
+Version 0.017
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.017';
 
 
 ###########################################################################
@@ -76,6 +76,12 @@ sub positions {
 #                              Change Data                                # 
 #                                                                         #
 ###########################################################################
+
+sub register_derived_point {
+    my ($self, $point) = @_;
+
+    foreach($self->input) { $_->register_point($point) }
+}
 
 1;
 
