@@ -24,12 +24,27 @@ our $VERSION = '0.017';
 #                                                                         #
 ###########################################################################
 
-has 'points' => (isa     => 'ArrayRef[Item]',
+has 'points' => (isa     => 'HashRef[Item]',
 		 is      => 'bare',
-		 traits  => ['Array'],
-		 default => sub { [] },
-		 handles => {points         => 'elements',
-			     register_point => 'push'});
+		 traits  => ['Hash'],
+		 default => sub { {} },
+		 handles => {points          => 'values',
+			     _pointset_point => 'accessor'});
+
+sub register_point {
+    my ($self, @args) = @_;
+
+    foreach(@args) { $self->_pointset_point($_->id, $_) }
+}
+
+sub has_point {
+    my ($self, @args) = @_;
+
+    foreach(@args) {
+	return 0 if(!$self->_pointset_point(blessed($_) ? $_->id : $_));
+    }
+    return 1;
+}
 
 1;
 
