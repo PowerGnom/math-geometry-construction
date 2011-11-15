@@ -95,6 +95,24 @@ sub as_tikz { return(shift(@_)->draw('TikZ', @_)) }
 #                                                                         #
 ###########################################################################
 
+sub lines {
+    my ($self) = @_;
+    my $class  = 'Math::Geometry::Construction::Line';
+
+    return(grep { $_->isa($class) } $self->objects);
+}
+
+sub find_line {
+    my ($self, %args) = @_;
+
+    # TODO: test %args
+    
+    foreach($self->lines) {
+	return $_ if($_->has_point(@{$args{input}}));
+    }
+    return undef;
+}
+
 sub add_object {
     my ($self, $class, @args) = @_;
 

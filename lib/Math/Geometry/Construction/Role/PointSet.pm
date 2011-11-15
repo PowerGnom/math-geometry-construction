@@ -24,9 +24,6 @@ our $VERSION = '0.017';
 #                                                                         #
 ###########################################################################
 
-requires 'construction';
-requires 'id';
-
 has 'points' => (isa     => 'ArrayRef[Item]',
 		 is      => 'bare',
 		 traits  => ['Array'],
