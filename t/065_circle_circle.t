@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -59,4 +59,24 @@ sub circle_circle {
     is_close(max(map { $_->position->[0] } @ips), 3, 'intersection x');
 }
 
+sub register_derived_point {
+    my $construction = Math::Geometry::Construction->new;
+    my @circles;
+    my $ip;
+
+    @circles = ($construction->add_circle(center  => [1, 0],
+					  support => [5, 6]),
+		$construction->add_circle(center  => [1, 5],
+					  support => [5, 9]));
+    $ip = $construction->add_derived_point
+	('IntersectionCircleCircle',
+	 {input => [@circles]});
+
+    is(scalar(grep { $_->id eq $ip->id } $circles[0]->points), 1,
+       'derived point is registered');
+    is(scalar(grep { $_->id eq $ip->id } $circles[1]->points), 1,
+       'derived point is registered');
+}
+
 circle_circle;
+register_derived_point;
