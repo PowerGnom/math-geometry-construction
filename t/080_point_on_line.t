@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 66;
+use Test::More tests => 67;
 use Math::Geometry::Construction;
 
 sub is_close {
@@ -162,5 +162,20 @@ sub id {
     }
 }
 
+sub register_derived_point {
+    my $construction = Math::Geometry::Construction->new;
+    my $line;
+    my $dp;
+
+    $line = $construction->add_line(support => [[1, 2], [3, 4]]);
+    $dp = $construction->add_derived_point
+	('PointOnLine',
+	 {input => [$line], quantile => 0.3});
+
+    is(scalar(grep { $_->id eq $dp->id } $line->points), 1,
+       'derived point is registered');
+}
+
 line_line;
 id;
+register_derived_point;
