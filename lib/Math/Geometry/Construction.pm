@@ -213,9 +213,10 @@ __END__
 
 =head1 DESCRIPTION
 
-This is alpha software. The API is likely to change, input checks
-and documentation are sparse, the test suite barely exists. But
-release early, release often, so here we go.
+This is alpha software. The API is stabilizing and the test suite at
+least deserves that name by now, but input checks and documentation
+are still sparse. However, release early, release often, so here we
+go.
 
 Please note: In version 0.014, the underlying vector class has been
 changed from L<Math::VectorReal|Math::VectorReal> to
@@ -277,6 +278,14 @@ languages. With this module, you have Perl as your "macro language".
 
 =back
 
+=head2 Output Formats
+
+The current output formats are C<SVG> and C<TikZ>. Especially the
+latter one is experimental and the interface might change in future
+versions. Other output engines could be written by subclassing
+L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>.
+However, documentation of the interface is not available, yet.
+
 =head2 Intersection Concept
 
 Intersecting two objects consists of two steps. First, you create a
@@ -291,35 +300,16 @@ given direction etc..
 
 The C<DerivedPoint> object only holds information about how to
 select the right point. Only when you ask for the position of the
-point it is actually calculated.
+point it is actually calculated. The purpose of this approach is
+that you will always get the desired point based on the current
+situation, even if you move your start configuration and the
+arrangement of points changes.
 
 The classes are called C<Derivate> and C<DerivedPoint> because this
 concept is applicable beyond the case of intersections. It could,
 for example, be used to calculate the center of a circle given by
 three points. Whenever some operation based on given objects results
 in a finite number of points, it fits into this concept.
-
-=head2 Output
-
-=head3 Output Formats
-
-The current output formats are C<SVG> and C<TikZ>. Especially the
-latter one is experimental and the interface might change in future
-versions. Other output engines could be written by subclassing
-L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>.
-However, documentation of the interface is not available, yet.
-
-=head3 How much to draw?
-
-Each line or similar object holds a number of "points of
-interest". These are - in case of the line - the two points that
-define the line and all intersection points the line is involved
-in. At drawing time, the object determines the most extreme points
-and they define the end points of the drawn line segment. The
-C<extend> attribute allows to extend the line for a given length
-beyond these points because this often looks better. A similar
-concept will be implemented for circles, but currently, the full
-circle is drawn.
 
 =head2 Current Status
 
@@ -612,6 +602,26 @@ and
 L<Math::Geometry::Construction::Draw::TikZ|Math::Geometry::Construction::Draw::TikZ>
 for supported parameters. At least C<width> and C<height> should be
 provided.
+
+
+=head2 List of Derivates
+
+=head2 Partial Drawing
+
+Each line or similar object holds a number of "points of
+interest". These are - in case of the line - the two points that
+define the line and all intersection points the line is involved
+in. At drawing time, the object determines the most extreme points
+and they define the end points of the drawn line segment. The
+C<extend> attribute allows to extend the line for a given length
+beyond these points because this often looks better. A similar
+concept will be implemented for circles, but currently, the full
+circle is drawn.
+
+=head2 Reusing Objects
+
+=head2 Labels
+
 
 =head1 DIAGNOSTICS
 
