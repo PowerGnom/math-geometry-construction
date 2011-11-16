@@ -396,7 +396,7 @@ Holds the default point size that is used if no explict size is
 given to C<Point> objects. Defaults to C<6>. Changing it will only
 affect C<Point> objects created afterwards.
 
-=head2 Methods for Users
+=head2 Methods
 
 =head3 add_point
 
