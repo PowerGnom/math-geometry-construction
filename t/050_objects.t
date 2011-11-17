@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 43;
+use Test::More tests => 79;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -98,5 +98,102 @@ sub id {
     is($object->position->[1], 8, 'position y');
 }
 
+sub find_line {
+    my $construction;
+    my @points;
+    my @lines;
+
+    $construction = Math::Geometry::Construction->new;
+
+    @points = ($construction->add_point(position => [0, 1]),
+	       $construction->add_point(position => [1, 2]),
+	       $construction->add_point(position => [2, 3]),
+	       $construction->add_point(position => [-2, 10]));
+
+    ok(!defined($construction->find_line(support => [@points[0, 1]])),
+       'no lines, line not found');
+
+    @lines = ($construction->add_line(support => [@points[0, 1]]));
+    ok(defined($construction->find_line(support => [@points[0, 1]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[1, 0]])),
+       'line found in reverse order');
+    ok(!defined($construction->find_line(support => [@points[1, 2]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[2, 3]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[3, 0]])),
+       'line not found');
+
+    push(@lines, $construction->add_line(support => [@points[2, 3]]));
+    ok(defined($construction->find_line(support => [@points[0, 1]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[1, 0]])),
+       'line found in reverse order');
+    ok(!defined($construction->find_line(support => [@points[1, 2]])),
+       'line not found');
+    ok(defined($construction->find_line(support => [@points[2, 3]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[3, 2]])),
+       'line found in reverse order');
+    ok(!defined($construction->find_line(support => [@points[3, 0]])),
+       'line not found');
+
+    push(@points, $construction->add_derived_point
+	 ('IntersectionLineLine', {input => [@lines]}));
+    ok(defined($construction->find_line(support => [@points[0, 1]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[1, 0]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[0, 4]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[4, 0]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[1, 4]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[4, 1]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[2, 3]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[3, 2]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[2, 4]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[4, 2]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[3, 4]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[4, 3]])),
+       'line found');
+    ok(!defined($construction->find_line(support => [@points[0, 2]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[2, 0]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[0, 3]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[3, 0]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[1, 2]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[2, 1]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[1, 3]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[3, 1]])),
+       'line not found');
+
+    push(@points, $construction->add_derived_point
+	 ('PointOnLine', {input => [$lines[0]], quantile => 0.2}));
+    ok(defined($construction->find_line(support => [@points[0, 5]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[5, 0]])),
+       'line found');
+    ok(!defined($construction->find_line(support => [@points[2, 5]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[5, 2]])),
+       'line not found');
+}
+
 order_index;
 id;
+find_line;
