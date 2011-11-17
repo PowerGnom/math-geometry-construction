@@ -50,9 +50,122 @@ has '_output'    => (isa     => 'Item',
 				 draw_circle => 'circle',
 				 draw_text   => 'text'});
 
+sub points {
+    my ($self) = @_;
+    my $class  = 'Math::Geometry::Construction::Point';
+
+    return(grep { $_->isa($class) } $self->objects);
+}
+
+sub lines {
+    my ($self) = @_;
+    my $class  = 'Math::Geometry::Construction::Line';
+
+    return(grep { $_->isa($class) } $self->objects);
+}
+
+sub circles {
+    my ($self) = @_;
+    my $class  = 'Math::Geometry::Construction::Circle';
+
+    return(grep { $_->isa($class) } $self->objects);
+}
+
+sub add_object {
+    my ($self, $class, @args) = @_;
+
+    if($class =~ /^\s*[A-Za-z0-9\_\:]+\s*$/) {
+	eval "require $class" or croak "Unable to load module $class: $!";
+    }
+    else { croak "Class name $class did not pass regex check" }
+    
+    my $object = $class->new(construction => $self, @args);
+    $object->order_index($self->count_objects);
+    $self->object($object->id, $object);
+
+    return $object;
+}
+
+sub add_point {
+    my ($self, @args) = @_;
+
+    return $self->add_object
+	('Math::Geometry::Construction::FixedPoint', @args);
+}
+
+sub add_line {
+    my ($self, @args) = @_;
+
+    return $self->add_object
+	('Math::Geometry::Construction::Line', @args);
+}
+
+sub find_line {
+    my ($self, %args) = @_;
+
+    # TODO: test %args
+    
+    foreach($self->lines) {
+	return $_ if($_->has_point(@{$args{support}}));
+    }
+    return undef;
+}
+
+sub find_or_add_line {
+    my ($self, @args) = @_;
+
+    return($self->find_line(@args) or $self->add_line(@args));
+}
+
+sub add_circle {
+    my ($self, @args) = @_;
+
+    return $self->add_object
+	('Math::Geometry::Construction::Circle', @args);
+}
+
+sub find_circle {
+    my ($self, %args) = @_;
+
+    # TODO: test %args
+    
+    foreach($self->circles) {
+	return $_ if($_->center->id eq $args{center}->id and
+		     $_->has_point($args{support}));
+    }
+    return undef;
+}
+
+sub find_or_add_circle {
+    my ($self, @args) = @_;
+
+    return($self->find_circle(@args) or $self->add_circle(@args));
+}
+
+sub add_derivate {
+    my ($self, $class, @args) = @_;
+
+    return $self->add_object
+	('Math::Geometry::Construction::Derivate::'.$class, @args);
+}
+
+sub add_derived_point {
+    my ($self, $class, $derivate_args, $point_args) = @_;
+
+    my $derivate = $self->add_derivate($class, %$derivate_args);
+    
+    if(!defined($point_args) or ref($point_args) eq 'HASH') {
+	return $derivate->create_derived_point(%{$point_args || {}});
+    }
+    else {
+	return(map { $derivate->create_derived_point(%{$_ || {}}) }
+	       @$point_args);
+    }
+}
+
 ###########################################################################
 #                                                                         #
-#                             Retrieve Data                               #
+#                                   Draw                                  #
 #                                                                         #
 ###########################################################################
 
@@ -88,113 +201,6 @@ sub draw {
 sub as_svg  { return(shift(@_)->draw('SVG', @_)) }
 
 sub as_tikz { return(shift(@_)->draw('TikZ', @_)) }
-
-###########################################################################
-#                                                                         #
-#                              Change Data                                # 
-#                                                                         #
-###########################################################################
-
-sub points {
-    my ($self) = @_;
-    my $class  = 'Math::Geometry::Construction::Point';
-
-    return(grep { $_->isa($class) } $self->objects);
-}
-
-sub lines {
-    my ($self) = @_;
-    my $class  = 'Math::Geometry::Construction::Line';
-
-    return(grep { $_->isa($class) } $self->objects);
-}
-
-sub circles {
-    my ($self) = @_;
-    my $class  = 'Math::Geometry::Construction::Circle';
-
-    return(grep { $_->isa($class) } $self->objects);
-}
-
-sub find_line {
-    my ($self, %args) = @_;
-
-    # TODO: test %args
-    
-    foreach($self->lines) {
-	return $_ if($_->has_point(@{$args{support}}));
-    }
-    return undef;
-}
-
-sub find_circle {
-    my ($self, %args) = @_;
-
-    # TODO: test %args
-    
-    foreach($self->circles) {
-	return $_ if($_->center->id eq $args{center}->id and
-		     $_->has_point($args{support}));
-    }
-    return undef;
-}
-
-sub add_object {
-    my ($self, $class, @args) = @_;
-
-    if($class =~ /^\s*[A-Za-z0-9\_\:]+\s*$/) {
-	eval "require $class" or croak "Unable to load module $class: $!";
-    }
-    else { croak "Class name $class did not pass regex check" }
-    
-    my $object = $class->new(construction => $self, @args);
-    $object->order_index($self->count_objects);
-    $self->object($object->id, $object);
-
-    return $object;
-}
-
-sub add_point {
-    my ($self, @args) = @_;
-
-    return $self->add_object
-	('Math::Geometry::Construction::FixedPoint', @args);
-}
-
-sub add_line {
-    my ($self, @args) = @_;
-
-    return $self->add_object
-	('Math::Geometry::Construction::Line', @args);
-}
-
-sub add_circle {
-    my ($self, @args) = @_;
-
-    return $self->add_object
-	('Math::Geometry::Construction::Circle', @args);
-}
-
-sub add_derivate {
-    my ($self, $class, @args) = @_;
-
-    return $self->add_object
-	('Math::Geometry::Construction::Derivate::'.$class, @args);
-}
-
-sub add_derived_point {
-    my ($self, $class, $derivate_args, $point_args) = @_;
-
-    my $derivate = $self->add_derivate($class, %$derivate_args);
-    
-    if(!defined($point_args) or ref($point_args) eq 'HASH') {
-	return $derivate->create_derived_point(%{$point_args || {}});
-    }
-    else {
-	return(map { $derivate->create_derived_point(%{$_ || {}}) }
-	       @$point_args);
-    }
-}
 
 1;
 
