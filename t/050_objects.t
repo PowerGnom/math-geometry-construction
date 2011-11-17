@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 85;
+use Test::More tests => 106;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -218,6 +218,103 @@ sub find_line {
        'line not found');
 }
 
+sub find_circle {
+    my $construction;
+    my @points;
+    my @circles;
+    my $line;
+
+    $construction = Math::Geometry::Construction->new;
+
+    @points = ($construction->add_point(position => [0, 1]),
+	       $construction->add_point(position => [1, 2]),
+	       $construction->add_point(position => [1, 2]),
+	       $construction->add_point(position => [-2, 10]),
+	       $construction->add_point(position => [0, 0]));
+
+    ok(!defined($construction->find_circle(support => [@points[0, 1]])),
+       'no circles, circle not found');
+    @circles = ($construction->add_circle(center  => $points[0],
+					  support => $points[1]));
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[1])),
+       'circle found');
+    ok(!defined($construction->find_circle(center  => $points[1],
+					   support => $points[0])),
+       'circle not found');
+    ok(!defined($construction->find_circle(center  => $points[0],
+					   support => $points[2])),
+       'circle not found');
+
+    push(@circles, $construction->add_circle(center  => $points[3],
+					     support => $points[4]));
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[1])),
+       'circle found');
+    ok(defined($construction->find_circle(center  => $points[3],
+					  support => $points[4])),
+       'circle found');
+
+    push(@points, $construction->add_derived_point
+	 ('IntersectionCircleCircle',
+	  {input => [@circles[0, 1]]},
+	  [{position_selector => ['indexed_position', [0]]},
+	   {position_selector => ['indexed_position', [1]]}]));
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[1])),
+       'circle found');
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[5])),
+       'circle found');
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[6])),
+       'circle found');
+    ok(defined($construction->find_circle(center  => $points[3],
+					  support => $points[5])),
+       'circle found');
+    ok(defined($construction->find_circle(center  => $points[3],
+					  support => $points[6])),
+       'circle found');
+    ok(!defined($construction->find_circle(center  => $points[0],
+					   support => $points[2])),
+       'circle not found');
+    ok(!defined($construction->find_circle(center  => $points[0],
+					   support => $points[4])),
+       'circle not found');
+    ok(!defined($construction->find_circle(center  => $points[3],
+					   support => $points[0])),
+       'circle not found');
+    ok(!defined($construction->find_circle(center  => $points[3],
+					   support => $points[1])),
+       'circle not found');
+    ok(!defined($construction->find_circle(center  => $points[4],
+					   support => $points[3])),
+       'circle not found');
+
+    $line = $construction->add_line(support => [[0, -1], [10, 11]]);
+    push(@points, $construction->add_derived_point
+	 ('IntersectionCircleLine',
+	  {input => [$line, $circles[0]]},
+	  [{position_selector => ['indexed_position', [0]]},
+	   {position_selector => ['indexed_position', [1]]}]));
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[1])),
+       'circle found');
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[7])),
+       'circle found');
+    ok(defined($construction->find_circle(center  => $points[0],
+					  support => $points[8])),
+       'circle found');
+    ok(!defined($construction->find_circle(center  => $points[0],
+					   support => $points[2])),
+       'circle not found');
+    ok(!defined($construction->find_circle(center  => $points[0],
+					   support => $points[4])),
+       'circle not found');
+}
+
 order_index;
 id;
 find_line;
+find_circle;

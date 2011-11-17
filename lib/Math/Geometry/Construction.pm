@@ -127,6 +127,18 @@ sub find_line {
     return undef;
 }
 
+sub find_circle {
+    my ($self, %args) = @_;
+
+    # TODO: test %args
+    
+    foreach($self->circles) {
+	return $_ if($_->center->id eq $args{center}->id and
+		     $_->has_point($args{support}));
+    }
+    return undef;
+}
+
 sub add_object {
     my ($self, $class, @args) = @_;
 
