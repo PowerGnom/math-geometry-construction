@@ -108,7 +108,7 @@ sub find_line {
     # TODO: test %args
     
     foreach($self->lines) {
-	return $_ if($_->has_point(@{$args{input}}));
+	return $_ if($_->has_point(@{$args{support}}));
     }
     return undef;
 }

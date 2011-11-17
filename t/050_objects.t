@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 79;
+use Test::More tests => 85;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -102,6 +102,7 @@ sub find_line {
     my $construction;
     my @points;
     my @lines;
+    my $circle;
 
     $construction = Math::Geometry::Construction->new;
 
@@ -191,6 +192,29 @@ sub find_line {
     ok(!defined($construction->find_line(support => [@points[2, 5]])),
        'line not found');
     ok(!defined($construction->find_line(support => [@points[5, 2]])),
+       'line not found');
+
+    $circle = $construction->add_circle(center => [2, -1],
+					radius => 10);
+    push(@points, $construction->add_derived_point
+	 ('IntersectionCircleLine',
+	  {input => [$lines[0], $circle]},
+	  {position_selector => ['indexed_position', [0]]}));
+    push(@points, $construction->add_derived_point
+	 ('IntersectionCircleLine',
+	  {input => [$lines[0], $circle]},
+	  {position_selector => ['indexed_position', [1]]}));
+    ok(defined($construction->find_line(support => [@points[0, 6]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[0, 7]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[5, 6]])),
+       'line found');
+    ok(defined($construction->find_line(support => [@points[6, 7]])),
+       'line found');
+    ok(!defined($construction->find_line(support => [@points[2, 6]])),
+       'line not found');
+    ok(!defined($construction->find_line(support => [@points[7, 3]])),
        'line not found');
 }
 
