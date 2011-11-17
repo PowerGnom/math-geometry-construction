@@ -95,9 +95,23 @@ sub as_tikz { return(shift(@_)->draw('TikZ', @_)) }
 #                                                                         #
 ###########################################################################
 
+sub points {
+    my ($self) = @_;
+    my $class  = 'Math::Geometry::Construction::Point';
+
+    return(grep { $_->isa($class) } $self->objects);
+}
+
 sub lines {
     my ($self) = @_;
     my $class  = 'Math::Geometry::Construction::Line';
+
+    return(grep { $_->isa($class) } $self->objects);
+}
+
+sub circles {
+    my ($self) = @_;
+    my $class  = 'Math::Geometry::Construction::Circle';
 
     return(grep { $_->isa($class) } $self->objects);
 }
