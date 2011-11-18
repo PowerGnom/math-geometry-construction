@@ -34,7 +34,7 @@ our $VERSION = '0.018';
 #                                                                         #
 ###########################################################################
 
-sub positions {
+sub calculate_positions {
     my ($self) = @_;
     my @lines  = $self->input;
 

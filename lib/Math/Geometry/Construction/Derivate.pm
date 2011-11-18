@@ -36,6 +36,7 @@ sub id_template { return $ID_TEMPLATE }
 
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
+with 'Math::Geometry::Construction::Role::Buffering';
 
 has 'input' => (isa      => 'ArrayRef[Item]',
 		is       => 'bare',
@@ -51,7 +52,20 @@ has 'input' => (isa      => 'ArrayRef[Item]',
 #                                                                         #
 ###########################################################################
 
-sub positions { return() }
+sub calculate_positions { return }
+
+sub positions {
+    my ($self) = @_;
+
+    return(@{$self->buffer('positions') || []})
+	if($self->is_buffered('positions'));
+
+    my $positions = [$self->calculate_positions];
+
+    $self->buffer('positions', $positions)
+	if($self->construction->buffer_results);
+    return @$positions;
+}
 
 sub register_derived_point {}
 
