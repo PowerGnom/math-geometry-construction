@@ -41,11 +41,11 @@ with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
 has 'center'  => (isa      => 'Item',
-		  is       => 'rw',
+		  is       => 'ro',
 		  required => 1);
 
 has 'support' => (isa      => 'Item',
-		  is       => 'rw',
+		  is       => 'ro',
 		  required => 1);
 
 has 'extend'  => (isa     => 'Num',
