@@ -58,8 +58,14 @@ has 'position_selector' => (isa      => 'ArrayRef[Item]',
 sub position {
     my ($self) = @_;
 
+    return $self->buffer('position') if($self->is_buffered('position'));
+
     my ($selection_method, $args) = @{$self->_position_selector};
-    return $self->derivate->$selection_method(@$args);
+    my $position = $self->derivate->$selection_method(@$args);
+
+    $self->buffer('position', $position)
+	if($self->construction->buffer_results);
+    return $position;
 }
 
 ###########################################################################

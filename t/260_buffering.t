@@ -6,19 +6,29 @@ use Test::More tests => 24;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
 
-sub construction {
+sub derived_point {
     my $construction = Math::Geometry::Construction->new;
+    my @points;
+    my @lines;
 
-    ok(!$construction->update(0), 'default no update');
-    $construction->add_point(position => [2, 3]);
-    ok(!$construction->update(0), 'add point, no update');
-    $construction->add_point(position => [4, -3]);
-    ok(!$construction->update(2), 'add point, no update');
-    ok(!$construction->update(1), 'add point, no update');
-    ok(!$construction->update(0), 'add point, no update');
+    @points = ($construction->add_point(position => [2, -1]),
+	       $construction->add_point(position => [4, -1]),
+	       $construction->add_point(position => [3,  5]),
+	       $construction->add_point(position => [3,  7]));
 
-    $construction->register_change(1);
-    ok(!$construction->update(0), 'register_change, no update for lower');
+    @lines = ($construction->add_line(support => [@points[0, 1]]),
+	      $construction->add_line(support => [@points[2, 3]]));
+
+    push(@points, $construction->add_derived_point
+	 ('IntersectionLineLine',
+	  {input => [@lines[0, 1]]}));
+
+    is($points[4]->position->[0],  3, 'initial x');
+    is($points[4]->position->[1], -1, 'initial y');
+
+    $points[0]->position(V(4, -3));
+    is($points[4]->position->[0],  3, 'shifted x');
+    is($points[4]->position->[1], -2, 'shifted y');
 }
 
-construction;
+derived_point;

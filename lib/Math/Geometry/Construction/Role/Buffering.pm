@@ -24,13 +24,22 @@ our $VERSION = '0.018';
 #                                                                         #
 ###########################################################################
 
+requires 'construction';
+
 has 'buffer' => (isa     => 'HashRef[Any]',
 		 is      => 'bare',
 		 traits  => ['Hash'],
 		 default => sub { {} },
 		 handles => {delete_buffer => 'delete',
+			     is_buffered   => 'exists',
 			     clear_buffer  => 'clear',
 			     buffer        => 'accessor'});
+
+sub clear_global_buffer {
+    my ($self) = @_;
+
+    $self->construction->clear_buffer;
+}
 
 1;
 

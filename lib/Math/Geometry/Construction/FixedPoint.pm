@@ -27,10 +27,12 @@ our $VERSION = '0.018';
 ###########################################################################
 
 with 'Math::Geometry::Construction::Role::Input';
+with 'Math::Geometry::Construction::Role::Buffering';
 
 has 'position' => (isa      => 'Math::Vector::Real',
 	           is       => 'rw',
-	           required => 1);
+	           required => 1,
+		   trigger  => \&clear_global_buffer);
 
 sub BUILDARGS {
     my ($class, %args) = @_;

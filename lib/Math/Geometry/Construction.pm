@@ -47,46 +47,21 @@ has 'point_size'     => (isa     => 'Num',
 
 has 'buffer_results' => (isa     => 'Bool',
 			 is      => 'rw',
-			 default => 1);
+			 default => 1,
+			 trigger => \&clear_buffer);
 
-has '_refresh_limit' => (isa       => 'Num',
-			 is        => 'rw',
-			 predicate => '_has_refresh_limit',
-			 clearer   => '_clear_refresh_limit');
+has '_output'        => (isa     => 'Item',
+			 is      => 'rw',
+			 handles => {draw_line   => 'line',
+				     draw_circle => 'circle',
+				     draw_text   => 'text'});
 
-has '_output'        => (isa       => 'Item',
-			 is        => 'rw',
-			 handles   => {draw_line   => 'line',
-				       draw_circle => 'circle',
-				       draw_text   => 'text'});
-
-sub refresh {
+sub clear_buffer {
     my ($self) = @_;
 
     foreach($self->objects) {
 	$_->clear_buffer if($_->can('clear_buffer'));
     }
-
-    $self->_clear_refresh_limit;
-}
-
-sub update {
-    my ($self, $order_index) = @_;
-    my $rl                   = $self->_refresh_limit;
-
-    if(defined($rl) and $rl <= $order_index) {
-	$self->refresh;
-	return 1;
-    }
-    return 0;
-}
-
-sub register_change {
-    my ($self, $order_index) = @_;
-    my $rl                   = $self->_refresh_limit;
-
-    $self->_refresh_limit
-	(defined($rl) ? min($rl, $order_index) : $order_index);
 }
 
 sub points {
