@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 24;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
 
@@ -62,13 +62,14 @@ sub fixed_point {
 
     # chained dependency
     @points = ($construction->add_point(position => [1, -4]));
-    push(@points, $construction->add_derived_point
+    push(@points,
+	 $construction->add_derived_point
 	 ('TranslatedPoint',
-	  {input => [$points[0]], translator => [-1, 2]}));
-    push(@points, $construction->add_derived_point
+	  {input => [$points[0]], translator => [-1, 2]}),
+	 $construction->add_derived_point
 	 ('TranslatedPoint',
-	  {input => [$points[0]], translator => [3, 5]}));
-    push(@points, $construction->add_derived_point
+	  {input => [$points[0]], translator => [3, 5]}),
+	 $construction->add_derived_point
 	 ('TranslatedPoint',
 	  {input => [$points[0]], translator => [-4, 5]}));
     @circles = ($construction->add_circle(center => $points[1],
@@ -86,4 +87,31 @@ sub fixed_point {
     is($points[4]->position->[1], 2, 'shifted y');
 }
 
+sub translator {
+    my $construction = Math::Geometry::Construction->new;
+    my @points;
+    my @lines;
+    my @circles;
+
+    @points = ($construction->add_point(position => [5, -8]));
+    push(@points,
+	 $construction->add_derived_point
+	 ('TranslatedPoint',
+	  {input => [$points[0]], translator => [-3, 7]}),
+	 $construction->add_derived_point
+	 ('TranslatedPoint',
+	  {input => [$points[0]], translator => [10, -5]}));
+    is($points[1]->position->[0], 2, 'initial x');
+    is($points[1]->position->[1], -1, 'initial y');
+    is($points[2]->position->[0], 15, 'initial x');
+    is($points[2]->position->[1], -13, 'initial y');
+
+    $points[1]->derivate->translator(V(-5, 2));
+    is($points[1]->position->[0], 0, 'initial x');
+    is($points[1]->position->[1], -6, 'initial y');
+    is($points[2]->position->[0], 15, 'initial x');
+    is($points[2]->position->[1], -13, 'initial y');
+}
+
 fixed_point;
+translator;
