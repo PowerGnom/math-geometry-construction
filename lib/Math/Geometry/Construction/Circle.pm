@@ -48,10 +48,6 @@ has 'support' => (isa      => 'Item',
 		  is       => 'ro',
 		  required => 1);
 
-has 'extend'  => (isa     => 'Num',
-		  is      => 'rw',
-		  default => 0);
-
 sub BUILDARGS {
     my ($class, %args) = @_;
     

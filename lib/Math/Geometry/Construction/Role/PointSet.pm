@@ -31,6 +31,10 @@ has 'points' => (isa     => 'HashRef[Item]',
 		 handles => {points          => 'values',
 			     _pointset_point => 'accessor'});
 
+has 'extend'  => (isa     => 'Num',
+		  is      => 'rw',
+		  default => 0);
+
 sub register_point {
     my ($self, @args) = @_;
 

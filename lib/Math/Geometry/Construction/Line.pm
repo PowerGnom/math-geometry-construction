@@ -50,10 +50,6 @@ has 'support'     => (isa      => 'ArrayRef[Item]',
 				   support        => 'elements',
 				   single_support => 'accessor'});
 
-has 'extend'      => (isa     => 'Num',
-		      is      => 'rw',
-		      default => 0);
-
 sub BUILDARGS {
     my ($class, %args) = @_;
     
