@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Role::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.017
+Version 0.018
 
 =cut
 
-our $VERSION = '0.017';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -176,17 +176,6 @@ attribute also apply here.
 =head3 draw_label
 
 Draws the label. Called by objects that have consumed this role.
-
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
 
 
 =head1 AUTHOR

@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Role::Object> - shared administrative issues
 
 =head1 VERSION
 
-Version 0.014
+Version 0.018
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -80,17 +80,6 @@ __END__
 =head2 Methods for Subclass Developers
 
 =head3 as_svg
-
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
 
 
 =head1 AUTHOR

@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Role::PointSet> - point set objects
 
 =head1 VERSION
 
-Version 0.017
+Version 0.018
 
 =cut
 
-our $VERSION = '0.017';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -79,17 +79,6 @@ The C<points> accessor will return the array (not a reference), the
 C<register_point> method pushes to the array.
 
 =head2 Methods
-
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
 
 
 =head1 AUTHOR
