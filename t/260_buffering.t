@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 4;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
 
@@ -26,7 +26,7 @@ sub derived_point {
     is($points[4]->position->[0],  3, 'initial x');
     is($points[4]->position->[1], -1, 'initial y');
 
-    $points[0]->position(V(4, -3));
+    $points[1]->position(V(4, -3));
     is($points[4]->position->[0],  3, 'shifted x');
     is($points[4]->position->[1], -2, 'shifted y');
 }
