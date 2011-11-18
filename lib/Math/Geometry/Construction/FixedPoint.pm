@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::FixedPoint> - independent user-defined point
 
 =head1 VERSION
 
-Version 0.016
+Version 0.018
 
 =cut
 
-our $VERSION = '0.016';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -26,7 +26,7 @@ our $VERSION = '0.016';
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Role::VectorFormats';
+with 'Math::Geometry::Construction::Role::Input';
 
 has 'position' => (isa      => 'Math::Vector::Real',
 	           is       => 'rw',

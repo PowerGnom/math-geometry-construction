@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.017
+Version 0.018
 
 =cut
 
-our $VERSION = '0.017';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -41,7 +41,6 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
-with 'Math::Geometry::Construction::Role::ImplicitPoint';
 
 has 'support'     => (isa      => 'ArrayRef[Item]',
 		      is       => 'bare',

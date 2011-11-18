@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Derivate::TranslatedPoint> - point translated by
 
 =head1 VERSION
 
-Version 0.014
+Version 0.018
 
 =cut
 
-our $VERSION = '0.014';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -26,7 +26,7 @@ our $VERSION = '0.014';
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Role::VectorFormats';
+with 'Math::Geometry::Construction::Role::Input';
 
 has 'translator' => (isa      => 'Item',
 		     is       => 'rw',

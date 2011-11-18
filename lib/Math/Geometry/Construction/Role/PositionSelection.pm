@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::PositionSelection> - select position from 
 
 =head1 VERSION
 
-Version 0.016
+Version 0.018
 
 =cut
 
-our $VERSION = '0.016';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -25,7 +25,7 @@ our $VERSION = '0.016';
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Role::VectorFormats';
+with 'Math::Geometry::Construction::Role::Input';
 
 requires 'id';
 requires 'positions';

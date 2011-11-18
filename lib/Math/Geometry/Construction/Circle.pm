@@ -39,7 +39,6 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
-with 'Math::Geometry::Construction::Role::ImplicitPoint';
 
 has 'center'  => (isa      => 'Item',
 		  is       => 'rw',
