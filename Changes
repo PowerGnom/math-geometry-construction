@@ -1,5 +1,9 @@
 Revision history for Math-Geometry-Construction
 
+0.017	 Thu Nov 17 20:14:53 NZDT 2011
+	 - find_or_add methods that allow the reuse of lines and
+	   circles even if no reference or id has been kept
+
 0.016	 Mon Nov 14 19:41:12 NZDT 2011
 	 - fixed bug in SVG generation: if the transform attribute
 	   was specified it leaked through to the SVG object and

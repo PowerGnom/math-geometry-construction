@@ -27,25 +27,23 @@ sub triangle {
 sub angle_bisector {
     my ($construction, $a, $b, $c, $style) = @_;
 
-    my $c1 = $construction->add_circle(center  => $b,
-				       support => $a,
-				       style   => {%$style});
-    my $ba = $construction->add_line(support => [$b, $a],
-				     hidden  => 1);
-    my $bc = $construction->add_line(support => [$b, $c],
-				     hidden  => 1);
+    my $c1 = $construction->find_or_add_circle(center  => $b,
+					       support => $a,
+					       style   => {%$style});
+    my $ba = $construction->find_or_add_line(support => [$b, $a]);
+    my $bc = $construction->find_or_add_line(support => [$b, $c]);
     my $p1 = $construction->add_derived_point
 	('IntersectionCircleLine',
 	 {input => [$c1, $bc]},
 	 {position_selector => ['extreme_position', [$bc->parallel]],
 	  style             => {%$style}});
-
-    my $c2 = $construction->add_circle(center  => $a,
-				       support => $p1,
-				       style   => {%$style});
-    my $c3 = $construction->add_circle(center  => $p1,
-				       support => $a,
-				       style   => {%$style});
+    
+    my $c2 = $construction->find_or_add_circle(center  => $a,
+					       support => $p1,
+					       style   => {%$style});
+    my $c3 = $construction->find_or_add_circle(center  => $p1,
+					       support => $a,
+					       style   => {%$style});
     return $construction->add_derived_point
 	('IntersectionCircleCircle',
 	 {input => [$c2, $c3]},
