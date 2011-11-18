@@ -2,10 +2,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 44;
+use Test::More tests => 56;
 use Test::Exception;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
+use Math::VectorReal;
 
 sub is_close {
     my ($value, $reference, $message, $limit) = @_;
@@ -62,6 +63,25 @@ sub circle {
     is_close($p->position->[0], 70, 'support x');
     is_close($p->position->[1], 110, 'support y');
     is_close($ci->radius, 130, 'radius');
+
+    $ci = $construction->add_circle(center  => V(5, 6),
+				    support => vector(3, 2, 0));
+    ok(defined($ci), 'circle defined');
+    isa_ok($ci, 'Math::Geometry::Construction::Circle');
+    $root = $ci->construction;
+    ok(defined($root), 'construction defined');
+    isa_ok($root, 'Math::Geometry::Construction');
+    
+    $c = $ci->center;
+    ok(defined($c), 'center defined');
+    isa_ok($c, 'Math::Geometry::Construction::Point');
+    is_close($c->position->[0], 5, 'center x');
+    is_close($c->position->[1], 6, 'center y');
+    $p = $ci->support;
+    ok(defined($p), 'support defined');
+    isa_ok($p, 'Math::Geometry::Construction::Point');
+    is_close($p->position->[0], 3, 'support x');
+    is_close($p->position->[1], 2, 'support y');
 
     $ci = $construction->add_circle(center => [50, 100],
 				    radius => 20);

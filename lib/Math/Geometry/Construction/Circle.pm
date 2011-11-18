@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.017
+Version 0.018
 
 =cut
 
-our $VERSION = '0.017';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -39,6 +39,7 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
+with 'Math::Geometry::Construction::Role::ImplicitPoint';
 
 has 'center'  => (isa      => 'Item',
 		  is       => 'rw',
@@ -55,11 +56,8 @@ has 'extend'  => (isa     => 'Num',
 sub BUILDARGS {
     my ($class, %args) = @_;
     
-    if(!blessed($args{center})) {
-	$args{center} = $args{construction}->add_point
-	    (position => $args{center},
-	     hidden   => 1);
-    }
+    $args{center} = $class->import_point
+	($args{construction}, $args{center});
 
     if(exists($args{radius})) {
 	$args{support} = $args{construction}->add_derived_point
@@ -69,11 +67,9 @@ sub BUILDARGS {
 	     {hidden     => 1});
 	delete $args{radius};
     }
-
-    if(!blessed($args{support})) {
-	$args{support} = $args{construction}->add_point
-	    (position => $args{support},
-	     hidden   => 1);
+    else {
+	$args{support} = $class->import_point
+	    ($args{construction}, $args{support});
     }
 
     return \%args;
