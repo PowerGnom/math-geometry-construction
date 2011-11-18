@@ -58,6 +58,8 @@ sub _rules {
 	    $self->$clearer;
 	}
     }
+
+    $self->clear_global_buffer;
 }
 
 sub _distance_rules { $_[0]->_rules('distance') }

@@ -2,9 +2,15 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 46;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
+
+sub is_close {
+    my ($value, $reference, $message, $limit) = @_;
+
+    cmp_ok(abs($value - $reference), '<', ($limit || 1e-12), $message);
+}
 
 sub fixed_point {
     my $construction = Math::Geometry::Construction->new;
@@ -90,8 +96,6 @@ sub fixed_point {
 sub translator {
     my $construction = Math::Geometry::Construction->new;
     my @points;
-    my @lines;
-    my @circles;
 
     @points = ($construction->add_point(position => [5, -8]));
     push(@points,
@@ -113,5 +117,56 @@ sub translator {
     is($points[2]->position->[1], -13, 'initial y');
 }
 
+sub point_on_line {
+    my $construction = Math::Geometry::Construction->new;
+    my @points;
+    my @lines;
+
+    @points = ($construction->add_point(position => [5, -8]),
+	       $construction->add_point(position => [15, -12]));
+    @lines  = ($construction->add_line(support => [@points[0, 1]]));
+    push(@points,
+	 $construction->add_derived_point
+	 ('PointOnLine',
+	  {input => [$lines[0]], quantile => 0.5}));
+    push(@points,
+	 $construction->add_derived_point
+	 ('TranslatedPoint',
+	  {input => [$points[2]], translator => [3, -1]}));
+    is($points[2]->position->[0], 10, 'initial x');
+    is($points[2]->position->[1], -10, 'initial y');
+    is($points[3]->position->[0], 13, 'initial x');
+    is($points[3]->position->[1], -11, 'initial y');
+
+    $points[2]->derivate->quantile(0.75);
+    is($points[2]->position->[0], 12.5, 'initial x');
+    is($points[2]->position->[1], -11, 'initial y');
+    is($points[3]->position->[0], 15.5, 'initial x');
+    is($points[3]->position->[1], -12, 'initial y');
+
+    $points[2]->derivate->quantile(0.25);
+    is($points[3]->position->[0], 10.5, 'initial x');
+    is($points[3]->position->[1], -10, 'initial y');
+
+    $points[2]->derivate->distance(0);
+    is($points[2]->position->[0], 5, 'initial x');
+    is($points[2]->position->[1], -8, 'initial y');
+    is($points[3]->position->[0], 8, 'initial x');
+    is($points[3]->position->[1], -9, 'initial y');
+
+    $points[2]->derivate->x(10);
+    is($points[2]->position->[0], 10, 'initial x');
+    is($points[2]->position->[1], -10, 'initial y');
+    is($points[3]->position->[0], 13, 'initial x');
+    is($points[3]->position->[1], -11, 'initial y');
+
+    $points[2]->derivate->y(-11);
+    is($points[2]->position->[0], 12.5, 'initial x');
+    is($points[2]->position->[1], -11, 'initial y');
+    is($points[3]->position->[0], 15.5, 'initial x');
+    is($points[3]->position->[1], -12, 'initial y');
+}
+
 fixed_point;
 translator;
+point_on_line;
