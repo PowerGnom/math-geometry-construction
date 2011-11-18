@@ -56,6 +56,8 @@ by C<DerivedPoint> and C<Derivate> objects to store their positions.
 
 =head1 INTERFACE
 
+=head3 buffer
+
 The C<buffer> attribute implements the following hash traits (see
 L<Moose|Moose> if you are not familiar with traits and native
 delegation):
@@ -74,6 +76,12 @@ resets the hash to the empty hash
 
 =back
 
+=head3 clear_global_buffer
+
+Calls L<clear_buffer|Math::Geometry::Construction/clear_buffer> on
+the C<Math::Geometry::Construction> object. Mainly used as
+C<trigger> for attributes. When the attribute is changed the buffer
+is cleared.
 
 =head1 AUTHOR
 
