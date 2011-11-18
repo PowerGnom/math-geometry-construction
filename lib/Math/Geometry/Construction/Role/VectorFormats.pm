@@ -1,4 +1,4 @@
-package Math::Geometry::Construction::Role::VectorFormats;
+package Math::Geometry::Construction::Role::Input;
 use Moose::Role;
 
 use 5.008008;
@@ -8,15 +8,15 @@ use Math::Vector::Real;
 
 =head1 NAME
 
-C<Math::Geometry::Construction::Role::VectorFormats> - transform different formats to Math::Vector::Real
+C<Math::Geometry::Construction::Role::Input> - format conversions
 
 =head1 VERSION
 
-Version 0.016
+Version 0.018
 
 =cut
 
-our $VERSION = '0.016';
+our $VERSION = '0.018';
 
 
 sub import_vector {
@@ -28,6 +28,15 @@ sub import_vector {
     return V($value->x, $value->y)
 	if(eval { $value->isa('Math::VectorReal') });
     croak sprintf('Unsupported vector format %s', ref($value));
+}
+
+sub import_point {
+    my ($self, $construction, $value) = @_;
+
+    return undef if(!defined($value));
+    return $value
+	if(eval { $value->isa('Math::Geometry::Construction::Point') });
+    return $construction->add_point(position => $value, hidden => 1);
 }
 
 1;
@@ -45,22 +54,7 @@ __END__
 
 =head1 INTERFACE
 
-=head2 Public Attributes
-
-=head2 Methods for Users
-
-=head2 Methods for Subclass Developers
-
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
+=head2 Methods
 
 
 =head1 AUTHOR
