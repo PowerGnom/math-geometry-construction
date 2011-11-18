@@ -24,27 +24,13 @@ our $VERSION = '0.018';
 #                                                                         #
 ###########################################################################
 
-has 'points' => (isa     => 'HashRef[Item]',
+has 'buffer' => (isa     => 'HashRef[Any]',
 		 is      => 'bare',
 		 traits  => ['Hash'],
 		 default => sub { {} },
-		 handles => {points          => 'values',
-			     _pointset_point => 'accessor'});
-
-sub register_point {
-    my ($self, @args) = @_;
-
-    foreach(@args) { $self->_pointset_point($_->id, $_) }
-}
-
-sub has_point {
-    my ($self, @args) = @_;
-
-    foreach(@args) {
-	return 0 if(!$self->_pointset_point(blessed($_) ? $_->id : $_));
-    }
-    return 1;
-}
+		 handles => {delete_buffer => 'delete',
+			     clear_buffer  => 'clear',
+			     buffer        => 'accessor'});
 
 1;
 
@@ -55,41 +41,29 @@ __END__
 
 =head1 DESCRIPTION
 
-This role provides attributes and methods that are common to all
-classes which represent objects that are point sets (specifically
-lines and circles). The role provides means to identify if two such
-objects are the same.
+This role provides a hash in which results can be stored in order to
+prevent expensive recalculating when they are accessed. It is used
+by C<DerivedPoint> and C<Derivate> objects to store their positions.
 
 =head1 INTERFACE
 
-=head2 Public Attributes
+The C<buffer> attribute implements the following hash traits (see
+L<Moose|Moose> if you are not familiar with traits and native
+delegation):
 
-=head3 points
+=over 4
 
-An array of C<Point> objects that lie on this object. This is not
-meant in strict geometrical sense. For a line, the C<points> are the
-two support points and all points derived from and lying on this
-line, e.g. C<PointOnLine> constructions and intersection
-points. However, the points must lie on that line. If, for example,
-a point is reflected at this line then the reflected point is also
-somehow associated with this line, but not a C<point> in the sense
-of this list. Similarly, the center of a circle is not a C<point>.
+=item * C<buffer> is the name of the C<accessor> method, which
+provides accessor and mutator functionality for a single entry of
+the hash
 
-The C<points> accessor will return the array (not a reference), the
-C<register_point> method pushes to the array.
+=item * C<delete_buffer> is the name of the C<delete> method, which
+deletes a single entry of the hash
 
-=head2 Methods
+=item * C<clear_buffer> is the name of the C<clear> method, which
+resets the hash to the empty hash
 
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
+=back
 
 
 =head1 AUTHOR

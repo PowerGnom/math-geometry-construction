@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::DerivedPoint> - point derived from other objects
 
 =head1 VERSION
 
-Version 0.016
+Version 0.018
 
 =cut
 
-our $VERSION = '0.016';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -37,6 +37,7 @@ sub id_template { return $ID_TEMPLATE }
 
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::Output';
+with 'Math::Geometry::Construction::Role::Buffering';
 
 has 'derivate'          => (isa      => 'Item',
 			    is       => 'ro',
