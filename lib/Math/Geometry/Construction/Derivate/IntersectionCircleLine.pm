@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleLine> - circle line 
 
 =head1 VERSION
 
-Version 0.017
+Version 0.018
 
 =cut
 
-our $VERSION = '0.017';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -110,17 +110,6 @@ __END__
 =head2 Methods for Users
 
 =head2 Methods for Subclass Developers
-
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
 
 
 =head1 AUTHOR

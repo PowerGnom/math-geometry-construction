@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Draw::TikZ> - TikZ output
 
 =head1 VERSION
 
-Version 0.013
+Version 0.018
 
 =cut
 
-our $VERSION = '0.013';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -241,22 +241,6 @@ typesetting labels in math mode.
 
 See
 L<Math::Geometry::Construction::Draw|Math::Geometry::Construction::Draw>.
-
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-Please report any bugs or feature requests to
-C<bug-math-geometry-construction at rt.cpan.org>, or through the web
-interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Math-Geometry-Construction>.
-I will be notified, and then you will automatically be notified of
-progress on your bug as I make changes.
 
 
 =head1 SEE ALSO

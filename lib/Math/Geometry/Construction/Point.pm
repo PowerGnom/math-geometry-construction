@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Point> - abstract point base class
 
 =head1 VERSION
 
-Version 0.016
+Version 0.018
 
 =cut
 
-our $VERSION = '0.016';
+our $VERSION = '0.018';
 
 
 ###########################################################################
@@ -139,17 +139,6 @@ C<DerivedPoint> inherit from it.
 =head2 Public Attributes
 
 =head2 Methods
-
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
 
 
 =head1 AUTHOR

@@ -221,17 +221,6 @@ points.
 
 Class method returning C<$ID_TEMPLATE>, which defaults to C<'L%09d'>.
 
-=head1 DIAGNOSTICS
-
-=head2 Exceptions
-
-=head2 Warnings
-
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported. Please report all bugs directly to the author.
-
 
 =head1 AUTHOR
 
