@@ -3,8 +3,8 @@ use Moose;
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Point);
 use Carp;
-use Scalar::Util qw(blessed);
 use Math::Vector::Real;
 
 =head1 NAME
@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -41,11 +41,11 @@ with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
-has 'center'       => (isa      => 'Item',
+has 'center'       => (isa      => Point,
 		       is       => 'ro',
 		       required => 1);
 
-has 'support'      => (isa      => 'Item',
+has 'support'      => (isa      => Point,
 		       is       => 'ro',
 		       required => 1);
 

@@ -3,6 +3,7 @@ use Moose::Role;
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(HashRefOfPoint);
 use Carp;
 
 =head1 NAME
@@ -11,11 +12,11 @@ C<Math::Geometry::Construction::Role::PointSet> - point set objects
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -24,7 +25,7 @@ our $VERSION = '0.018';
 #                                                                         #
 ###########################################################################
 
-has 'points' => (isa     => 'HashRef[Item]',
+has 'points' => (isa     => HashRefOfPoint,
 		 is      => 'bare',
 		 traits  => ['Hash'],
 		 default => sub { {} },

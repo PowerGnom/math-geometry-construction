@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Role::Output> - graphical output issues
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -31,7 +31,7 @@ has 'hidden'         => (isa     => 'Bool',
 		         is      => 'rw',
 		         default => 0);
 
-has 'label'          => (isa       => 'Item',
+has 'label'          => (isa       => 'Str',
 		         is        => 'rw',
 		         clearer   => 'clear_label',
 		         predicate => 'has_label');

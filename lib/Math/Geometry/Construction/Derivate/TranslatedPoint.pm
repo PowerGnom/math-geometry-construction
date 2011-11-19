@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Vector);
 use Carp;
 use Math::Vector::Real;
 
@@ -13,11 +14,11 @@ C<Math::Geometry::Construction::Derivate::TranslatedPoint> - point translated by
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -26,21 +27,13 @@ our $VERSION = '0.018';
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Role::Input';
 with 'Math::Geometry::Construction::Role::Buffering';
 
-has 'translator' => (isa      => 'Item',
+has 'translator' => (isa      => Vector,
+		     coerce   => 1,
 		     is       => 'rw',
 		     required => 1,
 		     trigger  => \&clear_global_buffer);
-
-sub BUILDARGS {
-    my ($class, %args) = @_;
-
-    $args{translator} = $class->import_vector($args{translator});
-
-    return \%args;
-}
 
 ###########################################################################
 #                                                                         #

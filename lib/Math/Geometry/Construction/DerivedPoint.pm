@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Point';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Derivate);
 use Carp;
 
 =head1 NAME
@@ -12,11 +13,11 @@ C<Math::Geometry::Construction::DerivedPoint> - point derived from other objects
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -39,11 +40,11 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::Buffering';
 
-has 'derivate'          => (isa      => 'Item',
+has 'derivate'          => (isa      => Derivate,
 			    is       => 'ro',
 			    required => 1);
 
-has 'position_selector' => (isa      => 'ArrayRef[Item]',
+has 'position_selector' => (isa      => 'ArrayRef[Defined]',
 			    is       => 'ro',
 			    reader   => '_position_selector',
 			    default  => sub { ['indexed_position', [0]] },

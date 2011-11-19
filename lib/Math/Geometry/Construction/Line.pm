@@ -3,6 +3,7 @@ use Moose;
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(ArrayRefOfPoint);
 use Carp;
 use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
@@ -14,11 +15,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -42,7 +43,7 @@ with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
-has 'support'     => (isa      => 'ArrayRef[Item]',
+has 'support'     => (isa      => ArrayRefOfPoint,
 		      is       => 'bare',
 		      traits   => ['Array'],
 		      required => 1,

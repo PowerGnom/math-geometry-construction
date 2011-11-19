@@ -3,6 +3,7 @@ use Moose::Role;
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Construction);
 use Carp;
 
 =head1 NAME
@@ -11,11 +12,11 @@ C<Math::Geometry::Construction::Role::Object> - shared administrative issues
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -35,7 +36,7 @@ has 'id'           => (isa      => 'Str',
 has 'order_index'  => (isa      => 'Int',
 		       is       => 'rw');
 
-has 'construction' => (isa      => 'Item',
+has 'construction' => (isa      => Construction,
 		       is       => 'ro',
 		       required => 1,
 		       weak_ref => 1);

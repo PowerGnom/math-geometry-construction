@@ -2,8 +2,17 @@ package Math::Geometry::Construction::Types;
 use strict;
 use warnings;
 use MooseX::Types -declare => ['MathVectorReal3D',
-			       'Vector'];
-use MooseX::Types::Moose qw/Num ArrayRef/;
+			       'Vector',
+			       'Construction',
+			       'GeometricObject',
+			       'Point',
+			       'Derivate',
+			       'Draw',
+			       'HashRefOfGeometricObject',
+			       'ArrayRefOfGeometricObject',
+			       'HashRefOfPoint',
+			       'ArrayRefOfPoint'];
+use MooseX::Types::Moose qw/Num ArrayRef HashRef/;
 
 use 5.008008;
 
@@ -34,6 +43,27 @@ coerce Vector,
 coerce Vector,
     from ArrayRef[Num],
     via { V(@$_[0, 1]) };
+
+class_type Construction, {class => 'Math::Geometry::Construction'};
+
+role_type GeometricObject,
+    {role => 'Math::Geometry::Construction::Role::Object'};
+
+class_type Point,    {class => 'Math::Geometry::Construction::Point'};
+class_type Derivate, {class => 'Math::Geometry::Construction::Derivate'};
+class_type Draw,     {class => 'Math::Geometry::Construction::Draw'};
+
+subtype HashRefOfGeometricObject,
+    as HashRef[GeometricObject];
+
+subtype ArrayRefOfGeometricObject,
+    as ArrayRef[GeometricObject];
+
+subtype HashRefOfPoint,
+    as HashRef[Point];
+
+subtype ArrayRefOfPoint,
+    as ArrayRef[Point];
 
 1;
 

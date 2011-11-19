@@ -2,6 +2,7 @@ package Math::Geometry::Construction::Derivate;
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(ArrayRefOfGeometricObject);
 use Moose;
 use Carp;
 
@@ -11,11 +12,11 @@ C<Math::Geometry::Construction::Derivate> - derive points from objects
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -38,7 +39,7 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Buffering';
 
-has 'input' => (isa      => 'ArrayRef[Item]',
+has 'input' => (isa      => ArrayRefOfGeometricObject,
 		is       => 'bare',
 		traits   => ['Array'],
 		required => 1,
