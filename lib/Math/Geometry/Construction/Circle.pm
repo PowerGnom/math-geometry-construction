@@ -40,13 +40,17 @@ with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
-has 'center'  => (isa      => 'Item',
-		  is       => 'ro',
-		  required => 1);
+has 'center'       => (isa      => 'Item',
+		       is       => 'ro',
+		       required => 1);
 
-has 'support' => (isa      => 'Item',
-		  is       => 'ro',
-		  required => 1);
+has 'support'      => (isa      => 'Item',
+		       is       => 'ro',
+		       required => 1);
+
+has 'fixed_radius' => (isa      => 'Bool',
+		       is       => 'ro',
+		       required => 1);
 
 sub BUILDARGS {
     my ($class, %args) = @_;
@@ -61,10 +65,12 @@ sub BUILDARGS {
 	      translator => [$args{radius}, 0]},
 	     {hidden     => 1});
 	delete $args{radius};
+	$args{fixed_radius} = 1;
     }
     else {
 	$args{support} = $class->import_point
 	    ($args{construction}, $args{support});
+	$args{fixed_radius} = 0;
     }
 
     return \%args;

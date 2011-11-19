@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 56;
+use Test::More tests => 60;
 use Test::Exception;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
@@ -31,6 +31,7 @@ sub circle {
     $root = $ci->construction;
     ok(defined($root), 'construction defined');
     isa_ok($root, 'Math::Geometry::Construction');
+    ok(!$ci->fixed_radius, 'radius is not fixed');
 
     $c = $ci->center;
     ok(defined($c), 'center defined');
@@ -51,6 +52,7 @@ sub circle {
     $root = $ci->construction;
     ok(defined($root), 'construction defined');
     isa_ok($root, 'Math::Geometry::Construction');
+    ok(!$ci->fixed_radius, 'radius is not fixed');
     
     $c = $ci->center;
     ok(defined($c), 'center defined');
@@ -71,6 +73,7 @@ sub circle {
     $root = $ci->construction;
     ok(defined($root), 'construction defined');
     isa_ok($root, 'Math::Geometry::Construction');
+    ok(!$ci->fixed_radius, 'radius is not fixed');
     
     $c = $ci->center;
     ok(defined($c), 'center defined');
@@ -88,6 +91,8 @@ sub circle {
     ok(defined($ci), 'circle defined');
     isa_ok($ci, 'Math::Geometry::Construction::Circle');
     is_close($ci->radius, 20, 'set radius');
+    ok($ci->fixed_radius, 'radius is fixed');
+
     $c = $ci->center;
     ok(defined($c), 'center defined');
     isa_ok($c, 'Math::Geometry::Construction::Point');
