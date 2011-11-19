@@ -1,27 +1,19 @@
-- On creation of an intersection point, it should be added to the
-  lists of POIs of the intersecting objects. The user should be able
-  to inhibit this. I am unsure how he should be able to inihibit it
-  specifically for some of the objects. Maybe I won't allow
-  this. Anyway, it is planned to let objects ignore points. It can
-  always be done very specifically this way.
-
-- update strategy
-  - points buffer their position
-  - whenever an object changes something that affects downstream
-    objects it notifies the construction object
-  - the construction object saves the lowest order index that has
-    changes
-  - whenever a point would like to access its buffered value it asks
-    the construction object if it is still uptodate
-  - if the order index of the asking object is higher than the last
-    change then a refresh is triggered; either a refresh of the
-    required range (that would require a list of changed objects, -
-    not just the lowest one) or a full refresh (that would probably
-    not be too expensive)
-  - a refresh can be executed by just updating all objects
-    sequentially since an object can only depend on objects with -
-    lower order indices (I hope this is really true, but I cannot -
-    come up with a scenario where this restriction would be too -
-    harsh).
-
-- Think about a role shared by Point/DerivedPoint.
+- think about using MooseX::Params::Validate for Vector coercion in
+  PositionSelection; it might also come in useful if I allow Point
+  objects in these methods
+- operator overloading:
+  - x for intersection
+  - . for point on PointSet object
+  - >> for translated point
+  The question is if this should return the derivate object or a
+  list of derived points. The problem with the latter case is that
+  styles, labels, and position selectors cannot be set. However, in
+  the former case, it would only be syntactic sugar. My best bet at
+  the moment is to allow default styles/colors and hidden status and
+  go with the second alternative. Still, in many cases one will need
+  to use the more verbose method form.
+- PointOnCircle
+- less random ordering of derived positions
+- partial circles
+- label positioning
+- PointSet labels via PointOn points
