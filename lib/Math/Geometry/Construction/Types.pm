@@ -1,12 +1,13 @@
 package Math::Geometry::Construction::Types;
-use Moose::Util::TypeConstraints;
 use strict;
-use warnings
+use warnings;
+use MooseX::Types -declare => ['MathVectorReal3D', 'Vector'];
+use MooseX::Types::Moose qw/Num ArrayRef/;
 
 use 5.008008;
 
 use Math::Vector::Real;
-use Carp;
+use Math::VectorReal;
 
 =head1 NAME
 
@@ -20,6 +21,18 @@ Version 0.019
 
 our $VERSION = '0.019';
 
+class_type MathVectorReal3D, {class => 'Math::VectorReal'};
+
+subtype Vector,
+    as 'Math::Vector::Real';
+
+coerce Vector,
+    from MathVectorReal3D,
+    via { V($_->x, $_->y) };
+
+coerce Vector,
+    from ArrayRef[Num],
+    via { V(@$_[0, 1]) };
 
 1;
 

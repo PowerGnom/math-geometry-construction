@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Point';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Vector);
 use Math::Vector::Real;
 use Carp;
 
@@ -13,11 +14,11 @@ C<Math::Geometry::Construction::FixedPoint> - independent user-defined point
 
 =head1 VERSION
 
-Version 0.018
+Version 0.019
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.019';
 
 
 ###########################################################################
@@ -26,10 +27,10 @@ our $VERSION = '0.018';
 #                                                                         #
 ###########################################################################
 
-with 'Math::Geometry::Construction::Role::Input';
 with 'Math::Geometry::Construction::Role::Buffering';
 
-has 'position' => (isa      => 'Math::Vector::Real',
+has 'position' => (isa      => Vector,
+		   coerce   => 1,
 	           is       => 'rw',
 	           required => 1,
 		   trigger  => \&clear_global_buffer);
@@ -37,7 +38,6 @@ has 'position' => (isa      => 'Math::Vector::Real',
 sub BUILDARGS {
     my ($class, %args) = @_;
 
-    $args{position} = $class->import_vector($args{position});
     if(defined($args{x}) and defined($args{y})) {
 	$args{position} = V($args{x}, $args{y});
     }
