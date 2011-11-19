@@ -1,6 +1,7 @@
 Revision history for Math-Geometry-Construction
 
 0.019	 
+	 - starting to use Moose types
 	 - using coercion in order to accept Math::VectorReal
 	   objects and array references as vectors; this means that
 	   these types can now be used in mutators as well, not only
