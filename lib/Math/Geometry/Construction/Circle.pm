@@ -5,6 +5,7 @@ use 5.008008;
 
 use Carp;
 use Scalar::Util qw(blessed);
+use Math::Vector::Real;
 
 =head1 NAME
 
@@ -98,7 +99,17 @@ sub positions {
 }
 
 sub radius {
-    my ($self) = @_;
+    my ($self, @args) = @_;
+
+    if(@args) {
+	if($self->fixed_radius) {
+	    # TODO: validate
+	    $self->support->derivate->translator(V($args[0], 0));
+	}
+	else {
+	    croak "Radius can only be set on circles with fixed radius";
+	}
+    }
 
     my $center_p  = $self->center->position;
     my $support_p = $self->support->position;

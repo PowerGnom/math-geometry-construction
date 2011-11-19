@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 46;
+use Test::More tests => 48;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
 
@@ -34,8 +34,8 @@ sub fixed_point {
     is($points[4]->position->[1], -1, 'initial y');
 
     $points[1]->position(V(4, -3));
-    is($points[4]->position->[0],  3, 'shifted x');
-    is($points[4]->position->[1], -2, 'shifted y');
+    is($points[4]->position->[0],  3, 'updated x');
+    is($points[4]->position->[1], -2, 'updated y');
 
     push(@points, $construction->add_derived_point
 	 ('TranslatedPoint',
@@ -43,8 +43,8 @@ sub fixed_point {
     is($points[5]->position->[0], 3, 'initial x');
     is($points[5]->position->[1], 1, 'initial y');
     $points[0]->position(V(12, -4));
-    is($points[5]->position->[0], 13, 'shifted x');
-    is($points[5]->position->[1], -2, 'shifted y');
+    is($points[5]->position->[0], 13, 'updated x');
+    is($points[5]->position->[1], -2, 'updated y');
 
     # changing position selection
     @points = ($construction->add_point(position => [0, 0]),
@@ -63,8 +63,8 @@ sub fixed_point {
     is($points[4]->position->[0], 4, 'initial x');
     is($points[4]->position->[1], 3, 'initial y');
     $points[0]->position(V(0, 4));
-    is($points[4]->position->[0], 4, 'shifted x');
-    is($points[4]->position->[1], 1, 'shifted y');
+    is($points[4]->position->[0], 4, 'updated x');
+    is($points[4]->position->[1], 1, 'updated y');
 
     # chained dependency
     @points = ($construction->add_point(position => [1, -4]));
@@ -89,8 +89,8 @@ sub fixed_point {
     is($points[4]->position->[0], 4, 'initial x');
     is($points[4]->position->[1], 1, 'initial y');
     $points[0]->position(V(-10, -3));
-    is($points[4]->position->[0], -7, 'shifted x');
-    is($points[4]->position->[1], 2, 'shifted y');
+    is($points[4]->position->[0], -7, 'updated x');
+    is($points[4]->position->[1], 2, 'updated y');
 }
 
 sub translator {
@@ -111,10 +111,23 @@ sub translator {
     is($points[2]->position->[1], -13, 'initial y');
 
     $points[1]->derivate->translator(V(-5, 2));
-    is($points[1]->position->[0], 0, 'initial x');
-    is($points[1]->position->[1], -6, 'initial y');
-    is($points[2]->position->[0], 15, 'initial x');
-    is($points[2]->position->[1], -13, 'initial y');
+    is($points[1]->position->[0], 0, 'updated x');
+    is($points[1]->position->[1], -6, 'updated y');
+    is($points[2]->position->[0], 15, 'updated x');
+    is($points[2]->position->[1], -13, 'updated y');
+}
+
+sub circle_radius {
+    my $construction = Math::Geometry::Construction->new;
+    my @points;
+    my @circles;
+
+    @points = ($construction->add_point(position => [5, -8]));
+    @circles = ($construction->add_circle(center => $points[0],
+					  radius => 10));
+    is($circles[0]->radius, 10, 'initial radius');
+    $circles[0]->radius(20);
+    is($circles[0]->radius, 20, 'updated radius');
 }
 
 sub point_on_line {
@@ -139,34 +152,35 @@ sub point_on_line {
     is($points[3]->position->[1], -11, 'initial y');
 
     $points[2]->derivate->quantile(0.75);
-    is($points[2]->position->[0], 12.5, 'initial x');
-    is($points[2]->position->[1], -11, 'initial y');
-    is($points[3]->position->[0], 15.5, 'initial x');
-    is($points[3]->position->[1], -12, 'initial y');
+    is($points[2]->position->[0], 12.5, 'updated x');
+    is($points[2]->position->[1], -11, 'updated y');
+    is($points[3]->position->[0], 15.5, 'updated x');
+    is($points[3]->position->[1], -12, 'updated y');
 
     $points[2]->derivate->quantile(0.25);
-    is($points[3]->position->[0], 10.5, 'initial x');
-    is($points[3]->position->[1], -10, 'initial y');
+    is($points[3]->position->[0], 10.5, 'updated x');
+    is($points[3]->position->[1], -10, 'updated y');
 
     $points[2]->derivate->distance(0);
-    is($points[2]->position->[0], 5, 'initial x');
-    is($points[2]->position->[1], -8, 'initial y');
-    is($points[3]->position->[0], 8, 'initial x');
-    is($points[3]->position->[1], -9, 'initial y');
+    is($points[2]->position->[0], 5, 'updated x');
+    is($points[2]->position->[1], -8, 'updated y');
+    is($points[3]->position->[0], 8, 'updated x');
+    is($points[3]->position->[1], -9, 'updated y');
 
     $points[2]->derivate->x(10);
-    is($points[2]->position->[0], 10, 'initial x');
-    is($points[2]->position->[1], -10, 'initial y');
-    is($points[3]->position->[0], 13, 'initial x');
-    is($points[3]->position->[1], -11, 'initial y');
+    is($points[2]->position->[0], 10, 'updated x');
+    is($points[2]->position->[1], -10, 'updated y');
+    is($points[3]->position->[0], 13, 'updated x');
+    is($points[3]->position->[1], -11, 'updated y');
 
     $points[2]->derivate->y(-11);
-    is($points[2]->position->[0], 12.5, 'initial x');
-    is($points[2]->position->[1], -11, 'initial y');
-    is($points[3]->position->[0], 15.5, 'initial x');
-    is($points[3]->position->[1], -12, 'initial y');
+    is($points[2]->position->[0], 12.5, 'updated x');
+    is($points[2]->position->[1], -11, 'updated y');
+    is($points[3]->position->[0], 15.5, 'updated x');
+    is($points[3]->position->[1], -12, 'updated y');
 }
 
 fixed_point;
 translator;
+circle_radius;
 point_on_line;
