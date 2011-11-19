@@ -127,7 +127,8 @@ sub id {
 
     $dp = $construction->add_derived_point
 	('TranslatedPoint',
-	 {input => [$construction->add_point(position => [10, 21])]});
+	 {input      => [$construction->add_point(position => [10, 21])],
+	  translator => [4, -13]});
     foreach('P000000005',
 	    'D000000006',
 	    'S000000007')
