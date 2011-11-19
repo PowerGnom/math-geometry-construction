@@ -436,6 +436,21 @@ of the C<Hash> trait.
 
 =back
 
+As more specific accessors there are
+
+=over 4
+
+=item * points
+
+=item * lines
+
+=item * circles
+
+=back
+
+The C<points> list contains both user defined points and derived
+points.
+
 =head3 point_size
 
 Holds the default point size that is used if no explict size is

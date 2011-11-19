@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 48;
+use Test::More tests => 49;
+use Test::Exception;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
 
@@ -128,6 +129,12 @@ sub circle_radius {
     is($circles[0]->radius, 10, 'initial radius');
     $circles[0]->radius(20);
     is($circles[0]->radius, 20, 'updated radius');
+
+    push(@circles, $construction->add_circle(center  => [1, 3],
+					     support => [5, 6]));
+    throws_ok(sub { $circles[1]->radius(5) },
+	      qr/Radius can only be set on circles with fixed radius/,
+	      'attempt to set radius on support circle');
 }
 
 sub point_on_line {

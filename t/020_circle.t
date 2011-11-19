@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 60;
+use Test::More tests => 68;
 use Test::Exception;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
@@ -21,6 +21,8 @@ sub circle {
     my $p;
     my $ci;
     my $root;
+    my @points;
+    my @positions;
 
     $c  = $construction->add_point(position => [10, 10]);
     $p  = $construction->add_point(position => [40, 50]);
@@ -44,6 +46,13 @@ sub circle {
     is_close($p->position->[0], 40, 'support x');
     is_close($p->position->[1], 50, 'support y');
     is_close($ci->radius, 50, 'radius');
+    @points = $ci->points;
+    is(@points, 1, 'one point');
+    is($points[0]->id, $p->id, 'point is support point');
+    @positions = $ci->positions;
+    is(@positions, 1, 'one position');
+    is_close($positions[0]->[0], 40, 'position x');
+    is_close($positions[0]->[1], 50, 'position y');
 
     $ci = $construction->add_circle(center  => [20, -10],
 				    support => [70, 110]);
@@ -114,6 +123,11 @@ sub circle {
     ok(defined($p), 'support defined');
     isa_ok($p, 'Math::Geometry::Construction::DerivedPoint');
     is_close(($p->position - $c->position)->abs, 20, 'support distance');
+    @points = $ci->points;
+    is(@points, 1, 'one point');
+    is($points[0]->id, $p->id, 'point is support point');
+    @positions = $ci->positions;
+    is(@positions, 1, 'one position');
 }
 
 circle;

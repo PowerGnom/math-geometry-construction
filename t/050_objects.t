@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 116;
+use Test::More tests => 139;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -96,6 +96,61 @@ sub id {
     ok(defined($object), 'implicit point by id defined');
     is($object->position->[0], 7, 'position x');
     is($object->position->[1], 8, 'position y');
+}
+
+sub objects {
+    my $construction;
+    my @objects;
+
+    $construction = Math::Geometry::Construction->new;
+    @objects = $construction->objects;
+    is(@objects, 0, 'no objects to start with');
+    @objects = $construction->points;
+    is(@objects, 0, 'no points to start with');
+    @objects = $construction->lines;
+    is(@objects, 0, 'no lines to start with');
+    @objects = $construction->circles;
+    is(@objects, 0, 'no circles to start with');
+
+    $construction->add_point(position => [0, 0], id => 'P01');
+    @objects = $construction->objects;
+    is(@objects, 1, 'one object');
+    is($objects[0]->id, 'P01', 'this object is my point');
+    @objects = $construction->points;
+    is(@objects, 1, 'one point');
+    is($objects[0]->id, 'P01', 'this object is my point');
+    @objects = $construction->lines;
+    is(@objects, 0, 'no lines');
+    @objects = $construction->circles;
+    is(@objects, 0, 'no circles');
+
+    $construction = Math::Geometry::Construction->new;
+    $construction->add_line(support => [[0, 0], [1, 1]], id => 'L01');
+    @objects = $construction->objects;
+    is(@objects, 3, 'three objects');
+    is($objects[2]->id, 'L01', 'last object is my line');
+    @objects = $construction->points;
+    is(@objects, 2, 'two points');
+    @objects = $construction->lines;
+    is(@objects, 1, 'one line');
+    is($objects[0]->id, 'L01', 'this object is my line');
+    @objects = $construction->circles;
+    is(@objects, 0, 'no circles');
+
+    $construction = Math::Geometry::Construction->new;
+    $construction->add_circle(support => [0, 0],
+			      center  => [1, 1],
+			      id      => 'C01');
+    @objects = $construction->objects;
+    is(@objects, 3, 'three objects');
+    is($objects[2]->id, 'C01', 'last object is my circle');
+    @objects = $construction->points;
+    is(@objects, 2, 'two points');
+    @objects = $construction->lines;
+    is(@objects, 0, 'no lines');
+    @objects = $construction->circles;
+    is(@objects, 1, 'one circle');
+    is($objects[0]->id, 'C01', 'this object is my circle');
 }
 
 sub find_line {
@@ -245,6 +300,9 @@ sub find_circle {
     ok(!defined($construction->find_circle(center  => $points[0],
 					   support => $points[2])),
        'circle not found');
+    ok(!defined($construction->find_circle(center  => $points[3],
+					   support => $points[1])),
+       'circle not found');
 
     push(@circles, $construction->add_circle(center  => $points[3],
 					     support => $points[4]));
@@ -375,6 +433,7 @@ sub find_or_add {
 
 order_index;
 id;
+objects;
 find_line;
 find_circle;
 find_or_add;
