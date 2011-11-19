@@ -2,8 +2,7 @@ package Math::Geometry::Construction::Types;
 use strict;
 use warnings;
 use MooseX::Types -declare => ['MathVectorReal3D',
-			       'Vector',
-			       'Point'];
+			       'Vector'];
 use MooseX::Types::Moose qw/Num ArrayRef/;
 
 use 5.008008;
@@ -35,13 +34,6 @@ coerce Vector,
 coerce Vector,
     from ArrayRef[Num],
     via { V(@$_[0, 1]) };
-
-subtype Point,
-    as 'Math::Geometry::Construction::Point';
-
-coerce Point,
-    from Vector,
-    via { Math::Geometry::Construction::Point->new(position => $_) };
 
 1;
 
