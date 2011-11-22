@@ -9,8 +9,9 @@ use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
 use Math::Vector::Real;
 
-#use overload 'x' => '_intersect',
-#             '.' => '_point_on';
+use overload 'x'    => '_intersect',
+             '.'    => '_point_on',
+             'bool' => sub { return 1 };
 
 =head1 NAME
 
@@ -153,21 +154,17 @@ sub draw {
 sub _intersect {
     my ($self, $intersector) = @_;
     my $class;
-    my $derivate;
-    my $base = 'Math::Geometry::Construction::Derivate';
 	 
-    $class    = 'Math::Geometry::Construction::Line';
-    $derivate = "${base}::IntersectionLineLine";
+    $class = 'Math::Geometry::Construction::Line';
     if(eval { $intersector->isa($class) }) {
 	return $self->construction->add_derived_point
-	    ($derivate, {input => [$self, $intersector]});
+	    ('IntersectionLineLine', {input => [$self, $intersector]});
     }
 
-    $class    = 'Math::Geometry::Construction::Line';
-    $derivate = "${base}::IntersectionCircleLine";
+    $class = 'Math::Geometry::Construction::Line';
     if(eval { $intersector->isa($class) }) {
 	return $self->construction->add_derived_point
-	    ($derivate, {input => [$self, $intersector]},
+	    ('IntersectionCircleLine', {input => [$self, $intersector]},
 	    [{position_selector => ['indexed_position', [0]]},
 	     {position_selector => ['indexed_position', [1]]}]);
     }

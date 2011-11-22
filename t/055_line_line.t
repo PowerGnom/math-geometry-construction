@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 51;
+use Test::More tests => 65;
 use Math::Geometry::Construction;
 
 sub is_close {
@@ -149,6 +149,40 @@ sub register_derived_point {
        'derived point is registered');
 }
 
+sub overloading {
+    my $construction = Math::Geometry::Construction->new;
+
+    my @lines;
+    my $dp;
+    my $pos;
+
+    @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
+	      $construction->add_line(support => [[20, 10], [20, 40]]));
+    
+    $dp = $lines[0] x $lines[1];
+
+    ok(defined($dp), 'derived point defined');
+    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
+    $pos = $dp->position;
+    ok(defined($pos), 'position defined');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is_close($pos->[0], 20, 'intersection x');
+    is_close($pos->[1], 30, 'intersection y');
+    
+    $dp = $lines[1] x $lines[0];
+
+    ok(defined($dp), 'derived point defined');
+    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
+    $pos = $dp->position;
+    ok(defined($pos), 'position defined');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'two components');
+    is_close($pos->[0], 20, 'intersection x');
+    is_close($pos->[1], 30, 'intersection y');
+}
+
 line_line;
 id;
 register_derived_point;
+overloading;
