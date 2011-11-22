@@ -9,17 +9,20 @@ use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
 use Math::Vector::Real;
 
+#use overload 'x' => '_intersect',
+#             '.' => '_point_on';
+
 =head1 NAME
 
 C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.019
+Version 0.020
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.020';
 
 
 ###########################################################################
@@ -143,9 +146,40 @@ sub draw {
 
 ###########################################################################
 #                                                                         #
-#                              Change Data                                # 
+#                              Overloading                                # 
 #                                                                         #
 ###########################################################################
+
+sub _intersect {
+    my ($self, $intersector) = @_;
+    my $class;
+    my $derivate;
+    my $base = 'Math::Geometry::Construction::Derivate';
+	 
+    $class    = 'Math::Geometry::Construction::Line';
+    $derivate = "${base}::IntersectionLineLine";
+    if(eval { $intersector->isa($class) }) {
+	return $self->construction->add_derived_point
+	    ($derivate, {input => [$self, $intersector]});
+    }
+
+    $class    = 'Math::Geometry::Construction::Line';
+    $derivate = "${base}::IntersectionCircleLine";
+    if(eval { $intersector->isa($class) }) {
+	return $self->construction->add_derived_point
+	    ($derivate, {input => [$self, $intersector]},
+	    [{position_selector => ['indexed_position', [0]]},
+	     {position_selector => ['indexed_position', [1]]}]);
+    }
+}
+
+sub _point_on {
+    my ($self, $args) = @_;
+
+    my $derivate = "Math::Geometry::Construction::Derivate::PointOnLine";
+    return $self->construction->add_derived_point
+	($derivate, {input => [$self], $args});
+}
 
 1;
 
