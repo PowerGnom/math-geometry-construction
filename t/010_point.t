@@ -2,8 +2,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 52;
+use Test::More tests => 64;
 use Test::Exception;
+use Test::Warn;
 use Math::Geometry::Construction;
 use Math::VectorReal;
 use Math::Vector::Real;
@@ -14,41 +15,46 @@ sub is_close {
     cmp_ok(abs($value - $reference), '<', ($limit || 1e-12), $message);
 }
 
+sub position_ok {
+    my ($pos, $x, $y) = @_;
+
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'position has 2 components');
+    is($pos->[0], $x, "x coordinate is $x");
+    is($pos->[1], $y, "y coordinate is $y");
+}
+
+sub constructs_ok {
+    my ($construction, $args, $x, $y) = @_;
+    my $point;
+
+    warning_is { $point = $construction->add_point(%$args) } undef,
+        'no warnings in constructor';
+
+    ok(defined($point), 'point is defined');
+    isa_ok($point, 'Math::Geometry::Construction::Point');
+    position_ok($point->position, $x, $y);
+
+    return $point;
+}
+
 sub point {
     my $construction = Math::Geometry::Construction->new;
     my $p;
-    my $pos;
-    my $root;
 
-    $p = $construction->add_point(position => V(14, 15));
-    ok(defined($p), 'point is defined');
-    isa_ok($p, 'Math::Geometry::Construction::Point');
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], 14, 'x coordinate');
-    is($pos->[1], 15, 'y coordinate');
+    $p = constructs_ok($construction,
+		       {position => V(14, 15)},
+		       14, 15);
 
-    $p = $construction->add_point(x => 9, 'y' => 10, z => 11);
-    ok(defined($p), 'point is defined');
-    isa_ok($p, 'Math::Geometry::Construction::Point');
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], 9, 'x coordinate');
-    is($pos->[1], 10, 'y coordinate');
+    $p = constructs_ok($construction,
+		       {x => 9, 'y' => 10, z => 11},
+		       9, 10);
     ok(!$p->hidden, 'not hidden');
     is($p->size, 6, 'default size');
 
-    $p = $construction->add_point(x => 12, 'y' => 13, hidden => 1,
-				  size => 10);
-    ok(defined($p), 'point is defined');
-    isa_ok($p, 'Math::Geometry::Construction::Point');
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], 12, 'x coordinate');
-    is($pos->[1], 13, 'y coordinate');
+    $p = constructs_ok($construction,
+		       {x => 12, 'y' => 13, hidden => 1, size => 10},
+		       12, 13);
     ok($p->hidden, 'hidden');
     is($p->size, 10, 'size 10');
 
@@ -60,64 +66,46 @@ sub point {
 
 sub coercion {
     my $construction = Math::Geometry::Construction->new;
-    my $p;
-    my $pos;
+    my $point;
 
-    $p = $construction->add_point(position => vector(1, 2, 3));
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], 1, 'x coordinate');
-    is($pos->[1], 2, 'y coordinate');
+    $point = constructs_ok($construction,
+			   {position => vector(1, 2, 3)},
+			   1, 2);
 
-    $p = $construction->add_point(position => [4, 5, 6]);
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], 4, 'x coordinate');
-    is($pos->[1], 5, 'y coordinate');
+    $point = constructs_ok($construction,
+			   {position => [4, 5, 6]},
+			   4, 5);
 
-    $p = $construction->add_point(position => [7, 8]);
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], 7, 'x coordinate');
-    is($pos->[1], 8, 'y coordinate');
+    $point = constructs_ok($construction,
+			   {position => [7, 8]},
+			   7, 8);
 
-    $p->position(vector(-3, 4, 1));
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], -3, 'x coordinate');
-    is($pos->[1], 4, 'y coordinate');
+    $point->position(vector(-3, 4, 1));
+    position_ok($point->position, -3, 4);
 
-    $p->position([9, -10]);
-    $pos = $p->position;
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is($pos->[0], 9, 'x coordinate');
-    is($pos->[1], -10, 'y coordinate');
+    $point->position([9, -10]);
+    position_ok($point->position, 9, -10);
 }
 
 sub defaults {
     my $construction = Math::Geometry::Construction->new;
-    my $p;
-    my $pos;
-    my $root;
+    my $point;
 
-    $p = $construction->add_point(position => [0, 0]);
-    is($p->size, 6, 'default point size 6');
-    is($p->radius, 3, 'default radius 3');
+    $point = $construction->add_point(position => [0, 0]);
+    is($point->size, 6, 'default point size 6');
+    is($point->radius, 3, 'default radius 3');
     $construction->point_size(7.5);
-    $p = $construction->add_point(position => [0, 0]);
-    is($p->size, 7.5, 'default point size 7.5');
-    is($p->radius, 3.75, 'default radius 3.75');
-    $p->size(12);
-    is($p->size, 12, 'adjusted point size 12');
-    is($p->radius, 6, 'adjusted point size 6');
-    $p = $construction->add_point(position => [0, 0], size => 13.35);
-    is($p->size, 13.35, 'constructed point size 13.35');
-    is($p->radius, 6.675, 'constructed point size 6.675');
+
+    $point = $construction->add_point(position => [0, 0]);
+    is($point->size, 7.5, 'default point size 7.5');
+    is($point->radius, 3.75, 'default radius 3.75');
+    $point->size(12);
+    is($point->size, 12, 'adjusted point size 12');
+    is($point->radius, 6, 'adjusted point size 6');
+
+    $point = $construction->add_point(position => [0, 0], size => 13.35);
+    is($point->size, 13.35, 'constructed point size 13.35');
+    is($point->radius, 6.675, 'constructed point size 6.675');
 }
 
 point;
