@@ -1,5 +1,9 @@
 Revision history for Math-Geometry-Construction
 
+0.020	 
+	 - dabbling with operator overloading
+	 - refactored and cleaned up test suite
+
 0.019	 Sun Nov 20 12:19:09 NZDT 2011
 	 - starting to use Moose types
 	 - using coercion in order to accept Math::VectorReal
