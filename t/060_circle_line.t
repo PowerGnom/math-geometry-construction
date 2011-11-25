@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 26;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -83,29 +83,20 @@ sub overloading {
     my $l;
     my $c;
     my $ip;
-    my @ips;
     my $pos;
 
     $l = $construction->add_line(support => [[10, 30], [30, 30]]);
     $c = $construction->add_circle(center => [20, 30], radius => 30);
     
-    @ips = $l x $c;
+    $ip = $l x $c;
 
-  SKIP: {
-      skip("x seems to enforce scalar context", 12);
-      foreach $ip (@ips) {
-	  ok(defined($ip), 'derived point defined');
-	  isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
-	  $pos = $ip->position;
-	  ok(defined($pos), 'position defined');
-	  isa_ok($pos, 'Math::Vector::Real');
-	  # cannot test x because I don't know which point I got
-	  is_close($pos->[1], 30, 'intersection y');
-      }
-      
-      is_close(min(map { $_->position->[0] } @ips), -10, 'intersection x');
-      is_close(max(map { $_->position->[0] } @ips), 50, 'intersection x');
-    }
+    ok(defined($ip), 'derived point defined');
+    isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
+    $pos = $ip->position;
+    ok(defined($pos), 'position defined');
+    isa_ok($pos, 'Math::Vector::Real');
+    is_close($pos->[0], -10, 'intersection x');
+    is_close($pos->[1], 30, 'intersection y');
 }
 
 circle_line;

@@ -164,9 +164,7 @@ sub _intersect {
     $class = 'Math::Geometry::Construction::Circle';
     if(eval { $intersector->isa($class) }) {
 	return $self->construction->add_derived_point
-	    ('IntersectionCircleLine', {input => [$self, $intersector]},
-	    [{position_selector => ['indexed_position', [0]]},
-	     {position_selector => ['indexed_position', [1]]}]);
+	    ('IntersectionCircleLine', {input => [$self, $intersector]});
     }
 }
 
