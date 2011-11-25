@@ -62,12 +62,8 @@ sub calculate_positions {
 	return if(!defined($_));
     }
 
-    my $l_distance = $l_support_p[1] - $l_support_p[0];
-    my $d          = abs($l_distance);
-    return if($d == 0);
-
-    my $l_parallel = $l_distance / $d;
-    my $l_normal   = $l_parallel->normal_base;
+    my $l_parallel = $line->parallel or return;
+    my $l_normal   = $line->normal;
     my $l_constant = $l_normal * $l_support_p[0];
 
     my $a   = $l_normal * $c_center_p - $l_constant;
@@ -75,8 +71,8 @@ sub calculate_positions {
     return if($rad < 0);
     my $b   = sqrt($rad);
     
-    return($c_center_p - $l_normal * $a + $l_parallel * $b,
-	   $c_center_p - $l_normal * $a - $l_parallel * $b);
+    return($c_center_p - $l_normal * $a - $l_parallel * $b,
+	   $c_center_p - $l_normal * $a + $l_parallel * $b);
 }
 
 ###########################################################################
