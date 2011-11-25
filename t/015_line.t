@@ -2,8 +2,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 55;
+use Test::More tests => 91;
 use Test::Exception;
+use Test::Warn;
 use Math::Geometry::Construction;
 use Math::Vector::Real;
 
@@ -13,86 +14,99 @@ sub is_close {
     cmp_ok(abs($value - $reference), '<', ($limit || 1e-12), $message);
 }
 
+sub position_ok {
+    my ($pos, $x, $y) = @_;
+
+    ok(defined($pos), 'position is defined');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'position has 2 components');
+    is($pos->[0], $x, "x coordinate is $x");
+    is($pos->[1], $y, "y coordinate is $y");
+}
+
+sub support_ok {
+    my ($line, $pos) = @_;
+    my @support;
+
+    @support = $line->support;
+    is(@support, 2, 'two support points');
+    for(my $i=0;$i<2;$i++) {
+	ok(defined($support[$i]), 'support point defined');
+	isa_ok($support[$i], 'Math::Geometry::Construction::Point');
+	position_ok($support[$i]->position, @{$pos->[$i]});
+    }
+}
+
+sub constructs_ok {
+    my ($construction, $args, $pos) = @_;
+    my $line;
+
+    warning_is { $line = $construction->add_line(%$args) } undef,
+        'no warnings in constructor';
+
+    ok(defined($line), 'line is defined');
+    isa_ok($line, 'Math::Geometry::Construction::Line');
+    support_ok($line, $pos);
+
+    return $line;
+}
+
+sub directions_ok {
+    my ($line, $parallel, $normal) = @_;
+    my $dir;
+
+    $dir = $line->parallel;
+    ok(defined($dir), 'parallel defined');
+    isa_ok($dir, 'Math::Vector::Real');
+    is_close($dir->[0], $parallel->[0],
+	     'parallel x direction is '.$parallel->[0]);
+    is_close($dir->[1], $parallel->[1],
+	     'parallel y direction is '.$parallel->[1]);
+    $dir = $line->normal;
+    ok(defined($dir), 'normal defined');
+    isa_ok($dir, 'Math::Vector::Real');
+    is_close($dir->[0], $normal->[0],
+	     'normal x direction is '.$normal->[0]);
+    is_close($dir->[1], $normal->[1],
+	     'normal y direction is '.$normal->[1]);
+}
+
 sub line {
     my $construction = Math::Geometry::Construction->new;
-    my $l;
-    my $root;
+    my $line;
     my @support;
-    my $dir;
 
     @support = ($construction->add_point(position => [0.1, 0.2]),
 		$construction->add_point(position => [0.3, 0.4]));
-    $l = $construction->add_line(support => [@support]);
-    ok(defined($l), 'line defined');
-    isa_ok($l, 'Math::Geometry::Construction::Line');
-    $root = $l->construction;
-    ok(defined($root), 'construction defined');
-    isa_ok($root, 'Math::Geometry::Construction');
 
-    @support = $l->support;
-    is(@support, 2, 'two support points');
-    foreach my $p (@support) {
-	ok(defined($p), 'support point defined');
-	isa_ok($p, 'Math::Geometry::Construction::Point');
+    $line = constructs_ok($construction, {support => [@support]},
+			  [[0.1, 0.2], [0.3, 0.4]]);
+    directions_ok($line,
+		  [0.2 / (sqrt(2 * 0.2**2)), 0.2 / (sqrt(2 * 0.2**2))],
+		  [-0.2 / (sqrt(2 * 0.2**2)), 0.2 / (sqrt(2 * 0.2**2))]);
 
-	my $pos = $p->position;
-	isa_ok($pos, 'Math::Vector::Real');
-	is(@$pos, 2, 'two components');
-    }
-    is($support[0]->position->[0], 0.1, 'x coordinate');
-    is($support[0]->position->[1], 0.2, 'y coordinate');
-    is($support[1]->position->[0], 0.3, 'x coordinate');
-    is($support[1]->position->[1], 0.4, 'y coordinate');
+    $line = constructs_ok($construction, {support => [[3, 5], V(-1, 12)]},
+			  [[3, 5], [-1, 12]]);
+    directions_ok($line,
+		  [-4 / (sqrt(4**2 + 7**2)), 7 / (sqrt(4**2 + 7**2))],
+		  [-7 / (sqrt(4**2 + 7**2)), -4 / (sqrt(4**2 + 7**2))]);
+}
 
-    is($l->extend, 0, 'default extend');
+sub defaults {
+    my $construction = Math::Geometry::Construction->new;
+    my $line;
 
-    $dir = $l->parallel;
-    ok(defined($dir), 'parallel defined');
-    isa_ok($dir, 'Math::Vector::Real');
-    is_close($dir->[0], 0.2 / (sqrt(2 * 0.2**2)), 'x direction');
-    is_close($dir->[1], 0.2 / (sqrt(2 * 0.2**2)), 'y direction');
-    $dir = $l->normal;
-    ok(defined($dir), 'normal defined');
-    isa_ok($dir, 'Math::Vector::Real');
-    is_close($dir->[0], -0.2 / (sqrt(2 * 0.2**2)), 'x direction');
-    is_close($dir->[1],  0.2 / (sqrt(2 * 0.2**2)), 'y direction');
+    $line = constructs_ok($construction, {support => [[-1, 2], [3, 9]]},
+			  [[-1, 2], [3, 9]]);
+    is($line->extend, 0, 'default extend');
+    $line->extend(50);
+    is($line->extend, 50, 'can set extend');
 
-    $l = $construction->add_line(support => [[3, 5], V(-1, 12)]);
-    ok(defined($l), 'line defined');
-    isa_ok($l, 'Math::Geometry::Construction::Line');
-    $root = $l->construction;
-    ok(defined($root), 'construction defined');
-    isa_ok($root, 'Math::Geometry::Construction');
-
-    @support = $l->support;
-    is(@support, 2, 'two support points');
-    foreach my $p (@support) {
-	ok(defined($p), 'support point defined');
-	isa_ok($p, 'Math::Geometry::Construction::Point');
-
-	ok($p->hidden, 'implicit support point hidden');
-	
-	my $pos = $p->position;
-	isa_ok($pos, 'Math::Vector::Real');
-	is(@$pos, 2, 'two components');
-    }
-    is($support[0]->position->[0], 3, 'x coordinate');
-    is($support[0]->position->[1], 5, 'y coordinate');
-    is($support[1]->position->[0], -1, 'x coordinate');
-    is($support[1]->position->[1], 12, 'y coordinate');
-    is($support[0]->order_index, 3, 'implict point order index');
-    is($support[1]->order_index, 4, 'implict point order index');
-
-    $dir = $l->parallel;
-    ok(defined($dir), 'parallel defined');
-    isa_ok($dir, 'Math::Vector::Real');
-    is_close($dir->[0], -4 / (sqrt(4**2 + 7**2)), 'x direction');
-    is_close($dir->[1],  7 / (sqrt(4**2 + 7**2)), 'y direction');
-    $dir = $l->normal;
-    ok(defined($dir), 'normal defined');
-    isa_ok($dir, 'Math::Vector::Real');
-    is_close($dir->[0], -7 / (sqrt(4**2 + 7**2)), 'x direction');
-    is_close($dir->[1], -4 / (sqrt(4**2 + 7**2)), 'y direction');
+    $line = constructs_ok($construction,
+			  {support => [[-1, 2], [3, 9]], extend => 30},
+			  [[-1, 2], [3, 9]]);
+    is($line->extend, 30, 'default extend in constructor');
 }
 
 line;
+defaults;
