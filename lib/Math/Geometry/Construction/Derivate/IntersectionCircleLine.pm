@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleLine> - circle line 
 
 =head1 VERSION
 
-Version 0.018
+Version 0.020
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.020';
 
 
 ###########################################################################
@@ -24,6 +24,21 @@ our $VERSION = '0.018';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    my @input = $self->input;
+    croak "Need one circle and one line to intersect" if(@input != 2);
+    unless(eval { $input[0]->isa('Math::Geometry::Construction::Circle') }
+	   and
+	   eval { $input[1]->isa('Math::Geometry::Construction::Line') }
+	   or
+	   eval { $input[0]->isa('Math::Geometry::Construction::Line') }
+	   and
+	   eval { $input[1]->isa('Math::Geometry::Construction::Circle') })
+    { croak "Need one circle and one line to intersect" }
+}
 
 ###########################################################################
 #                                                                         #
@@ -35,23 +50,9 @@ sub calculate_positions {
     my ($self) = @_;
     my @input  = $self->input;
 
-    croak "Need one circle and one line to intersect" if(@input != 2);
-
-    my $circle;
-    my $line;
-    if(eval { $input[0]->isa('Math::Geometry::Construction::Circle') }
-       and
-       eval { $input[1]->isa('Math::Geometry::Construction::Line') })
-    {
-	($circle, $line) = @input;
-    }
-    elsif(eval { $input[0]->isa('Math::Geometry::Construction::Line') }
-	  and
-	  eval { $input[1]->isa('Math::Geometry::Construction::Circle') })
-    {
-	($line, $circle) = @input;
-    }
-    else { croak "Need one circle and one line to intersect"  }
+    my $circle_class = 'Math::Geometry::Construction::Circle';
+    my ($circle, $line) = $input[0]->isa($circle_class)
+        ? @input : reverse(@input);
        
     my $c_center_p  = $circle->center->position;
     my $c_radius    = $circle->radius;
