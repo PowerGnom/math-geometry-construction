@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 139;
+use Test::More tests => 148;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -151,6 +151,27 @@ sub objects {
     @objects = $construction->circles;
     is(@objects, 1, 'one circle');
     is($objects[0]->id, 'C01', 'this object is my circle');
+}
+
+sub root_ok {
+    my ($construction, $object) = @_;
+    my $root = $object->construction;
+
+    ok(defined($root), 'construction is defined');
+    isa_ok($root, 'Math::Geometry::Construction');
+    ok(defined($root->object($object->id)), 'construction has object');
+}
+
+sub root {
+    my $construction = Math::Geometry::Construction->new;
+    my $object;
+
+    root_ok($construction,
+	    $construction->add_point(position => [0, 0]));
+    root_ok($construction,
+	    $construction->add_line(support => [[0, 0], [1, 2]]));
+    root_ok($construction,
+	    $construction->add_circle(center => [0, 0], radius => 10));
 }
 
 sub find_line {
@@ -434,6 +455,7 @@ sub find_or_add {
 order_index;
 id;
 objects;
+root;
 find_line;
 find_circle;
 find_or_add;
