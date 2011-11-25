@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 64;
+use Test::More tests => 72;
 use Test::Exception;
 use Test::Warn;
 use Math::Geometry::Construction;
@@ -18,6 +18,7 @@ sub is_close {
 sub position_ok {
     my ($pos, $x, $y) = @_;
 
+    ok(defined($pos), 'position is defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'position has 2 components');
     is($pos->[0], $x, "x coordinate is $x");
