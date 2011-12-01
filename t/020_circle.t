@@ -21,8 +21,13 @@ sub position_ok {
     ok(defined($pos), 'position is defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'position has 2 components');
-    is($pos->[0], $x, "x coordinate is $x");
-    is($pos->[1], $y, "y coordinate is $y");
+
+    if(defined($x)) {
+	is($pos->[0], $x, "x coordinate is $x");
+    }
+    if(defined($y)) {
+	is($pos->[1], $y, "y coordinate is $y");
+    }
 }
 
 sub support_ok {
