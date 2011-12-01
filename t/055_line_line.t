@@ -11,92 +11,65 @@ sub is_close {
     cmp_ok(abs($value - $reference), '<', ($limit || 1e-12), $message);
 }
 
+sub position_ok {
+    my ($pos, $x, $y) = @_;
+
+    ok(defined($pos), 'position is defined');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'position has 2 components');
+    is($pos->[0], $x, "x coordinate is $x");
+    is($pos->[1], $y, "y coordinate is $y");
+}
+
+sub derived_point_ok {
+    my ($dp, $x, $y) = @_;
+
+    ok(defined($dp), 'derived point defined');
+    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
+    position_ok($dp->position, $x, $y);
+}
+
 sub line_line {
     my $construction = Math::Geometry::Construction->new;
-
     my @lines;
     my $d;
-    my $ip;
-    my $pos;
+    my $dp;
 
     @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
 	      $construction->add_line(support => [[20, 10], [20, 40]]));
     
     $d  = $construction->add_derivate
 	('IntersectionLineLine', input => [@lines]);
-    $ip = $d->create_derived_point
+    $dp = $d->create_derived_point
 	(position_selector => ['indexed_position', [0]]);
+    derived_point_ok($dp, 20, 30);
 
-    ok(defined($ip), 'derived point defined');
-    isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $ip->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 20, 'intersection x');
-    is_close($pos->[1], 30, 'intersection y');
-    
-    $ip = $d->create_derived_point;
+    $dp = $d->create_derived_point;
+    derived_point_ok($dp, 20, 30);
 
-    ok(defined($ip), 'derived point defined');
-    isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $ip->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 20, 'intersection x');
-    is_close($pos->[1], 30, 'intersection y');
-    
-    # add_derived_point
-    $ip = $construction->add_derived_point
+    $dp = $construction->add_derived_point
 	('IntersectionLineLine',
 	 {input => [@lines]},
 	 {position_selector => ['indexed_position', [0]]});
+    derived_point_ok($dp, 20, 30);
 
-    ok(defined($ip), 'derived point defined');
-    isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $ip->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 20, 'intersection x');
-    is_close($pos->[1], 30, 'intersection y');
-    
-    # without position selector
-    $ip = $construction->add_derived_point
+    $dp = $construction->add_derived_point
 	('IntersectionLineLine',
 	 {input => [@lines]},
 	 {});
+    derived_point_ok($dp, 20, 30);
 
-    ok(defined($ip), 'derived point defined');
-    isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $ip->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 20, 'intersection x');
-    is_close($pos->[1], 30, 'intersection y');
-
-    # without point args
-    $ip = $construction->add_derived_point
+    $dp = $construction->add_derived_point
 	('IntersectionLineLine',
 	 {input => [@lines]});
-
-    ok(defined($ip), 'derived point defined');
-    isa_ok($ip, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $ip->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 20, 'intersection x');
-    is_close($pos->[1], 30, 'intersection y');
+    derived_point_ok($dp, 20, 30);
 }
 
 sub id {
     my $construction = Math::Geometry::Construction->new;
     my @lines;
     my $d;
-    my $ip;
+    my $dp;
 
     @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
 	      $construction->add_line(support => [[20, 10], [20, 40]]));
@@ -107,15 +80,15 @@ sub id {
 	('IntersectionLineLine', input => [@lines]);
     is($d->id, 'D000000006', 'derivate id');
 
-    $ip = $d->create_derived_point;
-    is($ip->id, 'S000000007', 'derived point id');
+    $dp = $d->create_derived_point;
+    is($dp->id, 'S000000007', 'derived point id');
 
-    $ip = $construction->add_derived_point
+    $dp = $construction->add_derived_point
 	('IntersectionLineLine', {input => [@lines]});
-    is($ip->id, 'S000000009', 'derived point id');
+    is($dp->id, 'S000000009', 'derived point id');
     ok(defined($construction->object('D000000008')), 'derivate exists');
 
-    $ip = $construction->add_derived_point
+    $dp = $construction->add_derived_point
 	('IntersectionLineLine',
 	 {input => [$construction->add_line(support => [[1, 2], [3, 4]]),
 		    $construction->add_line(support => [[5, 6], [7, 8]])]});
@@ -135,17 +108,17 @@ sub id {
 sub register_derived_point {
     my $construction = Math::Geometry::Construction->new;
     my @lines;
-    my $ip;
+    my $dp;
 
     @lines = ($construction->add_line(support => [[1, 2], [3, 4]]),
 	      $construction->add_line(support => [[5, 6], [7, 8]]));
-    $ip = $construction->add_derived_point
+    $dp = $construction->add_derived_point
 	('IntersectionLineLine',
 	 {input => [@lines]});
 
-    is(scalar(grep { $_->id eq $ip->id } $lines[0]->points), 1,
+    is(scalar(grep { $_->id eq $dp->id } $lines[0]->points), 1,
        'derived point is registered');
-    is(scalar(grep { $_->id eq $ip->id } $lines[1]->points), 1,
+    is(scalar(grep { $_->id eq $dp->id } $lines[1]->points), 1,
        'derived point is registered');
 }
 
@@ -160,26 +133,10 @@ sub overloading {
 	      $construction->add_line(support => [[20, 10], [20, 40]]));
     
     $dp = $lines[0] x $lines[1];
-
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 20, 'intersection x');
-    is_close($pos->[1], 30, 'intersection y');
-    
+    derived_point_ok($dp, 20, 30);
+        
     $dp = $lines[1] x $lines[0];
-
-    ok(defined($dp), 'derived point defined');
-    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
-    $pos = $dp->position;
-    ok(defined($pos), 'position defined');
-    isa_ok($pos, 'Math::Vector::Real');
-    is(@$pos, 2, 'two components');
-    is_close($pos->[0], 20, 'intersection x');
-    is_close($pos->[1], 30, 'intersection y');
+    derived_point_ok($dp, 20, 30);
 }
 
 line_line;
