@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 43;
+use Test::More tests => 50;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -137,6 +137,9 @@ sub overloading {
     $circle = $construction->add_circle(center => [20, 30], radius => 30);
     
     $dp = $line x $circle;
+    derived_point_ok($dp, -10, 30);
+    
+    $dp = $circle x $line;
     derived_point_ok($dp, -10, 30);
 }
 

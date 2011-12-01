@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 34;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -10,6 +10,29 @@ sub is_close {
     my ($value, $reference, $message, $limit) = @_;
 
     cmp_ok(abs($value - $reference), '<', ($limit || 1e-12), $message);
+}
+
+sub position_ok {
+    my ($pos, $x, $y) = @_;
+
+    ok(defined($pos), 'position is defined');
+    isa_ok($pos, 'Math::Vector::Real');
+    is(@$pos, 2, 'position has 2 components');
+
+    if(defined($x)) {
+	is($pos->[0], $x, "x coordinate is $x");
+    }
+    if(defined($y)) {
+	is($pos->[1], $y, "y coordinate is $y");
+    }
+}
+
+sub derived_point_ok {
+    my ($dp, $x, $y) = @_;
+
+    ok(defined($dp), 'derived point defined');
+    isa_ok($dp, 'Math::Geometry::Construction::DerivedPoint');
+    position_ok($dp->position, $x, $y);
 }
 
 sub circle_circle {
@@ -78,5 +101,21 @@ sub register_derived_point {
        'derived point is registered');
 }
 
+sub overloading {
+    my $construction = Math::Geometry::Construction->new;
+    my @circles;
+    my $dp;
+
+    @circles = ($construction->add_circle(center => [0, 0], radius => 5),
+		$construction->add_circle(center => [0, 8], radius => 5));
+    
+    $dp = $circles[0] x $circles[1];
+    derived_point_ok($dp, undef, 4);
+        
+    $dp = $circles[1] x $circles[0];
+    derived_point_ok($dp, undef, 4);
+}
+
 circle_circle;
 register_derived_point;
+overloading;

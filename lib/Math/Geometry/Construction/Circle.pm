@@ -7,17 +7,21 @@ use Math::Geometry::Construction::Types qw(Point);
 use Carp;
 use Math::Vector::Real;
 
+use overload 'x'    => '_intersect',
+#             '.'    => '_point_on',
+             'bool' => sub { return 1 };
+
 =head1 NAME
 
 C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.019
+Version 0.020
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.020';
 
 
 ###########################################################################
@@ -149,9 +153,26 @@ sub draw {
 
 ###########################################################################
 #                                                                         #
-#                              Change Data                                # 
+#                              Overloading                                # 
 #                                                                         #
 ###########################################################################
+
+sub _intersect {
+    my ($self, $intersector) = @_;
+    my $class;
+	 
+    $class = 'Math::Geometry::Construction::Circle';
+    if(eval { $intersector->isa($class) }) {
+	return $self->construction->add_derived_point
+	    ('IntersectionCircleCircle', {input => [$self, $intersector]});
+    }
+
+    $class = 'Math::Geometry::Construction::Line';
+    if(eval { $intersector->isa($class) }) {
+	return $self->construction->add_derived_point
+	    ('IntersectionCircleLine', {input => [$self, $intersector]});
+    }
+}
 
 1;
 
