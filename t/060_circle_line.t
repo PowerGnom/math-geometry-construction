@@ -93,7 +93,7 @@ sub overloading {
     $line = $construction->add_line(support => [[10, 30], [30, 30]]);
     $circle = $construction->add_circle(center => [20, 30], radius => 30);
     
-    $dp = $l x $c;
+    $dp = $line x $circle;
     derived_point_ok($dp, -10, 30);
 }
 
