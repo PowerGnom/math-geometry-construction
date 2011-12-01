@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 29;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
