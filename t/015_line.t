@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 91;
+use Test::More tests => 110;
 use Test::Exception;
 use Test::Warn;
 use Math::Geometry::Construction;
@@ -103,14 +103,20 @@ sub defaults {
 
     $line = constructs_ok($construction, {support => [[-1, 2], [3, 9]]},
 			  [[-1, 2], [3, 9]]);
-    is($line->extend, 0, 'default extend');
+    is_deeply($line->extend, [0, 0], 'default extend');
     $line->extend(50);
-    is($line->extend, 50, 'can set extend');
+    is_deeply($line->extend, [50, 50], 'can set extend');
 
     $line = constructs_ok($construction,
 			  {support => [[-1, 2], [3, 9]], extend => 30},
 			  [[-1, 2], [3, 9]]);
-    is($line->extend, 30, 'default extend in constructor');
+    is_deeply($line->extend, [30, 30], 'default extend in constructor');
+
+    $line = constructs_ok($construction,
+			  {support => [[-1, 2], [3, 9]],
+			   extend  => [0, 30]},
+			  [[-1, 2], [3, 9]]);
+    is_deeply($line->extend, [0, 30], 'mixed extend in constructor');
 }
 
 line;

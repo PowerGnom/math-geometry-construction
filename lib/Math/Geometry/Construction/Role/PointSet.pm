@@ -3,7 +3,7 @@ use Moose::Role;
 
 use 5.008008;
 
-use Math::Geometry::Construction::Types qw(HashRefOfPoint);
+use Math::Geometry::Construction::Types qw(HashRefOfPoint Extension);
 use Carp;
 
 =head1 NAME
@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::PointSet> - point set objects
 
 =head1 VERSION
 
-Version 0.019
+Version 0.020
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.020';
 
 
 ###########################################################################
@@ -32,9 +32,10 @@ has 'points' => (isa     => HashRefOfPoint,
 		 handles => {points          => 'values',
 			     _pointset_point => 'accessor'});
 
-has 'extend'  => (isa     => 'Num',
+has 'extend'  => (isa     => Extension,
+		  coerce  => 1,
 		  is      => 'rw',
-		  default => 0);
+		  default => sub { [0, 0] });
 
 sub register_point {
     my ($self, @args) = @_;
@@ -93,7 +94,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011-2012 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

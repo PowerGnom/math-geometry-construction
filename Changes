@@ -1,6 +1,12 @@
 Revision history for Math-Geometry-Construction
 
-0.020	 
+0.020	 Sat Jan  7 15:36:16 NZDT 2012
+	 - The extend attribute is turned into an array reference
+	   with backward and forward extent. When setting the
+	   attribute, this change is transparent since a value x is
+	   coerced into [x, x]. However, when reading the value (not
+	   a typical scenario), you get the array reference instead
+	   of a single number.
 	 - dabbling with operator overloading
 	 - refactored and cleaned up test suite
 

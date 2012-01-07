@@ -128,10 +128,11 @@ sub draw {
     my $parallel = $self->parallel;
     return undef if(!$parallel);
 
+    my $extend    = $self->extend;
     my @positions = ($self->extreme_position(-$parallel)
-		     - $parallel * $self->extend,
+		     - $parallel * $extend->[0],
 		     $self->extreme_position($parallel)
-		     + $parallel * $self->extend);
+		     + $parallel * $extend->[1]);
 
     $self->construction->draw_line(x1    => $positions[0]->[0],
 				   y1    => $positions[0]->[1],
@@ -226,7 +227,14 @@ hold exactly two points.
 
 Often it looks nicer if the visual representation of a line extends
 somewhat beyond its end points. The length of this extent is set
-here. Defaults to C<0>.
+here. Internally, this is an array reference with two entries
+containing the exent in backward in forward direction. If a single
+value C<x> is provided it is turned into C<[x, x]>. Defaults to
+C<[0, 0]>.
+
+Take care if you are reading this attribute. You get the internal
+array reference, so manipulating it will affect the values stored in
+the object.
 
 =head2 Methods
 
@@ -255,7 +263,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011-2012 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

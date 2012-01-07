@@ -11,7 +11,8 @@ use MooseX::Types -declare => ['MathVectorReal3D',
 			       'HashRefOfGeometricObject',
 			       'ArrayRefOfGeometricObject',
 			       'HashRefOfPoint',
-			       'ArrayRefOfPoint'];
+			       'ArrayRefOfPoint',
+			       'Extension'];
 use MooseX::Types::Moose qw/Num ArrayRef HashRef/;
 
 use 5.008008;
@@ -25,11 +26,11 @@ C<Math::Geometry::Construction::Types> - custom types for Math::Geometry::Constr
 
 =head1 VERSION
 
-Version 0.019
+Version 0.020
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.020';
 
 class_type MathVectorReal3D, {class => 'Math::VectorReal'};
 
@@ -65,6 +66,13 @@ subtype HashRefOfPoint,
 subtype ArrayRefOfPoint,
     as ArrayRef[Point];
 
+subtype Extension,
+    as ArrayRef[Num];
+
+coerce Extension,
+    from Num,
+    via { [$_, $_] };
+
 1;
 
 
@@ -79,7 +87,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011-2012 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
