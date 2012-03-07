@@ -1,5 +1,8 @@
 Revision history for Math-Geometry-Construction
 
+0.021
+	 - partial drawing of circles
+
 0.020	 Sat Jan  7 15:36:16 NZDT 2012
 	 - The extend attribute is turned into an array reference
 	   with backward and forward extent. When setting the
