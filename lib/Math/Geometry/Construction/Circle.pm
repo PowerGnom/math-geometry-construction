@@ -140,10 +140,34 @@ sub draw {
 	return undef;
     }
 
+    # work out if we want to draw the circle only partially
+    my @positions = $self->positions;
+    my $extend    = $self->extend;
+    my $radius    = $self->radius;
+
+    if(!$radius) {
+	warn sprintf("Radius of circle %s vanishes, ".
+		     "nothing to draw.\n", $self->id);
+	return undef;
+    }
+
+    # I still have to work on the concept here. I need to order the
+    # positions around the circle. Current best idea: Split into
+    # positive and negative y values, sort the first group by
+    # descending x values, the second group by ascending x values.
+    # Then find the largest angle between neighbouring points. This
+    # should still (or again) be possible by only looking at the
+    # cosines. This is then the gap at which we might possibly split
+    # the circle.
+#    my $ref    = V(1, 0) / $radius;
+#    my @angles = sort { $a <=> $b }
+#    map  { acos($_) + 6.28318530717959 }
+#    map  { ($_ - $center_position) * $ref } @positions;
+
     # currently, we just draw the full circle
     $self->construction->draw_circle(cx    => $center_position->[0],
 				     cy    => $center_position->[1],
-				     r     => $self->radius,
+				     r     => $radius,
 				     style => $self->style_hash,
 				     id    => $self->id);
 
