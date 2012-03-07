@@ -17,3 +17,6 @@
 - partial circles
 - label positioning
 - PointSet labels via PointOn points
+- Can't I move positions from Circle/Line to PointSet? There might
+  be classes that need it and do not consume PointSet, but is this
+  really a counterargument?
