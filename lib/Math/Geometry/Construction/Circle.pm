@@ -6,6 +6,7 @@ use 5.008008;
 use Math::Geometry::Construction::Types qw(Point);
 use Carp;
 use Math::Vector::Real;
+use List::Util qw(max);
 
 use overload 'x'    => '_intersect',
 #             '.'    => '_point_on',
@@ -17,11 +18,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.020
+Version 0.021
 
 =cut
 
-our $VERSION = '0.020';
+our $VERSION = '0.021';
 
 
 ###########################################################################
@@ -56,6 +57,10 @@ has 'support'      => (isa      => Point,
 has 'fixed_radius' => (isa      => 'Bool',
 		       is       => 'ro',
 		       required => 1);
+
+has 'partial_draw' => (isa      => 'Bool',
+		       is       => 'rw',
+		       default  => 1);
 
 sub BUILDARGS {
     my ($class, %args) = @_;
@@ -122,6 +127,72 @@ sub radius {
     return(abs($support_p - $center_p));
 }
 
+sub _calculate_boundary_positions {
+    my ($self, %args) = @_;
+
+    my @positions = grep { defined($_) } $self->positions;
+    return if(@positions < 2);
+
+    # sort positions around the circle; note that @sorted_positions
+    # contains arrayrefs with position and angle
+    my $center_position = $self->center->position; # known to be def
+    my @rich_positions  = ();
+    foreach(@positions) {
+	my $relative = $_ - $center_position;
+	push(@rich_positions, [$_, atan2($relative->[1], $relative->[0])]);
+    }
+    my @sorted_positions = sort { $a->[1] <=> $b->[1] } @rich_positions;
+
+    my $n   = @sorted_positions;
+    my @max = (undef, undef);
+    for(my $i=0;$i<$n;$i++) {
+	my $diff;
+	if($i + 1 < $n) {
+	    $diff = $sorted_positions[$i + 1]->[1]
+		- $sorted_positions[$i]->[1];
+	}
+	else {
+	    $diff = $sorted_positions[0]->[1] + 6.28318530717959
+		- $sorted_positions[$i]->[1];
+	}
+	@max = ($i, $diff) if(!defined($max[1]) or $diff > $max[1]);
+    }
+
+    my $extend = $self->extend;
+    my $radius = $self->radius;  # known to be non-zero
+
+    # if the gap is two small we return nothing
+    return if($max[1] - ($extend->[0] + $extend->[1]) / $radius
+	      < $self->construction->min_circle_gap);
+
+    # calculate the boundary positions; note that the order needs to
+    # be reversed because we now deal with the part that needs to be
+    # drawn, not the gap
+    my @boundary_positions = ();
+    my $i                  = $max[0];
+    my $j                  = ($i + 1) % $n;
+    if($extend->[0] == 0) {
+	push(@boundary_positions, $sorted_positions[$j]->[0]);
+    }
+    else {
+	my $phi      = $sorted_positions[$j]->[1] - $extend->[0];
+	my $boundary = $center_position +
+	    [$radius * cos($phi), $radius * sin($phi)];
+	push(@boundary_positions, $boundary);
+    }
+    if($extend->[1] == 0) {
+	push(@boundary_positions, $sorted_positions[$i]->[0]);
+    }
+    else {
+	my $phi      = $sorted_positions[$i]->[1] + $extend->[1];
+	my $boundary = $center_position +
+	    [$radius * cos($phi), $radius * sin($phi)];
+	push(@boundary_positions, $boundary);
+    }
+
+    return @boundary_positions;
+}
+
 sub draw {
     my ($self, %args) = @_;
     return undef if $self->hidden;
@@ -140,29 +211,15 @@ sub draw {
 	return undef;
     }
 
-    # work out if we want to draw the circle only partially
-    my @positions = $self->positions;
-    my $extend    = $self->extend;
-    my $radius    = $self->radius;
-
+    my $radius = $self->radius;
     if(!$radius) {
 	warn sprintf("Radius of circle %s vanishes, ".
 		     "nothing to draw.\n", $self->id);
 	return undef;
     }
 
-    # I still have to work on the concept here. I need to order the
-    # positions around the circle. Current best idea: Split into
-    # positive and negative y values, sort the first group by
-    # descending x values, the second group by ascending x values.
-    # Then find the largest angle between neighbouring points. This
-    # should still (or again) be possible by only looking at the
-    # cosines. This is then the gap at which we might possibly split
-    # the circle.
-#    my $ref    = V(1, 0) / $radius;
-#    my @angles = sort { $a <=> $b }
-#    map  { acos($_) + 6.28318530717959 }
-#    map  { ($_ - $center_position) * $ref } @positions;
+    my @boundary_positions = $self->partial_draw
+	? $self->_calculate_boundary_positions(%args) : ();
 
     # currently, we just draw the full circle
     $self->construction->draw_circle(cx    => $center_position->[0],
@@ -233,7 +290,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011-2012 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
@@ -243,4 +300,3 @@ See http://dev.perl.org/licenses/ for more information.
 
 
 =cut
-

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 50;
+use Test::More tests => 102;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -143,7 +143,110 @@ sub overloading {
     derived_point_ok($dp, -10, 30);
 }
 
+sub partial_draw {
+    my $construction = Math::Geometry::Construction->new;
+    my $circle;
+    my $line;
+    my @dps;
+    my @bp;
+
+    $circle = $construction->add_circle(center  => [0, 0],
+					support => [5, 0]);
+    is_deeply([$circle->_calculate_boundary_positions], [],
+	      'one point, no boundary points');
+
+    $line = $construction->add_line(support => [[4, -1], [4, 1]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+
+    @bp = $circle->_calculate_boundary_positions;
+    position_ok($bp[0], 4, -3);
+    position_ok($bp[1], 4, 3);
+
+    $circle = $construction->add_circle(center  => [0, 0],
+					support => [-5, 0]);
+    $line = $construction->add_line(support => [[-4, -1], [-4, 1]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+
+    @bp = $circle->_calculate_boundary_positions;
+    position_ok($bp[0], -4, 3);
+    position_ok($bp[1], -4, -3);
+
+    $circle = $construction->add_circle(center  => [0, 0],
+					support => [0, 5]);
+    $line = $construction->add_line(support => [[-1, 3], [1, 3]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+
+    @bp = $circle->_calculate_boundary_positions;
+    position_ok($bp[0], 4, 3);
+    position_ok($bp[1], -4, 3);
+
+    $circle = $construction->add_circle(center  => [0, 0],
+					support => [0, -5]);
+    $line = $construction->add_line(support => [[-1, -3], [1, -3]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+
+    @bp = $circle->_calculate_boundary_positions;
+    position_ok($bp[0], -4, -3);
+    position_ok($bp[1], 4, -3);
+
+    # check support involvement
+    $circle = $construction->add_circle(center  => [0, 0],
+					support => [5, 0]);
+    $line = $construction->add_line(support => [[-1, -3], [1, -3]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+
+    @bp = $circle->_calculate_boundary_positions;
+    position_ok($bp[0], -4, -3);
+    position_ok($bp[1], 5, 0);
+
+    # check closed circle
+    $circle = $construction->add_circle(center  => [0, 0],
+					support => [5, 0]);
+    $line = $construction->add_line(support => [[0, 0], [1, 0]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+    $line = $construction->add_line(support => [[0, 0], [0.1, 1]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+    $line = $construction->add_line(support => [[0, 0], [-0.1, 1]]);
+    @dps  = $construction->add_derived_point
+	('IntersectionCircleLine',
+	 {input => [$circle, $line]},
+	 [{position_selector => ['indexed_position', [0]]},
+	  {position_selector => ['indexed_position', [1]]}]);
+
+    is_deeply([$circle->_calculate_boundary_positions], [],
+	      'two many points, no boundary points');
+}
+
 circle_line;
 id;
 register_derived_point;
 overloading;
+partial_draw;
