@@ -93,6 +93,26 @@ sub process_style {
 	    $style{$key} = sprintf('{rgb,255:red,%d;green,%d;blue,%d}',
 				   @$value);
 	}
+	if($svg_mode) {
+	    if($key eq 'stroke-dasharray') {
+		if($value) {
+		    my $wsp           = qr/[\x{20}\x{9}\x{D}\x{A}]/;
+		    my $split_pattern = qr/(?:$wsp+\,?$wsp*|\,$wsp*)/;
+		    my @sections      = split($split_pattern, $value);
+		    my $cmd           = 'on';
+		    foreach(@sections) {
+			$_ = "$cmd $_";
+			$cmd = $cmd eq 'on' ? 'off' : 'on';
+		    }
+		    $style{'dash pattern'} = join(' ', @sections);
+		}
+		delete($style{'stroke-dasharray'});
+	    }
+	    if($key eq 'stroke-dashoffset') {
+		$style{'dash phase'} = $style{'stroke-dashoffset'};
+		delete($style{'stroke-dashoffset'});
+	    }
+	}
     }
 
     return %style;
