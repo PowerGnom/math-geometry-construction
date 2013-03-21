@@ -19,11 +19,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.020
+Version 0.021
 
 =cut
 
-our $VERSION = '0.020';
+our $VERSION = '0.021';
 
 
 ###########################################################################
@@ -90,6 +90,19 @@ sub positions {
     my ($self) = @_;
 
     return map { $_->position } $self->points;
+}
+
+sub direction {
+    my ($self)            = @_;
+    my @support_positions = map { $_->position } $self->support;
+
+    # check for defined positions
+    if(any { !defined($_) } @support_positions) {
+	warn sprintf("Undefined support point in line %s.\n", $self->id);
+	return undef;
+    }
+
+    return($support_positions[1] - $support_positions[0]);
 }
 
 sub parallel {
@@ -238,10 +251,27 @@ the object.
 
 =head2 Methods
 
+=head3 direction
+
+Returns the unnormalized difference vector between the two support
+points as a L<Math::Vector::Real|Math::Vector::Real>. Issues a
+warning and returns C<undef> if one of the support points has an
+undefined position. If the support points have identical positions
+the C<0> vector is returned without warning.
+
+=head3 parallel
+
+Returns a L<Math::Vector::Real|Math::Vector::Real> of length C<1>
+that is parallel to the line. Issues a warning and returns C<undef>
+if one of the support points has an undefined position or if the two
+positions are identical.
+
 =head3 normal
 
 Returns a L<Math::Vector::Real|Math::Vector::Real> of length C<1>
-that is orthogonal to the line.
+that is orthogonal to the line. Issues a warning and returns
+C<undef> if one of the support points has an undefined position or
+if the two positions are identical.
 
 =head3 draw
 
@@ -263,7 +293,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011-2012 Lutz Gehlen.
+Copyright 2011-2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
