@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::PositionSelection> - select position from 
 
 =head1 VERSION
 
-Version 0.018
+Version 0.021
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.021';
 
 
 ###########################################################################
@@ -61,6 +61,13 @@ sub extreme_position {
     croak "Undefined direction in 'extreme_position' selector"
 	if(!defined($direction));
 
+    # I do not want to put the Line evaluation into import_vector,
+    # because this would evaluate the position at the time when
+    # import_vector is called. That would be right here, but could
+    # lead to subtle errors at other places.
+    my $line_class = 'Math::Geometry::Construction::Line';
+    $direction = $direction->direction
+	if(eval { $direction->isa($line_class) });
     $direction = $self->import_vector($direction);
 
     my $d         = abs($direction);
@@ -86,10 +93,10 @@ sub close_position {
     croak "Undefined reference position in 'close_position' selector"
 	if(!defined($reference));
 
-    # I do not want to put the first part into import_vector, because
-    # this would evaluate the position at the time when import_vector
-    # is called. That would be right here, but could lead to subtle
-    # errors at other places.
+    # I do not want to put the Point evaluation into import_vector,
+    # because this would evaluate the position at the time when
+    # import_vector is called. That would be right here, but could
+    # lead to subtle errors at other places.
     my $point_class = 'Math::Geometry::Construction::Point';
     $reference = $reference->position
 	if(eval { $reference->isa($point_class) });
@@ -114,10 +121,10 @@ sub distant_position {
     croak "Undefined reference position in 'distant_position' selector"
 	if(!defined($reference));
     
-    # I do not want to put the first part into import_vector, because
-    # this would evaluate the position at the time when import_vector
-    # is called. That would be right here, but could lead to subtle
-    # errors at other places.
+    # I do not want to put the Point evaluation into import_vector,
+    # because this would evaluate the position at the time when
+    # import_vector is called. That would be right here, but could
+    # lead to subtle errors at other places.
     my $point_class = 'Math::Geometry::Construction::Point';
     $reference = $reference->position
 	if(eval { $reference->isa($point_class) });
@@ -171,7 +178,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
