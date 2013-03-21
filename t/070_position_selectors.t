@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 50;
+use Test::More tests => 56;
 use Math::VectorReal;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
@@ -59,9 +59,10 @@ sub extreme_position {
 	('IntersectionCircleLine',
 	 {input => [$l, $c]},
 	 [{position_selector => ['extreme_position', [vector(1, 0, 0)]]},
-	  {position_selector => ['extreme_position', [[-1, 0]]]}]);
+	  {position_selector => ['extreme_position', [[-1, 0]]]},
+	  {position_selector => ['extreme_position', [$l]]}]);
 
-    is(scalar(@ips), 2, 'two intersection points');
+    is(scalar(@ips), 3, 'three intersection points');
     foreach(@ips) {
 	ok(defined($_), 'defined');
 	isa_ok($_, 'Math::Geometry::Construction::DerivedPoint');
@@ -74,6 +75,8 @@ sub extreme_position {
     is_close($ipps[0]->[1], 20, 'intersection y');
     is_close($ipps[1]->[0], -80, 'intersection x');
     is_close($ipps[1]->[1], 20, 'intersection y');
+    is_close($ipps[2]->[0], 120, 'intersection x');
+    is_close($ipps[2]->[1], 20, 'intersection y');
 }
 
 sub dist_position {
