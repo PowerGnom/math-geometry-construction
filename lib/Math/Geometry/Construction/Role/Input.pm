@@ -12,13 +12,17 @@ C<Math::Geometry::Construction::Role::Input> - format conversions
 
 =head1 VERSION
 
-Version 0.018
+Version 0.021
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.021';
 
 
+# As a general rule, this method should only deal with 'fixed
+# values'; e.g. Point positions and Line directions have to be
+# evaluated by the caller in order supply the vector object to this
+# method.
 sub import_vector {
     my ($self, $value) = @_;
 
