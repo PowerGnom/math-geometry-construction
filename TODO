@@ -13,8 +13,6 @@
   go with the second alternative. Still, in many cases one will need
   to use the more verbose method form.
 - PointOnCircle
-- less random ordering of derived positions
-- partial circles
 - label positioning
 - PointSet labels via PointOn points
 - Can't I move positions from Circle/Line to PointSet? There might
