@@ -126,11 +126,11 @@ sub convenience {
 			     translator => vector(0, -10, 0)});
 }
 
-line;
-intersection;
+#line;
+#intersection;
 circle;
-derivates;
-convenience;
+#derivates;
+#convenience;
 
 # width/height are on purpose not proportional to those of the
 # construction; this is to show how you can hand over SVG

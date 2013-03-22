@@ -101,7 +101,34 @@ sub circle {
     $args{ry} = $self->transform_y_length($args{r});
     delete $args{r};
 
-    $self->output->ellipse(%args);
+    if(defined($args{x1}) and defined($args{y1}) and
+       defined($args{x2}) and defined($args{y2}))
+    {
+	my @boundary =
+	    ([$self->transform_coordinates($args{x1}, $args{y1})],
+	     [$self->transform_coordinates($args{x2}, $args{y2})]);
+
+	my @phi = map { atan2($boundary[$_]->[1] - $args{cy},
+			      $boundary[$_]->[0] - $args{cx}) }
+	          (0, 1);
+
+	my $delta_phi = $phi[1] - $phi[0];
+	$delta_phi += 6.28318530717959 if($delta_phi < 0);
+	my $large = $delta_phi > 3.14159265358979 ? 1 : 0;
+
+	$args{d} = sprintf('M%f %f A%f %f %d %d %f %f',
+			   @{$boundary[0]},
+			   $args{rx}, $args{ry},
+			   $large, 1,
+			   @{$boundary[1]});
+
+	delete(@args{'cx', 'cy', 'rx', 'ry', 'x1', 'y1', 'x2', 'y2'});
+	$self->output->path(%args);
+    }
+    else {
+	delete(@args{'x1', 'y1', 'x2', 'y2'});
+	$self->output->ellipse(%args);
+    }
 }
 
 sub text {

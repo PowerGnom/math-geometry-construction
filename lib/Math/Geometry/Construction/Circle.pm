@@ -131,7 +131,7 @@ sub _calculate_boundary_positions {
     my ($self, %args) = @_;
 
     my @positions = grep { defined($_) } $self->positions;
-    return if(@positions < 2);
+    return([undef, undef], [undef, undef]) if(@positions < 2);
 
     # sort positions around the circle; note that @sorted_positions
     # contains arrayrefs with position and angle
@@ -139,7 +139,9 @@ sub _calculate_boundary_positions {
     my @rich_positions  = ();
     foreach(@positions) {
 	my $relative = $_ - $center_position;
-	push(@rich_positions, [$_, atan2($relative->[1], $relative->[0])]);
+	my $angle    = atan2($relative->[1], $relative->[0]);
+	$angle += 6.28318530717959 if($angle < 0);
+	push(@rich_positions, [$_, $angle]);
     }
     my @sorted_positions = sort { $a->[1] <=> $b->[1] } @rich_positions;
 
@@ -162,8 +164,11 @@ sub _calculate_boundary_positions {
     my $radius = $self->radius;  # known to be non-zero
 
     # if the gap is two small we return nothing
-    return if($max[1] - ($extend->[0] + $extend->[1]) / $radius
-	      < $self->construction->min_circle_gap);
+    if($max[1] - ($extend->[0] + $extend->[1]) / $radius
+       < $self->construction->min_circle_gap)
+    {
+	return([undef, undef], [undef, undef]);
+    }
 
     # calculate the boundary positions; note that the order needs to
     # be reversed because we now deal with the part that needs to be
@@ -175,7 +180,7 @@ sub _calculate_boundary_positions {
 	push(@boundary_positions, $sorted_positions[$j]->[0]);
     }
     else {
-	my $phi      = $sorted_positions[$j]->[1] - $extend->[0];
+	my $phi      = $sorted_positions[$j]->[1] - $extend->[0] / $radius;
 	my $boundary = $center_position +
 	    [$radius * cos($phi), $radius * sin($phi)];
 	push(@boundary_positions, $boundary);
@@ -184,7 +189,7 @@ sub _calculate_boundary_positions {
 	push(@boundary_positions, $sorted_positions[$i]->[0]);
     }
     else {
-	my $phi      = $sorted_positions[$i]->[1] + $extend->[1];
+	my $phi      = $sorted_positions[$i]->[1] + $extend->[1] / $radius;
 	my $boundary = $center_position +
 	    [$radius * cos($phi), $radius * sin($phi)];
 	push(@boundary_positions, $boundary);
@@ -219,14 +224,20 @@ sub draw {
     }
 
     my @boundary_positions = $self->partial_draw
-	? $self->_calculate_boundary_positions(%args) : ();
+	? $self->_calculate_boundary_positions(%args)
+	: ([undef, undef], [undef, undef]);
 
     # currently, we just draw the full circle
-    $self->construction->draw_circle(cx    => $center_position->[0],
-				     cy    => $center_position->[1],
-				     r     => $radius,
-				     style => $self->style_hash,
-				     id    => $self->id);
+    $self->construction->draw_circle
+	(cx    => $center_position->[0],
+	 cy    => $center_position->[1],
+	 r     => $radius,
+	 x1    => $boundary_positions[0]->[0],
+	 y1    => $boundary_positions[0]->[1],
+	 x2    => $boundary_positions[1]->[0],
+	 y2    => $boundary_positions[1]->[1],
+	 style => $self->style_hash,
+	 id    => $self->id);
 
     $self->draw_label('x' => $support_position->[0],
 		      'y' => $support_position->[1]);
@@ -290,13 +301,12 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011-2012 Lutz Gehlen.
+Copyright 2011-2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
-
 
 =cut

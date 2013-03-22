@@ -13,11 +13,11 @@ C<Math::Geometry::Construction::Draw::TikZ> - TikZ output
 
 =head1 VERSION
 
-Version 0.018
+Version 0.021
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.021';
 
 
 ###########################################################################
@@ -139,12 +139,43 @@ sub line {
 
 sub circle {
     my ($self, %args) = @_;
+    my $raw;
 
-    my $raw = TikZ->raw
-	(sprintf('(%f, %f) ellipse (%f and %f)',
-		 $self->transform_coordinates($args{cx}, $args{cy}),
-		 $self->transform_x_length($args{r}),
-		 $self->transform_y_length($args{r})));
+    ($args{cx}, $args{cy}) = $self->transform_coordinates
+	($args{cx}, $args{cy});
+    $args{rx} = $self->transform_x_length($args{r});
+    $args{ry} = $self->transform_y_length($args{r});
+    if(defined($args{x1}) and defined($args{y1}) and
+       defined($args{x2}) and defined($args{y2}))
+    {
+	my @boundary =
+	    ([$self->transform_coordinates($args{x1}, $args{y1})],
+	     [$self->transform_coordinates($args{x2}, $args{y2})]);
+
+	my @alpha = ();  # angles in °
+	foreach(@boundary) {
+	    my $angle = atan2($_->[1] - $args{cy}, $_->[0] - $args{cx});
+	    $angle += 6.28318530717959 if($angle < 0);
+	    push(@alpha, $angle / 3.14159265358979 * 180);
+	}
+	my $delta_alpha = $alpha[1] - $alpha[0];
+	$delta_alpha += 360 if($delta_alpha < 0);
+
+	my $template = 
+	    '(%f, %f) arc '.
+	    '[start angle=%f, delta angle=%f, '.
+	    'x radius=%f, y radius=%f]';
+	$raw = TikZ->raw(sprintf($template,
+				 @{$boundary[0]},
+				 $alpha[0], $delta_alpha,
+				 $args{rx}, $args{ry}));
+	
+    }
+    else {
+	$raw = TikZ->raw(sprintf('(%f, %f) ellipse (%f and %f)',
+				 $args{cx}, $args{cy},
+				 $args{rx}, $args{ry}));
+    }
 	
     my %style = $self->process_style('circle', %{$args{style} || {}});
     while(my ($key, $value) = each(%style)) {
@@ -154,7 +185,7 @@ sub circle {
     if($style{fill}) {
 	$raw->mod(TikZ->fill($style{fill}));
     }
-
+    
     $self->output->add($raw);
 }
 
@@ -283,7 +314,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011,2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
