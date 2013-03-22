@@ -18,7 +18,8 @@ sub circle {
     my $p01 = $construction->add_point('x' => 200, 'y' => 150);
     my $p02 = $construction->add_point('x' => 200, 'y' => 50);
     my $c1  = $construction->add_circle(center       => $p01,
-					support      => $p02);
+					support      => $p02,
+					partial_draw => 1);
 
 
     my $p03 = $construction->add_point('x' => 190, 'y' => 40);
@@ -42,9 +43,10 @@ sub circle {
 
     my $p07 = $construction->add_point('x' => 600, 'y' => 150);
     my $p08 = $construction->add_point('x' => 600, 'y' => 250);
-    my $c2  = $construction->add_circle(center  => $p07,
-					support => $p08,
-					extend  => [20, 20]);
+    my $c2  = $construction->add_circle(center       => $p07,
+					support      => $p08,
+					partial_draw => 1,
+					extend       => [20, 20]);
 
     my $p09 = $construction->add_point('x' => 570, 'y' => 40);
     my $p10 = $construction->add_point('x' => 710, 'y' => 160);

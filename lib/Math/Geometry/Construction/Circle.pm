@@ -60,7 +60,13 @@ has 'fixed_radius' => (isa      => 'Bool',
 
 has 'partial_draw' => (isa      => 'Bool',
 		       is       => 'rw',
-		       default  => 1);
+		       builder  => '_build_partial_draw',
+		       lazy     => 1);
+
+has 'min_gap'      => (isa      => 'Num',
+		       is       => 'rw',
+		       builder  => '_build_min_gap',
+		       lazy     => 1);
 
 sub BUILDARGS {
     my ($class, %args) = @_;
@@ -93,6 +99,18 @@ sub BUILD {
     $self->style('fill',   'none')  unless($self->style('fill'));
 
     $self->register_point($self->support);
+}
+
+sub _build_partial_draw {
+    my ($self) = @_;
+
+    return $self->construction->partial_circles;
+}
+
+sub _build_min_gap {
+    my ($self) = @_;
+
+    return $self->construction->min_circle_gap;
 }
 
 ###########################################################################
@@ -165,7 +183,7 @@ sub _calculate_boundary_positions {
 
     # if the gap is two small we return nothing
     if($max[1] - ($extend->[0] + $extend->[1]) / $radius
-       < $self->construction->min_circle_gap)
+       < $self->min_gap)
     {
 	return([undef, undef], [undef, undef]);
     }
