@@ -152,7 +152,8 @@ sub partial_draw {
 
     $circle = $construction->add_circle(center  => [0, 0],
 					support => [5, 0]);
-    is_deeply([$circle->_calculate_boundary_positions], [],
+    is_deeply([$circle->_calculate_boundary_positions],
+	      [[undef, undef], [undef, undef]],
 	      'one point, no boundary points');
 
     $line = $construction->add_line(support => [[4, -1], [4, 1]]);
@@ -241,8 +242,9 @@ sub partial_draw {
 	 [{position_selector => ['indexed_position', [0]]},
 	  {position_selector => ['indexed_position', [1]]}]);
 
-    is_deeply([$circle->_calculate_boundary_positions], [],
-	      'two many points, no boundary points');
+    is_deeply([$circle->_calculate_boundary_positions],
+	      [[undef, undef], [undef, undef]],
+	      'too many points, no boundary points');
 }
 
 circle_line;
