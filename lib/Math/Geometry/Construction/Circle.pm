@@ -174,22 +174,22 @@ sub _calculate_boundary_positions {
     # be reversed because we now deal with the part that needs to be
     # drawn, not the gap
     my @boundary_positions = ();
-    my $i                  = $max[0];
-    my $j                  = ($i + 1) % $n;
+    my $j                  = $max[0];
+    my $i                  = ($j + 1) % $n;
     if($extend->[0] == 0) {
-	push(@boundary_positions, $sorted_positions[$j]->[0]);
+	push(@boundary_positions, $sorted_positions[$i]->[0]);
     }
     else {
-	my $phi      = $sorted_positions[$j]->[1] - $extend->[0] / $radius;
+	my $phi      = $sorted_positions[$i]->[1] - $extend->[0] / $radius;
 	my $boundary = $center_position +
 	    [$radius * cos($phi), $radius * sin($phi)];
 	push(@boundary_positions, $boundary);
     }
     if($extend->[1] == 0) {
-	push(@boundary_positions, $sorted_positions[$i]->[0]);
+	push(@boundary_positions, $sorted_positions[$j]->[0]);
     }
     else {
-	my $phi      = $sorted_positions[$i]->[1] + $extend->[1] / $radius;
+	my $phi      = $sorted_positions[$j]->[1] + $extend->[1] / $radius;
 	my $boundary = $center_position +
 	    [$radius * cos($phi), $radius * sin($phi)];
 	push(@boundary_positions, $boundary);

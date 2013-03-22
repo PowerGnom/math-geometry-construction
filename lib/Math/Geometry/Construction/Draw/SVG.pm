@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Draw::SVG> - SVG output
 
 =head1 VERSION
 
-Version 0.018
+Version 0.021
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.021';
 
 
 ###########################################################################
@@ -104,9 +104,11 @@ sub circle {
     if(defined($args{x1}) and defined($args{y1}) and
        defined($args{x2}) and defined($args{y2}))
     {
-	my @boundary =
-	    ([$self->transform_coordinates($args{x1}, $args{y1})],
-	     [$self->transform_coordinates($args{x2}, $args{y2})]);
+	my @boundary = $self->is_flipped
+	    ? ([$self->transform_coordinates($args{x2}, $args{y2})],
+	       [$self->transform_coordinates($args{x1}, $args{y1})])
+	    : ([$self->transform_coordinates($args{x1}, $args{y1})],
+	       [$self->transform_coordinates($args{x2}, $args{y2})]);
 
 	my @phi = map { atan2($boundary[$_]->[1] - $args{cy},
 			      $boundary[$_]->[0] - $args{cx}) }
@@ -212,7 +214,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

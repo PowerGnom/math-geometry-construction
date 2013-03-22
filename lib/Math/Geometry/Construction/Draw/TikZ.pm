@@ -61,6 +61,10 @@ override 'transform_coordinates' => sub {
     else                { return($x, $y)                 }
 };
 
+override 'is_flipped' => sub {
+    return(super() == 1 ? 0 : 1);
+};
+
 sub process_style {
     my ($self, $element, %style) = @_;
     my $svg_mode                 = $self->svg_mode;
@@ -139,7 +143,7 @@ sub line {
 
 sub circle {
     my ($self, %args) = @_;
-    my $raw;
+    my @raw           = ();
 
     ($args{cx}, $args{cy}) = $self->transform_coordinates
 	($args{cx}, $args{cy});
@@ -148,9 +152,11 @@ sub circle {
     if(defined($args{x1}) and defined($args{y1}) and
        defined($args{x2}) and defined($args{y2}))
     {
-	my @boundary =
-	    ([$self->transform_coordinates($args{x1}, $args{y1})],
-	     [$self->transform_coordinates($args{x2}, $args{y2})]);
+	my @boundary = $self->is_flipped
+	    ? ([$self->transform_coordinates($args{x2}, $args{y2})],
+	       [$self->transform_coordinates($args{x1}, $args{y1})])
+	    : ([$self->transform_coordinates($args{x1}, $args{y1})],
+	       [$self->transform_coordinates($args{x2}, $args{y2})]);
 
 	my @alpha = ();  # angles in °
 	foreach(@boundary) {
@@ -158,9 +164,15 @@ sub circle {
 	    $angle += 6.28318530717959 if($angle < 0);
 	    push(@alpha, $angle / 3.14159265358979 * 180);
 	}
+
+=pod
+
+=begin problematic
+
+TexLive crashes on this TikZ construct.
+
 	my $delta_alpha = $alpha[1] - $alpha[0];
 	$delta_alpha += 360 if($delta_alpha < 0);
-
 	my $template = 
 	    '(%f, %f) arc '.
 	    '[start angle=%f, delta angle=%f, '.
@@ -170,23 +182,50 @@ sub circle {
 				 $alpha[0], $delta_alpha,
 				 $args{rx}, $args{ry}));
 	
+=end problematic
+
+=cut
+
+
+	if($alpha[0] > $alpha[1]) {
+	    push(@raw, TikZ->raw(sprintf('(%f, %f) arc (%f:%f:%f and %f)',
+					 @{$boundary[0]},
+					 $alpha[0], 360,
+					 $args{rx}, $args{ry})));
+	    push(@raw, TikZ->raw(sprintf('(%f, %f) arc (%f:%f:%f and %f)',
+					 $args{cx} + $args{rx}, $args{cy},
+					 0, $alpha[1],
+					 $args{rx}, $args{ry})));
+	}
+	else {
+	    push(@raw, TikZ->raw(sprintf('(%f, %f) arc (%f:%f:%f and %f)',
+					 @{$boundary[0]},
+					 $alpha[0], $alpha[1],
+					 $args{rx}, $args{ry})));
+	}
     }
     else {
-	$raw = TikZ->raw(sprintf('(%f, %f) ellipse (%f and %f)',
-				 $args{cx}, $args{cy},
-				 $args{rx}, $args{ry}));
+	push(@raw, TikZ->raw(sprintf('(%f, %f) ellipse (%f and %f)',
+				     $args{cx}, $args{cy},
+				     $args{rx}, $args{ry})));
     }
 	
     my %style = $self->process_style('circle', %{$args{style} || {}});
     while(my ($key, $value) = each(%style)) {
 	next if($key eq 'fill');
-	$raw->mod(TikZ->raw_mod("$key=$value"));
+	foreach(@raw) {
+	    $_->mod(TikZ->raw_mod("$key=$value"));
+	}
     }
     if($style{fill}) {
-	$raw->mod(TikZ->fill($style{fill}));
+	foreach(@raw) {
+	    $_->mod(TikZ->fill($style{fill}));
+	}
     }
     
-    $self->output->add($raw);
+    foreach(@raw) {
+	$self->output->add($_);
+    }
 }
 
 sub text {
