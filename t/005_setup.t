@@ -62,7 +62,7 @@ sub construction {
     }
 
     throws_ok(sub { $construction->draw('SVG') },
-	      qr/Attribute \(width\) is required/,
+	      qr/Attribute \((?:width|height)\) is required/,
 	      'width required in draw');
     throws_ok(sub { $construction->draw('SVG', width => 100) },
 	      qr/Attribute \(height\) is required/,
@@ -71,7 +71,7 @@ sub construction {
     isa_ok($output, 'SVG');
 
     throws_ok(sub { $construction->as_svg },
-	      qr/Attribute \(width\) is required/,
+	      qr/Attribute \((?:width|height)\) is required/,
 	      'width required in as_svg');
     throws_ok(sub { $construction->as_svg(width => 100) },
 	      qr/Attribute \(height\) is required/,
@@ -81,7 +81,7 @@ sub construction {
     isa_ok($output, 'SVG');
 
     throws_ok(sub { $construction->draw('TikZ') },
-	      qr/Attribute \(width\) is required/,
+	      qr/Attribute \((?:width|height)\) is required/,
 	      'width required in draw');
     throws_ok(sub { $construction->draw('TikZ', width => 100) },
 	      qr/Attribute \(height\) is required/,
@@ -90,7 +90,7 @@ sub construction {
     isa_ok($output, 'LaTeX::TikZ::Set::Sequence');
 
     throws_ok(sub { $construction->as_tikz },
-	      qr/Attribute \(width\) is required/,
+	      qr/Attribute \((?:width|height)\) is required/,
 	      'width required in as_tikz');
     throws_ok(sub { $construction->as_tikz(width => 100) },
 	      qr/Attribute \(height\) is required/,

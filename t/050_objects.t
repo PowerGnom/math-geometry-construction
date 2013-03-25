@@ -128,7 +128,8 @@ sub objects {
     $construction->add_line(support => [[0, 0], [1, 1]], id => 'L01');
     @objects = $construction->objects;
     is(@objects, 3, 'three objects');
-    is($objects[2]->id, 'L01', 'last object is my line');
+    is(scalar(grep { $_->id eq 'L01' } @objects), 1,
+       'my line is among them');
     @objects = $construction->points;
     is(@objects, 2, 'two points');
     @objects = $construction->lines;
@@ -143,7 +144,8 @@ sub objects {
 			      id      => 'C01');
     @objects = $construction->objects;
     is(@objects, 3, 'three objects');
-    is($objects[2]->id, 'C01', 'last object is my circle');
+    is(scalar(grep { $_->id eq 'C01' } @objects), 1,
+       'my circle is among them');
     @objects = $construction->points;
     is(@objects, 2, 'two points');
     @objects = $construction->lines;
