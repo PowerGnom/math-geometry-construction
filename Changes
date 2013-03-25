@@ -1,5 +1,8 @@
 Revision history for Math-Geometry-Construction
 
+0.022	 Mon Mar 25 17:27:04 CET 2013
+	 Fixed test suite to work with perl 5.17.
+
 0.021	 Fri Mar 22 17:49:50 CET 2013 (unpublished)
 	 - extreme_position selector accepts Line objects as
            direction

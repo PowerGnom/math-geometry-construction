@@ -11,11 +11,11 @@ C<Math::Geometry::Construction::Draw> - base class for drawing
 
 =head1 VERSION
 
-Version 0.018
+Version 0.022
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.022';
 
 
 ###########################################################################
