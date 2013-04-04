@@ -1,5 +1,8 @@
 Revision history for Math-Geometry-Construction
 
+0.023	 Thu Apr  4 13:14:01 CEST 2013
+	 PointOnCircle derivate
+
 0.022	 Mon Mar 25 17:27:04 CET 2013
 	 Fixed test suite to work with perl 5.17.
 

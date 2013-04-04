@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 BEGIN {
     use_ok('Math::Geometry::Construction')
@@ -22,6 +22,8 @@ BEGIN {
     use_ok('Math::Geometry::Construction::Derivate::TranslatedPoint')
 	|| print "Bail out!\n";
     use_ok('Math::Geometry::Construction::Derivate::PointOnLine')
+	|| print "Bail out!\n";
+    use_ok('Math::Geometry::Construction::Derivate::PointOnCircle')
 	|| print "Bail out!\n";
     use_ok('Math::Geometry::Construction::DerivedPoint')
 	|| print "Bail out!\n";
