@@ -21,3 +21,6 @@
 - I don't like that points get there size from Construction at first
   use and then stick to that value. I think they should rather ask
   for the default value when needed, but not keep it.
+- I need a clear concept of which return values can be undef and how
+  to react to that (specifically where to croak and where to return
+  undef).
