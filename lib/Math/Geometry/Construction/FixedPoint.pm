@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::FixedPoint> - independent user-defined point
 
 =head1 VERSION
 
-Version 0.019
+Version 0.024
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -31,8 +31,9 @@ with 'Math::Geometry::Construction::Role::Buffering';
 
 has 'position' => (isa      => Vector,
 		   coerce   => 1,
-	           is       => 'rw',
+	           is       => 'ro',
 	           required => 1,
+		   reader   => '_position_vector',
 		   trigger  => \&clear_global_buffer);
 
 sub BUILDARGS {
@@ -50,6 +51,10 @@ sub BUILDARGS {
 #                             Retrieve Data                               #
 #                                                                         #
 ###########################################################################
+
+sub position {
+    return $_[0]->_position_vector->value;
+}
 
 ###########################################################################
 #                                                                         #
@@ -93,7 +98,7 @@ C<Math::Geometry::Construction>.
 
 =head3 position
 
-Holds a L<Math::Vector::Real|Math::Vector::Real> object with the
+Returns a L<Math::Vector::Real|Math::Vector::Real> object with the
 position of the point. As initialization argument to the
 constructor, you can also give either an array reference or a
 C<Math::VectorReal|Math::VectorReal> (C<VectorReal> one word instead
@@ -166,7 +171,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

@@ -1,11 +1,14 @@
 package Math::Geometry::Construction::Types;
 use strict;
 use warnings;
-use MooseX::Types -declare => ['MathVectorReal3D',
+use MooseX::Types -declare => ['ArrayRefOfNum',
 			       'Vector',
+			       'MathVectorReal',
+			       'MathVectorReal3D',
+			       'Point',
+			       'Line',
 			       'Construction',
 			       'GeometricObject',
-			       'Point',
 			       'Derivate',
 			       'Draw',
 			       'HashRefOfGeometricObject',
@@ -26,31 +29,46 @@ C<Math::Geometry::Construction::Types> - custom types for Math::Geometry::Constr
 
 =head1 VERSION
 
-Version 0.020
+Version 0.024
 
 =cut
 
-our $VERSION = '0.020';
+our $VERSION = '0.024';
 
+subtype ArrayRefOfNum,
+    as ArrayRef[Num];
+
+class_type Vector, {class => 'Math::Geometry::Construction::Vector'};
+class_type MathVectorReal,   {class => 'Math::Vector::Real'};
 class_type MathVectorReal3D, {class => 'Math::VectorReal'};
-
-subtype Vector,
-    as 'Math::Vector::Real';
-
-coerce Vector,
-    from MathVectorReal3D,
-    via { V($_->x, $_->y) };
+class_type Point,  {class => 'Math::Geometry::Construction::Point'};
+class_type Line,   {class => 'Math::Geometry::Construction::Line'};
 
 coerce Vector,
     from ArrayRef[Num],
-    via { V(@$_[0, 1]) };
+    via { Vector->new(provider => $_) };
+
+coerce Vector,
+    from MathVectorReal,
+    via { Vector->new(provider => $_) };
+
+coerce Vector,
+    from MathVectorReal3D,
+    via { Vector->new(provider => $_) };
+
+coerce Vector,
+    from Point,
+    via { Vector->new(provider => $_) };
+
+coerce Vector,
+    from Line,
+    via { Vector->new(provider => $_) };
 
 class_type Construction, {class => 'Math::Geometry::Construction'};
 
 role_type GeometricObject,
     {role => 'Math::Geometry::Construction::Role::Object'};
 
-class_type Point,    {class => 'Math::Geometry::Construction::Point'};
 class_type Derivate, {class => 'Math::Geometry::Construction::Derivate'};
 class_type Draw,     {class => 'Math::Geometry::Construction::Draw'};
 
@@ -87,7 +105,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011-2012 Lutz Gehlen.
+Copyright 2011-2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
