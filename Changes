@@ -1,8 +1,10 @@
 Revision history for Math-Geometry-Construction
 
 0.024	 
-	 Math::Geometry::Construction::Vector to unify access to
-	 sources for "vector values".
+	 - Math::Geometry::Construction::Vector to unify access to
+	   sources for "vector values"
+	 - Math::Geometry::Construction::PointPair for similar reasons
+	 - docu enhancements
 	 Incompatible changes:
 	 - Math::Geometry::Construction::FixedPoint
 
