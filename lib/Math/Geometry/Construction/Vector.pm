@@ -62,9 +62,13 @@ sub value {
     return $provider            if($provider->isa('Math::Vector::Real'));
     return V($provider->x, $provider->y)
 	if($provider->isa('Math::VectorReal'));
-    return $provider->position  if($provider->isa(Point));
-    return $provider->direction if($provider->isa(Line));
-    croak "Unknown provider type of a Vector should not be possible.\n"
+    return $provider->position
+	if($provider->isa('Math::Geometry::Construction::Point'));
+    return $provider->direction
+	if($provider->isa('Math::Geometry::Construction::Line'));
+    croak("Unknown provider type (".
+	  ref($provider).
+	  ") of a Vector should not be possible.\n");
 }
 ###########################################################################
 #                                                                         #
