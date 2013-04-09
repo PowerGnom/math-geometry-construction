@@ -42,7 +42,7 @@ has 'provider' => (isa      => ArrayRefOfNum
 		             | MathVectorReal3D
 		             | Point
 		             | Line,
-		   is       => 'ro',
+		   is       => 'rw',
 		   required => 1);
 
 ###########################################################################
