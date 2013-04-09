@@ -44,6 +44,7 @@ class_type MathVectorReal3D, {class => 'Math::VectorReal'};
 class_type Point,  {class => 'Math::Geometry::Construction::Point'};
 class_type Line,   {class => 'Math::Geometry::Construction::Line'};
 
+# coerce into Vector
 coerce Vector,
     from ArrayRef[Num],
     via { Vector->new(provider => $_) };
@@ -63,6 +64,27 @@ coerce Vector,
 coerce Vector,
     from Line,
     via { Vector->new(provider => $_) };
+
+# coerce into Point
+coerce Point,
+    from Vector,
+    via { Point->new(position => $_, hidden => 1) };
+
+coerce Point,
+    from ArrayRefOfNum,
+    via { Point->new(position => $_, hidden => 1) };
+
+coerce Point,
+    from MathVectorReal,
+    via { Point->new(position => $_, hidden => 1) };
+
+coerce Point,
+    from MathVectorReal3D,
+    via { Point->new(position => $_, hidden => 1) };
+
+coerce Point,
+    from Line,
+    via { Point->new(position => $_, hidden => 1) };
 
 class_type Construction, {class => 'Math::Geometry::Construction'};
 

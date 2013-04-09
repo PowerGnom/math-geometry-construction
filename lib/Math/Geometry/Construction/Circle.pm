@@ -47,10 +47,12 @@ with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
 has 'center'       => (isa      => Point,
+		       coerce   => 1,
 		       is       => 'ro',
 		       required => 1);
 
 has 'support'      => (isa      => Point,
+		       coerce   => 1,
 		       is       => 'ro',
 		       required => 1);
 
@@ -71,9 +73,6 @@ has 'min_gap'      => (isa      => 'Num',
 sub BUILDARGS {
     my ($class, %args) = @_;
     
-    $args{center} = $class->import_point
-	($args{construction}, $args{center});
-
     if(exists($args{radius})) {
 	$args{support} = $args{construction}->add_derived_point
 	    ('TranslatedPoint',
@@ -84,8 +83,6 @@ sub BUILDARGS {
 	$args{fixed_radius} = 1;
     }
     else {
-	$args{support} = $class->import_point
-	    ($args{construction}, $args{support});
 	$args{fixed_radius} = 0;
     }
 
