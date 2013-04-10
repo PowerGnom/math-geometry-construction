@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::Object> - shared administrative issues
 
 =head1 VERSION
 
-Version 0.019
+Version 0.024
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -89,7 +89,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
