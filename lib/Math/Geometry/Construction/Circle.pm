@@ -124,6 +124,26 @@ sub _build_min_gap {
     return $self->construction->min_circle_gap;
 }
 
+sub _center_trigger {
+    my ($self, $new, $old) = @_;
+
+    if(@_ > 2) {
+	# change of value, not init
+	$self->center->construction($self->construction)
+	    if(!defined($self->center->construction));
+    }
+}
+
+sub _support_trigger {
+    my ($self, $new, $old) = @_;
+
+    if(@_ > 2) {
+	# change of value, not init
+	$self->support->construction($self->construction)
+	    if(!defined($self->support->construction));
+    }
+}
+
 sub _fixed_radius_trigger {
     my ($self, $new, $old) = @_;
 

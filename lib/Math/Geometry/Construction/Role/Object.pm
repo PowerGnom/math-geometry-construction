@@ -37,8 +37,7 @@ has 'order_index'  => (isa      => 'Int',
 		       is       => 'rw');
 
 has 'construction' => (isa      => Construction,
-		       is       => 'ro',
-		       required => 1,
+		       is       => 'rw',
 		       weak_ref => 1);
 
 ###########################################################################
