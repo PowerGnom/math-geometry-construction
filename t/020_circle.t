@@ -57,18 +57,54 @@ sub constructs_ok {
     support_ok($circle, $pos);
 
     if($args->{radius}) {
-	ok($circle->fixed_radius, 'radius is fixed');
 	is_close($circle->radius, $args->{radius},
 		 'radius is '.$args->{radius});
     }
     else {
-	ok(!$circle->fixed_radius, 'radius is not fixed');
 	my $radius = sqrt(($pos->[1]->[0] - $pos->[0]->[0])**2 +
 			  ($pos->[1]->[1] - $pos->[0]->[1])**2);
 	is_close($circle->radius, $radius, "radius is $radius");
     }
 
     return $circle;
+}
+
+sub construction {
+    my $construction = Math::Geometry::Construction->new;
+    my $circle;
+    my @template;
+
+    @template = ([{center  => [1, 2],
+		   support => [3, 4]},
+		  [[1, 2], [3, 4]]]);
+
+=pod
+
+,
+		 [{position => [3, 4, 5]}, [3, 4]],
+		 [{position => V(6, 7)}, [6, 7]],
+		 [{position => vector(8, 9, 10)}, [8, 9]],
+		 [{x => 11, 'y' => 12}, [11, 12]],
+		 [{x => 13, 'y' => 14, z => 15}, [13, 14]]);
+
+=cut
+
+    foreach(@template) {
+	constructs_ok($construction, $_->[0], $_->[1]);
+    }
+
+=pod
+
+    $point = $construction->add_point(position => [0, 0]);
+    ok(!$point->hidden, 'point not hidden by default');
+    $point->hidden(1);
+    ok($point->hidden, 'point can be hidden');
+    $point = $construction->add_point(position => [0, 0],
+				      hidden   => 1);
+    ok($point->hidden, 'point can be hidden at startup');
+
+=cut
+
 }
 
 sub circle {
@@ -120,4 +156,5 @@ sub circle {
 	     'position lies on circle');
 }
 
-circle;
+construction;
+#circle;

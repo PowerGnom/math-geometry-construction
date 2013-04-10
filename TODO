@@ -24,3 +24,5 @@
 - I need a clear concept of which return values can be undef and how
   to react to that (specifically where to croak and where to return
   undef).
+- It should be possible to allow the modification the fixed radius
+  of a circle by triggering the change of the translator.

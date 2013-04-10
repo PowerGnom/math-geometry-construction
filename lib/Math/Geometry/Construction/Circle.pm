@@ -3,9 +3,9 @@ use Moose;
 
 use 5.008008;
 
+use Math::Geometry::Construction::Point;
 use Math::Geometry::Construction::Types qw(Point);
 use Carp;
-use Math::Vector::Real;
 use List::Util qw(max);
 
 use overload 'x'    => '_intersect',
@@ -18,11 +18,11 @@ C<Math::Geometry::Construction::Circle> - circle by center and point
 
 =head1 VERSION
 
-Version 0.021
+Version 0.024
 
 =cut
 
-our $VERSION = '0.021';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -46,44 +46,40 @@ with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
-has 'center'       => (isa      => Point,
-		       coerce   => 1,
-		       is       => 'ro',
-		       required => 1);
+has 'center'        => (isa      => Point,
+			coerce   => 1,
+			is       => 'ro',
+			required => 1,
+			trigger  => \&_center_trigger);
 
-has 'support'      => (isa      => Point,
-		       coerce   => 1,
-		       is       => 'ro',
-		       required => 1);
+has 'support'       => (isa      => Point,
+			coerce   => 1,
+			is       => 'ro',
+			lazy     => 1,
+			builder  => '_build_support',
+			trigger  => \&_support_trigger);
 
-has 'fixed_radius' => (isa      => 'Bool',
-		       is       => 'ro',
-		       required => 1);
+has '_fixed_radius' => (isa      => 'Num',
+			is       => 'rw',
+			init_arg => 'radius',
+			trigger  => \&_fixed_radius_trigger);
 
-has 'partial_draw' => (isa      => 'Bool',
-		       is       => 'rw',
-		       builder  => '_build_partial_draw',
-		       lazy     => 1);
+has 'partial_draw'  => (isa      => 'Bool',
+			is       => 'rw',
+			builder  => '_build_partial_draw',
+			lazy     => 1);
 
-has 'min_gap'      => (isa      => 'Num',
-		       is       => 'rw',
-		       builder  => '_build_min_gap',
-		       lazy     => 1);
+has 'min_gap'       => (isa      => 'Num',
+			is       => 'rw',
+			builder  => '_build_min_gap',
+			lazy     => 1);
 
 sub BUILDARGS {
     my ($class, %args) = @_;
     
-    if(exists($args{radius})) {
-	$args{support} = $args{construction}->add_derived_point
-	    ('TranslatedPoint',
-	     {input      => [$args{center}],
-	      translator => [$args{radius}, 0]},
-	     {hidden     => 1});
+    if(exists($args{support}) and exists($args{radius})) {
+	warn sprintf("Circle init parameter radius ignored.\n");
 	delete $args{radius};
-	$args{fixed_radius} = 1;
-    }
-    else {
-	$args{fixed_radius} = 0;
     }
 
     return \%args;
@@ -95,7 +91,25 @@ sub BUILD {
     $self->style('stroke', 'black') unless($self->style('stroke'));
     $self->style('fill',   'none')  unless($self->style('fill'));
 
+    # The following call also makes sure that the support has been
+    # set or can be built.
     $self->register_point($self->support);
+}
+
+sub _build_support {
+    my ($self) = @_;
+    my $radius = $self->_fixed_radius;
+
+    if(!defined($radius)) {
+	croak sprintf('Unable to build support point for circle %s '.
+		      'based on an undefined radius.', $self->id);
+    }
+
+    return $self->construction->add_derived_point
+	('TranslatedPoint',
+	 {input      => $self->center,
+	  translator => [$radius, 0]},
+	 {hidden     => 1});
 }
 
 sub _build_partial_draw {
@@ -108,6 +122,15 @@ sub _build_min_gap {
     my ($self) = @_;
 
     return $self->construction->min_circle_gap;
+}
+
+sub _fixed_radius_trigger {
+    my ($self, $new, $old) = @_;
+
+    if(@_ > 2) {
+	# change of value, not init
+	$self->support->derivate->translator([$new, 0]);
+    }
 }
 
 ###########################################################################
@@ -126,12 +149,12 @@ sub radius {
     my ($self, @args) = @_;
 
     if(@args) {
-	if($self->fixed_radius) {
-	    # TODO: validate
-	    $self->support->derivate->translator(V($args[0], 0));
+	if(defined($self->_fixed_radius)) {
+	    $self->_fixed_radius($args[0]);
 	}
 	else {
-	    croak "Radius can only be set on circles with fixed radius";
+	    croak sprintf('Refusing to set radius on circle %s without '.
+			  'fixed radius', $self->id);
 	}
     }
 
