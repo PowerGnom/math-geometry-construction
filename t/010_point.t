@@ -69,7 +69,7 @@ sub construction {
     ok($point->hidden, 'point can be hidden at startup');
 }
 
-sub change_position {
+sub modify_position {
     my $construction = Math::Geometry::Construction->new;
     my $point        = $construction->add_point(position => [0, 0]);
     my @template;
@@ -146,7 +146,7 @@ sub draw {
 }
 
 construction;
-change_position;
+modify_position;
 defaults;
 vector_and_point;
 draw;
