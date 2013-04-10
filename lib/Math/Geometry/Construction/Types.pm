@@ -65,27 +65,6 @@ coerce Vector,
     from Line,
     via { Vector->new(provider => $_) };
 
-# coerce into Point
-coerce Point,
-    from Vector,
-    via { Point->new(position => $_, hidden => 1) };
-
-coerce Point,
-    from ArrayRefOfNum,
-    via { Point->new(position => $_, hidden => 1) };
-
-coerce Point,
-    from MathVectorReal,
-    via { Point->new(position => $_, hidden => 1) };
-
-coerce Point,
-    from MathVectorReal3D,
-    via { Point->new(position => $_, hidden => 1) };
-
-coerce Point,
-    from Line,
-    via { Point->new(position => $_, hidden => 1) };
-
 class_type Construction, {class => 'Math::Geometry::Construction'};
 
 role_type GeometricObject,

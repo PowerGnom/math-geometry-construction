@@ -45,19 +45,15 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
+with 'Math::Geometry::Construction::Role::Input';
 
 has 'center'        => (isa      => Point,
-			coerce   => 1,
 			is       => 'ro',
-			required => 1,
-			trigger  => \&_center_trigger);
+			required => 1);
 
 has 'support'       => (isa      => Point,
-			coerce   => 1,
 			is       => 'ro',
-			lazy     => 1,
-			builder  => '_build_support',
-			trigger  => \&_support_trigger);
+			required => 1);
 
 has '_fixed_radius' => (isa      => 'Num',
 			is       => 'rw',
@@ -77,11 +73,27 @@ has 'min_gap'       => (isa      => 'Num',
 sub BUILDARGS {
     my ($class, %args) = @_;
     
-    if(exists($args{support}) and exists($args{radius})) {
-	warn sprintf("Circle init parameter radius ignored.\n");
-	delete $args{radius};
-    }
+    # implicitly checks $args{construction}
+    $args{center} = $class->import_point($args{construction},
+					 $args{center});
 
+    if(exists($args{support})) {
+	if(exists($args{radius})) {
+	    warn sprintf("Ignoring ircle init parameter radius.\n");
+	    delete $args{radius};
+	}
+
+	$args{support} = $class->import_point($args{construction},
+					      $args{support});
+    }
+    elsif(exists($args{radius})) {
+	$args{support} = $args{construction}->add_derived_point
+	    ('TranslatedPoint',
+	     {input      => [$args{center}],
+	      translator => [$args{radius}, 0]},
+	     {hidden     => 1});
+    }
+    
     return \%args;
 }
 
@@ -94,22 +106,6 @@ sub BUILD {
     # The following call also makes sure that the support has been
     # set or can be built.
     $self->register_point($self->support);
-}
-
-sub _build_support {
-    my ($self) = @_;
-    my $radius = $self->_fixed_radius;
-
-    if(!defined($radius)) {
-	croak sprintf('Unable to build support point for circle %s '.
-		      'based on an undefined radius.', $self->id);
-    }
-
-    return $self->construction->add_derived_point
-	('TranslatedPoint',
-	 {input      => $self->center,
-	  translator => [$radius, 0]},
-	 {hidden     => 1});
 }
 
 sub _build_partial_draw {

@@ -12,11 +12,11 @@ C<Math::Geometry::Construction::Role::Input> - format conversions
 
 =head1 VERSION
 
-Version 0.021
+Version 0.024
 
 =cut
 
-our $VERSION = '0.021';
+our $VERSION = '0.024';
 
 
 # As a general rule, this method should only deal with 'fixed
@@ -34,8 +34,13 @@ sub import_vector {
     croak sprintf('Unsupported vector format %s', ref($value));
 }
 
+# This method is also used during construction time, so $self might
+# just be a class name.
 sub import_point {
     my ($self, $construction, $value) = @_;
+
+    croak "Invalid construction object."
+	if(!eval { $construction->isa('Math::Geometry::Construction') });
 
     return undef if(!defined($value));
     return $value
@@ -68,7 +73,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

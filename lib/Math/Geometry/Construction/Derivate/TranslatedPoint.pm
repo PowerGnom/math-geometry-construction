@@ -54,7 +54,7 @@ sub calculate_positions {
     my $position = $input[0]->position;
     return if(!$position);
 
-    return($position + $self->translator);
+    return($position + $self->translator->value);
 }
 
 ###########################################################################
