@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Circle);
 use Carp;
 
 =head1 NAME
@@ -12,11 +13,11 @@ C<Math::Geometry::Construction::Derivate::PointOnCircle> - point on a Circle
 
 =head1 VERSION
 
-Version 0.023
+Version 0.024
 
 =cut
 
-our $VERSION = '0.023';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -24,6 +25,11 @@ our $VERSION = '0.023';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+has 'input'    => (isa       => Circle,
+		   coerce    => 1,
+		   is        => 'ro',
+		   required  => 1);
 
 has 'distance' => (isa       => 'Num',
 		   is        => 'rw',
@@ -78,17 +84,10 @@ sub BUILD {
 
 sub calculate_positions {
     my ($self) = @_;
-    my @input  = $self->input;
+    my $circle = $self->input;
 
-    if(@input != 1
-       or
-       !eval { $input[0]->isa('Math::Geometry::Construction::Circle') })
-    {
-	croak "Need one Circle for PointOnCircle";
-    }
-
-    my $center_p  = $input[0]->center->position;
-    my $support_p = $input[0]->support->position;
+    my $center_p  = $circle->center->position;
+    my $support_p = $circle->support->position;
     return if(!defined($center_p) or !defined($support_p));
     my $radius_v  = $support_p - $center_p;
     my $radius    = abs($radius_v);
@@ -120,7 +119,7 @@ sub calculate_positions {
 sub register_derived_point {
     my ($self, $point) = @_;
 
-    foreach($self->input) { $_->register_point($point) }
+    $self->input->register_point($point);
 }
 
 1;

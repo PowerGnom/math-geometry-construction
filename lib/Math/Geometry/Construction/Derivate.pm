@@ -39,14 +39,6 @@ with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Buffering';
 
-has 'input' => (isa      => ArrayRefOfGeometricObject,
-		is       => 'bare',
-		traits   => ['Array'],
-		required => 1,
-		handles  => {count_input  => 'count',
-			     input        => 'elements',
-			     single_input => 'accessor'});
-
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #

@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Line);
 use Carp;
 
 =head1 NAME
@@ -24,6 +25,11 @@ our $VERSION = '0.024';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+has 'input'    => (isa       => Line,
+		   coerce    => 1,
+		   is        => 'ro',
+		   required  => 1);
 
 has 'distance' => (isa       => 'Num',
 		   is        => 'rw',
@@ -85,16 +91,9 @@ sub BUILD {
 
 sub calculate_positions {
     my ($self) = @_;
-    my @input  = $self->input;
+    my $line  = $self->input;
 
-    if(@input != 1
-       or
-       !eval { $input[0]->isa('Math::Geometry::Construction::Line') })
-    {
-	croak "Need one line for PointOnLine";
-    }
-
-    my @support_p = map { $_->position } $input[0]->support;
+    my @support_p = map { $_->position } $line->support;
     return if(!defined($support_p[0]) or !defined($support_p[1]));
     my $s_distance = ($support_p[1] - $support_p[0]);
 
@@ -135,7 +134,7 @@ sub calculate_positions {
 sub register_derived_point {
     my ($self, $point) = @_;
 
-    foreach($self->input) { $_->register_point($point) }
+    $self->input->register_point($point);
 }
 
 1;
