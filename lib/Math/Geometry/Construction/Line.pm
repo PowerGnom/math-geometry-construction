@@ -19,11 +19,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.021
+Version 0.024
 
 =cut
 
-our $VERSION = '0.021';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -42,6 +42,7 @@ sub id_template { return $ID_TEMPLATE }
 #                                                                         #
 ###########################################################################
 
+with 'Math::Geometry::Construction::Role::Input';
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';

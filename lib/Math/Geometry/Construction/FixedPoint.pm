@@ -4,8 +4,8 @@ extends 'Math::Geometry::Construction::Point';
 
 use 5.008008;
 
-use Math::Geometry::Construction::Types qw(Vector);
 use Math::Geometry::Construction::Vector;
+use Math::Geometry::Construction::Types qw(Vector);
 use Math::Vector::Real;
 use Carp;
 

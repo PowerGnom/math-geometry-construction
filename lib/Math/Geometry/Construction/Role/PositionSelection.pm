@@ -3,8 +3,11 @@ use Moose::Role;
 
 use 5.008008;
 
-use Carp;
+use Math::Geometry::Construction::Vector;
+use Math::Geometry::Construction::Types qw(Vector);
+use MooseX::Params::Validate 0.13;
 use Math::Vector::Real;
+use Carp;
 
 =head1 NAME
 
@@ -12,11 +15,11 @@ C<Math::Geometry::Construction::Role::PositionSelection> - select position from 
 
 =head1 VERSION
 
-Version 0.021
+Version 0.024
 
 =cut
 
-our $VERSION = '0.021';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -24,8 +27,6 @@ our $VERSION = '0.021';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
-
-with 'Math::Geometry::Construction::Role::Input';
 
 requires 'id';
 requires 'positions';
@@ -56,21 +57,11 @@ sub indexed_position {
 }
 
 sub extreme_position {
-    my ($self, $direction) = @_;
+    my $self        = shift;
+    my ($direction) = map { $_->value } pos_validated_list
+	(\@_, {isa => Vector, coerce => 1});
     
-    croak "Undefined direction in 'extreme_position' selector"
-	if(!defined($direction));
-
-    # I do not want to put the Line evaluation into import_vector,
-    # because this would evaluate the position at the time when
-    # import_vector is called. That would be right here, but could
-    # lead to subtle errors at other places.
-    my $line_class = 'Math::Geometry::Construction::Line';
-    $direction = $direction->direction
-	if(eval { $direction->isa($line_class) });
-    $direction = $self->import_vector($direction);
-
-    my $d         = abs($direction);
+    my $d = abs($direction);
     return undef if($d == 0);
 
     my $norm      = $direction / $d;
@@ -88,20 +79,10 @@ sub extreme_position {
 }
 
 sub close_position {
-    my ($self, $reference) = @_;
-
-    croak "Undefined reference position in 'close_position' selector"
-	if(!defined($reference));
-
-    # I do not want to put the Point evaluation into import_vector,
-    # because this would evaluate the position at the time when
-    # import_vector is called. That would be right here, but could
-    # lead to subtle errors at other places.
-    my $point_class = 'Math::Geometry::Construction::Point';
-    $reference = $reference->position
-	if(eval { $reference->isa($point_class) });
-    $reference = $self->import_vector($reference);
-
+    my $self        = shift;
+    my ($reference) = map { $_->value } pos_validated_list
+	(\@_, {isa => Vector, coerce => 1});
+    
     my @positions = grep { defined($_) } $self->positions;
 
     if(!@positions) {
@@ -116,20 +97,10 @@ sub close_position {
 }
 
 sub distant_position {
-    my ($self, $reference) = @_;
+    my $self        = shift;
+    my ($reference) = map { $_->value } pos_validated_list
+	(\@_, {isa => Vector, coerce => 1});
     
-    croak "Undefined reference position in 'distant_position' selector"
-	if(!defined($reference));
-    
-    # I do not want to put the Point evaluation into import_vector,
-    # because this would evaluate the position at the time when
-    # import_vector is called. That would be right here, but could
-    # lead to subtle errors at other places.
-    my $point_class = 'Math::Geometry::Construction::Point';
-    $reference = $reference->position
-	if(eval { $reference->isa($point_class) });
-    $reference = $self->import_vector($reference);
-
     my @positions = grep { defined($_) } $self->positions;
 
     if(!@positions) {
