@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 102;
+use Test::More tests => 98;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -70,41 +70,60 @@ sub id {
     my $circle;
     my $d;
     my $dp;
+    my %count;
 
     $line = $construction->add_line(support => [[10, 30], [30, 30]]);
     $circle = $construction->add_circle(center  => [20, 30],
 					support => [20, 60]);
-    is($line->id, 'L000000002', 'line id');
-    is($circle->id, 'C000000005', 'line id');
 
     $d = $construction->add_derivate
 	('IntersectionCircleLine', input => [$line, $circle]);
-    is($d->id, 'D000000006', 'derivate id');
+    is($d->order_index, $construction->count_objects - 1,
+       'derivate is last object');
+    is($d->id,
+       sprintf(Math::Geometry::Construction::Derivate->id_template,
+	       $d->order_index),
+       'derivate id is composed from id_template and order_index');
 
     $dp = $d->create_derived_point;
-    is($dp->id, 'S000000007', 'derived point id');
+    is($dp->order_index, $construction->count_objects - 1,
+       'derived point is last object');
+    is($dp->id,
+       sprintf(Math::Geometry::Construction::DerivedPoint->id_template,
+	       $dp->order_index),
+       'derived point id is composed from id_template and order_index');
 
     $dp = $construction->add_derived_point
 	('IntersectionCircleLine', {input => [$circle, $line]});
-    is($dp->id, 'S000000009', 'derived point id');
-    ok(defined($construction->object('D000000008')), 'derivate exists');
+    is($dp->order_index, $construction->count_objects - 1,
+       'derived point is last object');
+    is($dp->id,
+       sprintf(Math::Geometry::Construction::DerivedPoint->id_template,
+	       $dp->order_index),
+       'derived point id is composed from id_template and order_index');
+    ok(defined($dp->derivate), 'derivate exists');
+    ok(defined($construction->object($dp->derivate->id)),
+       'derivate can be found via id');
 
     $dp = $construction->add_derived_point
 	('IntersectionCircleLine',
 	 {input => [$construction->add_line(support => [[1, 2], [3, 4]]),
 		    $construction->add_circle(support => [5, 6],
 					      center  => [7, 8])]});
-    foreach('P000000010',
-	    'P000000011',
-	    'L000000012',
-	    'P000000013',
-	    'P000000014',
-	    'C000000015',
-	    'D000000016',
-	    'S000000017')
-    {
-	ok(defined($construction->object($_)), "$_ defined");
+
+    %count = ();
+    foreach($construction->objects) {
+	$count{$_->order_index} = 1;
     }
+    is(scalar(keys %count), $construction->count_objects,
+       'order_indices are unique');
+
+    %count = ();
+    foreach($construction->objects) {
+	$count{$_->id} = 1;
+    }
+    is(scalar(keys %count), $construction->count_objects,
+       'ids are unique');
 }
 
 sub register_derived_point {
