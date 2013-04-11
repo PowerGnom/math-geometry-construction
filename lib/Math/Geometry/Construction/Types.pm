@@ -13,10 +13,12 @@ use MooseX::Types -declare => ['ArrayRefOfNum',
 			       'Draw',
 			       'HashRefOfGeometricObject',
 			       'ArrayRefOfGeometricObject',
+			       'LineLine',
 			       'HashRefOfPoint',
 			       'ArrayRefOfPoint',
 			       'Extension'];
-use MooseX::Types::Moose qw/Num ArrayRef HashRef/;
+use MooseX::Types::Moose qw(Num ArrayRef HashRef);
+use MooseX::Types::Structured qw(Tuple);
 
 use 5.008008;
 
@@ -78,6 +80,9 @@ subtype HashRefOfGeometricObject,
 
 subtype ArrayRefOfGeometricObject,
     as ArrayRef[GeometricObject];
+
+subtype LineLine,
+    as Tuple[Line, Line];
 
 subtype HashRefOfPoint,
     as HashRef[Point];

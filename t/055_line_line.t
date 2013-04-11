@@ -2,8 +2,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 61;
+use Test::More tests => 69;
 use Math::Geometry::Construction;
+use Test::Exception;
 
 sub is_close {
     my ($value, $reference, $message, $limit) = @_;
@@ -129,6 +130,39 @@ sub id {
        'ids are unique');
 }
 
+sub input {
+    my $construction = Math::Geometry::Construction->new;
+    my @template;
+    my @lines;
+    my $d;
+
+    @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
+	      $construction->add_line(support => [[20, 10], [20, 40]]));
+    
+    $d = $construction->add_derivate
+	('IntersectionLineLine', input => [@lines]);
+    is($d->count_input, 2, 'count_input works and delivers 2');
+    @lines = $d->input;
+    foreach(@lines) {
+	isa_ok($_, 'Math::Geometry::Construction::Line');
+    }
+    foreach(0, 1) {
+	isa_ok($d->single_input($_),
+	       'Math::Geometry::Construction::Line');
+    }
+
+    @template = ([$lines[0]],
+		 $lines[0],
+		 [$lines[0], $lines[1]->single_support(0)]);
+    
+    foreach(@template) {
+	throws_ok(sub { $construction->add_derivate
+			('IntersectionLineLine', input => $_); },
+		  qr/type constraint/,
+		  'LineLine type constraint');
+    }
+}
+
 sub register_derived_point {
     my $construction = Math::Geometry::Construction->new;
     my @lines;
@@ -165,5 +199,6 @@ sub overloading {
 
 line_line;
 id;
+input;
 register_derived_point;
 overloading;

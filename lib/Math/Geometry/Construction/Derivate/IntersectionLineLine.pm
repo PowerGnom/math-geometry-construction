@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(LineLine);
 use Carp;
 use List::MoreUtils qw(any);
 use Math::Vector::Real;
@@ -15,11 +16,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionLineLine> - line line inte
 
 =head1 VERSION
 
-Version 0.018
+Version 0.024
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -27,6 +28,14 @@ our $VERSION = '0.018';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+has 'input' => (isa      => LineLine,
+		is       => 'bare',
+		traits   => ['Array'],
+		required => 1,
+		handles  => {count_input  => 'count',
+			     input        => 'elements',
+			     single_input => 'accessor'});
 
 ###########################################################################
 #                                                                         #
@@ -37,14 +46,6 @@ our $VERSION = '0.018';
 sub calculate_positions {
     my ($self) = @_;
     my @lines  = $self->input;
-
-    croak "Need two lines to intersect" if(@lines != 2);
-    foreach(@lines) {
-	if(!eval { $_->isa('Math::Geometry::Construction::Line') }) {
-	    croak sprintf("Need lines for LineLine intersection, no %s",
-			  ref($_));
-	}
-    }
 
     my @normals   = ();
     my @constants = ();
@@ -112,7 +113,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
