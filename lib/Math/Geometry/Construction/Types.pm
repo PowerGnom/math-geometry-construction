@@ -17,8 +17,11 @@ use MooseX::Types -declare => ['ArrayRefOfNum',
 			       'LineLine',
 			       'LineCircle',
 			       'CircleLine',
+			       'CircleCircle',
 			       'HashRefOfPoint',
 			       'ArrayRefOfPoint',
+			       'ArrayRefOfLine',
+			       'ArrayRefOfCircle',
 			       'Extension'];
 use MooseX::Types::Moose qw(Num ArrayRef HashRef);
 use MooseX::Types::Structured qw(Tuple);
@@ -98,11 +101,32 @@ coerce CircleLine,
     from LineCircle,
     via { [$_->[1], $_->[0]] };
 
+subtype CircleCircle,
+    as Tuple[Circle, Circle];
+
 subtype HashRefOfPoint,
     as HashRef[Point];
 
 subtype ArrayRefOfPoint,
     as ArrayRef[Point];
+
+coerce Point,
+    from ArrayRefOfPoint,
+    via { $_->[0] };
+
+subtype ArrayRefOfLine,
+    as ArrayRef[Line];
+
+coerce Line,
+    from ArrayRefOfLine,
+    via { $_->[0] };
+
+subtype ArrayRefOfCircle,
+    as ArrayRef[Circle];
+
+coerce Circle,
+    from ArrayRefOfCircle,
+    via { $_->[0] };
 
 subtype Extension,
     as ArrayRef[Num];
