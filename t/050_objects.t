@@ -26,13 +26,18 @@ sub order_index {
     is($construction->count_objects, 4, '4 objects');
 
     $object = $construction->add_line(support => [[1, 2], [3, 4]]);
-    is($object->order_index, 6, 'order index 6');
     is($construction->count_objects, 7, '7 objects');    
 
     $object = $construction->add_circle(center  => [3, 4],
 					support => [1, 2]);
-    is($object->order_index, 9, 'order index 9');
     is($construction->count_objects, 10, '10 objects');    
+
+    my %count = ();
+    foreach($construction->objects) {
+	$count{$_->order_index} = 1;
+    }
+    is(scalar(keys %count), $construction->count_objects,
+       'order_indices are unique');
 }
 
 sub id {
@@ -74,28 +79,51 @@ sub id {
 
     $object = $construction->add_line(support => [[1, 2], [3, 4]]);
     is($construction->count_objects, 7, '7 objects');    
-    is($object->id, 'L000000006', 'line id');
-    $object = $construction->object('P000000004');
-    ok(defined($object), 'implicit point by id defined');
-    is($object->position->[0], 1, 'position x');
-    is($object->position->[1], 2, 'position y');
-    $object = $construction->object('P000000005');
-    ok(defined($object), 'implicit point by id defined');
-    is($object->position->[0], 3, 'position x');
-    is($object->position->[1], 4, 'position y');
+    is($object->id,
+       sprintf(Math::Geometry::Construction::Line->id_template,
+	       $object->order_index),
+       'line id is composed from id_template and order_index');
+    @objects = $object->support;
+    is($objects[0]->id,
+       sprintf(Math::Geometry::Construction::Point->id_template,
+	       $objects[0]->order_index),
+       'implicit point id is composed from id_template and order_index');
+    is($objects[0]->position->[0], 1, 'position x');
+    is($objects[0]->position->[1], 2, 'position y');
+    is($objects[1]->id,
+       sprintf(Math::Geometry::Construction::Point->id_template,
+	       $objects[1]->order_index),
+       'implicit point id is composed from id_template and order_index');
+    is($objects[1]->position->[0], 3, 'position x');
+    is($objects[1]->position->[1], 4, 'position y');
 
     $object = $construction->add_circle(center  => [5, 6],
 					support => [7, 8]);
     is($construction->count_objects, 10, '10 objects');    
-    is($object->id, 'C000000009', 'line id');
-    $object = $construction->object('P000000007');
-    ok(defined($object), 'implicit point by id defined');
-    is($object->position->[0], 5, 'position x');
-    is($object->position->[1], 6, 'position y');
-    $object = $construction->object('P000000008');
-    ok(defined($object), 'implicit point by id defined');
-    is($object->position->[0], 7, 'position x');
-    is($object->position->[1], 8, 'position y');
+    is($object->id,
+       sprintf(Math::Geometry::Construction::Circle->id_template,
+	       $object->order_index),
+       'circle id is composed from id_template and order_index');
+    @objects = ($object->center, $object->support);
+    is($objects[0]->id,
+       sprintf(Math::Geometry::Construction::Point->id_template,
+	       $objects[0]->order_index),
+       'implicit point id is composed from id_template and order_index');
+    is($objects[0]->position->[0], 5, 'position x');
+    is($objects[0]->position->[1], 6, 'position y');
+    is($objects[1]->id,
+       sprintf(Math::Geometry::Construction::Point->id_template,
+	       $objects[1]->order_index),
+       'implicit point id is composed from id_template and order_index');
+    is($objects[1]->position->[0], 7, 'position x');
+    is($objects[1]->position->[1], 8, 'position y');
+
+    my %count = ();
+    foreach($construction->objects) {
+	$count{$_->id} = 1;
+    }
+    is(scalar(keys %count), $construction->count_objects,
+       'ids are unique');
 }
 
 sub objects {

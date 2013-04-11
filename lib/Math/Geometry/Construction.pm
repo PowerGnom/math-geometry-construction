@@ -32,37 +32,52 @@ our $VERSION = '0.024';
 has 'background'      => (isa => 'Str|ArrayRef',
 			  is  => 'rw');
 
-has 'objects'         => (isa     => HashRefOfGeometricObject,
-			  is      => 'bare',
-			  traits  => ['Hash'],
-			  default => sub { {} },
-			  handles => {count_objects => 'count',
-				      object        => 'accessor',
-				      object_ids    => 'keys',
-				      objects       => 'values'});
+has 'objects'         => (isa      => HashRefOfGeometricObject,
+			  is       => 'bare',
+			  traits   => ['Hash'],
+			  default  => sub { {} },
+			  handles  => {count_objects => 'count',
+				       object        => 'accessor',
+				       object_ids    => 'keys',
+				       objects       => 'values'},
+			  init_arg => undef);
 
-has 'point_size'      => (isa     => 'Num',
-			  is      => 'rw',
-			  default => 6);
+has '_counter'        => (isa      => 'Int',
+			  is       => 'rw',
+			  default  => 0,
+			  init_arg => undef);
 
-has 'partial_circles' => (isa     => 'Bool',
-			  is      => 'ro',
-			  default => 0);
+has 'point_size'      => (isa      => 'Num',
+			  is       => 'rw',
+			  default  => 6);
 
-has 'min_circle_gap'  => (isa     => 'Num',
-			  is      => 'ro',
-			  default => 1.5707963267949);
+has 'partial_circles' => (isa      => 'Bool',
+			  is       => 'ro',
+			  default  => 0);
 
-has 'buffer_results'  => (isa     => 'Bool',
-			  is      => 'rw',
-			  default => 1,
-			  trigger => \&clear_buffer);
+has 'min_circle_gap'  => (isa      => 'Num',
+			  is       => 'ro',
+			  default  => 1.5707963267949);
 
-has '_output'         => (isa     => Draw,
-			  is      => 'rw',
-			  handles => {draw_line   => 'line',
-				      draw_circle => 'circle',
-				      draw_text   => 'text'});
+has 'buffer_results'  => (isa      => 'Bool',
+			  is       => 'rw',
+			  default  => 1,
+			  trigger  => \&clear_buffer);
+
+has '_output'         => (isa      => Draw,
+			  is       => 'rw',
+			  handles  => {draw_line   => 'line',
+				       draw_circle => 'circle',
+				       draw_text   => 'text'},
+			  init_arg => undef);
+
+sub counter {
+    my ($self) = @_;
+
+    my $counter = $self->_counter;
+    $self->_counter($counter + 1);
+    return $counter;
+}
 
 sub clear_buffer {
     my ($self) = @_;
@@ -101,8 +116,9 @@ sub add_object {
     }
     else { croak "Class name $class did not pass regex check" }
     
-    my $object = $class->new(construction => $self, @args);
-    $object->order_index($self->count_objects);
+    my $object = $class->new(construction => $self,
+			     @args,
+			     order_index  => $self->counter);
     $self->object($object->id, $object);
 
     return $object;

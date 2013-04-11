@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 67;
+use Test::More tests => 57;
 use Math::Geometry::Construction;
 
 sub is_close {
@@ -127,41 +127,6 @@ sub line_line {
     is_close($pos->[1], 120, 'intersection y');
 }
 
-sub id {
-    my $construction = Math::Geometry::Construction->new;
-    my $line;
-    my $d;
-    my $dp;
-
-    $line = $construction->add_line(support => [[10, 30], [30, 30]]);
-    is($line->id, 'L000000002', 'line id');
-
-    $d = $construction->add_derivate
-	('PointOnLine', input => [$line], quantile => 0.5);
-    is($d->id, 'D000000003', 'derivate id');
-
-    $dp = $d->create_derived_point;
-    is($dp->id, 'S000000004', 'derived point id');
-
-    $dp = $construction->add_derived_point
-	('PointOnLine', {input => [$line], distance => 10});
-    is($dp->id, 'S000000006', 'derived point id');
-    ok(defined($construction->object('D000000005')), 'derivate exists');
-
-    $dp = $construction->add_derived_point
-	('PointOnLine',
-	 {input => [$construction->add_line(support => [[1, 2], [3, 4]])],
-	  'y'   => 20});
-    foreach('P000000007',
-	    'P000000008',
-	    'L000000009',
-	    'D000000010',
-	    'S000000011')
-    {
-	ok(defined($construction->object($_)), "$_ defined");
-    }
-}
-
 sub register_derived_point {
     my $construction = Math::Geometry::Construction->new;
     my $line;
@@ -177,5 +142,4 @@ sub register_derived_point {
 }
 
 line_line;
-id;
 register_derived_point;
