@@ -7,6 +7,7 @@ use MooseX::Types -declare => ['ArrayRefOfNum',
 			       'MathVectorReal3D',
 			       'Point',
 			       'Line',
+			       'Circle',
 			       'Construction',
 			       'GeometricObject',
 			       'Derivate',
@@ -14,6 +15,8 @@ use MooseX::Types -declare => ['ArrayRefOfNum',
 			       'HashRefOfGeometricObject',
 			       'ArrayRefOfGeometricObject',
 			       'LineLine',
+			       'LineCircle',
+			       'CircleLine',
 			       'HashRefOfPoint',
 			       'ArrayRefOfPoint',
 			       'Extension'];
@@ -45,6 +48,7 @@ class_type MathVectorReal,   {class => 'Math::Vector::Real'};
 class_type MathVectorReal3D, {class => 'Math::VectorReal'};
 class_type Point,  {class => 'Math::Geometry::Construction::Point'};
 class_type Line,   {class => 'Math::Geometry::Construction::Line'};
+class_type Circle, {class => 'Math::Geometry::Construction::Circle'};
 
 # coerce into Vector
 coerce Vector,
@@ -83,6 +87,16 @@ subtype ArrayRefOfGeometricObject,
 
 subtype LineLine,
     as Tuple[Line, Line];
+
+subtype LineCircle,
+    as Tuple[Line, Circle];
+
+subtype CircleLine,
+    as Tuple[Circle, Line];
+
+coerce CircleLine,
+    from LineCircle,
+    via { [$_->[1], $_->[0]] };
 
 subtype HashRefOfPoint,
     as HashRef[Point];

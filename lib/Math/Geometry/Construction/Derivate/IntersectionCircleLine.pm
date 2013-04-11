@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(CircleLine);
 use Carp;
 
 =head1 NAME
@@ -12,11 +13,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleLine> - circle line 
 
 =head1 VERSION
 
-Version 0.020
+Version 0.024
 
 =cut
 
-our $VERSION = '0.020';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -25,20 +26,14 @@ our $VERSION = '0.020';
 #                                                                         #
 ###########################################################################
 
-sub BUILD {
-    my ($self, $args) = @_;
-
-    my @input = $self->input;
-    croak "Need one circle and one line to intersect" if(@input != 2);
-    unless(eval { $input[0]->isa('Math::Geometry::Construction::Circle') }
-	   and
-	   eval { $input[1]->isa('Math::Geometry::Construction::Line') }
-	   or
-	   eval { $input[0]->isa('Math::Geometry::Construction::Line') }
-	   and
-	   eval { $input[1]->isa('Math::Geometry::Construction::Circle') })
-    { croak "Need one circle and one line to intersect" }
-}
+has 'input' => (isa      => CircleLine,
+		coerce   => 1,
+		is       => 'bare',
+		traits   => ['Array'],
+		required => 1,
+		handles  => {count_input  => 'count',
+			     input        => 'elements',
+			     single_input => 'accessor'});
 
 ###########################################################################
 #                                                                         #
@@ -47,13 +42,9 @@ sub BUILD {
 ###########################################################################
 
 sub calculate_positions {
-    my ($self) = @_;
-    my @input  = $self->input;
+    my ($self)          = @_;
+    my ($circle, $line) = $self->input;
 
-    my $circle_class = 'Math::Geometry::Construction::Circle';
-    my ($circle, $line) = $input[0]->isa($circle_class)
-        ? @input : reverse(@input);
-       
     my $c_center_p  = $circle->center->position;
     my $c_radius    = $circle->radius;
     my @l_support_p = map { $_->position } $line->support;
@@ -116,7 +107,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

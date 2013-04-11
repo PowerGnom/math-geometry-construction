@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 98;
+use Test::More tests => 109;
+use Test::Exception;
 use List::Util qw(min max);
 use Math::Geometry::Construction;
 
@@ -124,6 +125,43 @@ sub id {
     }
     is(scalar(keys %count), $construction->count_objects,
        'ids are unique');
+}
+
+sub input {
+    my $construction = Math::Geometry::Construction->new;
+    my @template;
+    my $line;
+    my $circle;
+    my $d;
+
+    $line   = $construction->add_line(support => [[10, 30], [30, 30]]);
+    $circle = $construction->add_circle(center  => [20, 30],
+					support => [20, 60]);
+    
+    $d = $construction->add_derivate
+	('IntersectionCircleLine', input => [$line, $circle]);
+    is($d->count_input, 2, 'count_input works and delivers 2');
+    ($circle, $line) = $d->input;
+    isa_ok($circle, 'Math::Geometry::Construction::Circle');
+    isa_ok($line, 'Math::Geometry::Construction::Line');
+    isa_ok($d->single_input(0),
+	   'Math::Geometry::Construction::Circle');
+    isa_ok($d->single_input(1),
+	   'Math::Geometry::Construction::Line');
+
+    @template = ([$line],
+		 $line,
+		 [$circle],
+		 $circle,
+		 [$line, $line],
+		 [$circle, $circle->center]);
+    
+    foreach(@template) {
+	throws_ok(sub { $construction->add_derivate
+			('IntersectionCircleLine', input => $_); },
+		  qr/type constraint/,
+		  'CircleLine type constraint');
+    }
 }
 
 sub register_derived_point {
@@ -268,6 +306,7 @@ sub partial_draw {
 
 circle_line;
 id;
+input;
 register_derived_point;
 overloading;
 partial_draw;
