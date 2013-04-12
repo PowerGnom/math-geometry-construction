@@ -1,6 +1,6 @@
 Revision history for Math-Geometry-Construction
 
-0.024	 
+0.024	 Fri Apr 12 14:08:48 CEST 2013
 	 - Math::Geometry::Construction::Vector to unify access to
 	   sources for "vector values"
 	 - started using MooseX::Params::Validate
