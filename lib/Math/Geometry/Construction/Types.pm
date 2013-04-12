@@ -80,9 +80,20 @@ coerce Vector,
     from Point,
     via { Vector->new(point => $_) };
 
+subtype PointPoint,
+    as Tuple[Point, Point];
+
+coerce PointPoint,
+    from Line,
+    via { [$_->support] };
+
+coerce Vector,
+    from PointPoint,
+    via { Vector->new(point_point => $_) };
+
 coerce Vector,
     from Line,
-    via { Vector->new(line => $_) };
+    via { Vector->new(point_point => $_) };
 
 class_type Construction, {class => 'Math::Geometry::Construction'};
 
@@ -97,13 +108,6 @@ subtype HashRefOfGeometricObject,
 
 subtype ArrayRefOfGeometricObject,
     as ArrayRef[GeometricObject];
-
-subtype PointPoint,
-    as Tuple[Point, Point];
-
-coerce PointPoint,
-    from Line,
-    via { [$_->support] };
 
 subtype LineLine,
     as Tuple[Line, Line];

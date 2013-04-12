@@ -47,7 +47,7 @@ sub alternative_sources {
     $value  = $vector->value;
     is($value->[0], 1, 'x = 1');
     is($value->[1], 2, 'y = 2');
-    foreach('point', 'line') {
+    foreach('point', 'point_point') {
 	my $predicate = "_has_${_}";
 	ok(!$vector->$predicate, "$_ is clear");
     }

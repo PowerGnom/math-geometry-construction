@@ -132,7 +132,7 @@ sub vector_and_line {
 
     foreach(@template) {
 	$vector = Math::Geometry::Construction::Vector->new
-	    (line => $_->[0]);
+	    (point_point => $_->[0]);
 	ok(defined($vector), 'vector is defined');
 	isa_ok($vector, 'Math::Geometry::Construction::Vector');
 	$value = $vector->value;
@@ -151,12 +151,12 @@ sub vector_and_line {
     $value  = $vector->value;
     is($value->[0], 1, 'x = 1');
     is($value->[1], 2, 'y = 2');
-    foreach('vector', 'line') {
+    foreach('vector', 'point_point') {
 	my $predicate = "_has_${_}";
 	ok(!$vector->$predicate, "$_ is clear");
     }
 
-    $vector->line($l);
+    $vector->point_point($l);
     $value  = $vector->value;
     is($value->[0], 2, 'x = 2');
     is($value->[1], 3, 'y = 3');

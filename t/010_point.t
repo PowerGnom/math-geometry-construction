@@ -139,7 +139,7 @@ sub vector_and_point {
     $value  = $vector->value;
     is($value->[0], 3, 'x = 3');
     is($value->[1], 4, 'y = 4');
-    foreach('point', 'line') {
+    foreach('point', 'point_point') {
 	my $predicate = "_has_${_}";
 	ok(!$vector->$predicate, "$_ is clear");
     }
@@ -148,7 +148,7 @@ sub vector_and_point {
     $value  = $vector->value;
     is($value->[0], 1, 'x = 1');
     is($value->[1], 2, 'y = 2');
-    foreach('vector', 'line') {
+    foreach('vector', 'point_point') {
 	my $predicate = "_has_${_}";
 	ok(!$vector->$predicate, "$_ is clear");
     }
