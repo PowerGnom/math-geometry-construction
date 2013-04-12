@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 57;
+use Test::More tests => 67;
+use Test::Exception;
 use Math::Geometry::Construction;
 
 sub is_close {
@@ -11,7 +12,7 @@ sub is_close {
     cmp_ok(abs($value - $reference), '<', ($limit || 1e-12), $message);
 }
 
-sub line_line {
+sub point_on_line {
     my $construction = Math::Geometry::Construction->new;
 
     my $line;
@@ -32,8 +33,8 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
+    is_close($pos->[0], 50, 'position x');
+    is_close($pos->[1], 60, 'position y');
     
     $dp = $d->create_derived_point;
 
@@ -43,8 +44,8 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
+    is_close($pos->[0], 50, 'position x');
+    is_close($pos->[1], 60, 'position y');
     
     $dp = $construction->add_derived_point
 	('PointOnLine',
@@ -57,8 +58,8 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
+    is_close($pos->[0], 50, 'position x');
+    is_close($pos->[1], 60, 'position y');
     
     $dp = $construction->add_derived_point
 	('PointOnLine',
@@ -71,8 +72,8 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
+    is_close($pos->[0], 50, 'position x');
+    is_close($pos->[1], 60, 'position y');
     
     $dp = $construction->add_derived_point
 	('PointOnLine',
@@ -84,8 +85,8 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 50, 'intersection x');
-    is_close($pos->[1], 60, 'intersection y');
+    is_close($pos->[0], 50, 'position x');
+    is_close($pos->[1], 60, 'position y');
     
     $dp = $construction->add_derived_point
 	('PointOnLine',
@@ -97,8 +98,8 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 130, 'intersection x');
-    is_close($pos->[1], 120, 'intersection y');
+    is_close($pos->[0], 130, 'position x');
+    is_close($pos->[1], 120, 'position y');
     
     $dp = $construction->add_derived_point
 	('PointOnLine',
@@ -110,8 +111,8 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 90, 'intersection x');
-    is_close($pos->[1], 90, 'intersection y');
+    is_close($pos->[0], 90, 'position x');
+    is_close($pos->[1], 90, 'position y');
     
     $dp = $construction->add_derived_point
 	('PointOnLine',
@@ -123,8 +124,36 @@ sub line_line {
     ok(defined($pos), 'position defined');
     isa_ok($pos, 'Math::Vector::Real');
     is(@$pos, 2, 'two components');
-    is_close($pos->[0], 130, 'intersection x');
-    is_close($pos->[1], 120, 'intersection y');
+    is_close($pos->[0], 130, 'position x');
+    is_close($pos->[1], 120, 'position y');
+}
+
+sub alternative_sources {
+    my $construction = Math::Geometry::Construction->new;
+    my $line;
+    my $d;
+
+    $line = $construction->add_line(support => [[1, 2], [3, 4]]);
+    lives_ok(sub { $construction->add_derivate
+		       ('PointOnLine', input => $line, distance => 10) },
+	     'just checking');
+    throws_ok(sub { $construction->add_derivate
+			('PointOnLine', input => $line) },
+	      qr/At least one of the attributes.*distance.*has to be/,
+	      'no source dies');
+    $d = $construction->add_derivate
+	('PointOnLine', input => $line, distance => 10);
+    is($d->distance, 10, 'distance is 10');
+    foreach('quantile', 'x', 'y') {
+	my $predicate = "_has_${_}";
+	ok(!$d->$predicate, "$_ is clear");
+    }
+    $d->quantile(0.5);
+    is($d->quantile, 0.5, 'quantile is 0.5');
+    foreach('distance', 'x', 'y') {
+	my $predicate = "_has_${_}";
+	ok(!$d->$predicate, "$_ is clear");
+    }
 }
 
 sub register_derived_point {
@@ -141,5 +170,6 @@ sub register_derived_point {
        'derived point is registered');
 }
 
-line_line;
+point_on_line;
+alternative_sources;
 register_derived_point;

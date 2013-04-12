@@ -26,61 +26,29 @@ our $VERSION = '0.024';
 #                                                                         #
 ###########################################################################
 
+with 'Math::Geometry::Construction::Role::AlternativeSources';
+
 has 'input'    => (isa       => Line,
 		   coerce    => 1,
 		   is        => 'ro',
 		   required  => 1);
 
-has 'distance' => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => '_has_distance',
-		   clearer   => '_clear_distance',
-		   trigger   => \&_distance_rules);
+my %alternative_sources =
+    (position_sources => {'distance' => {isa => 'Num'},
+			  'quantile' => {isa => 'Num'},
+			  'x'        => {isa => 'Num'},
+			  'y'        => {isa => 'Num'}});
 
-has 'quantile' => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => '_has_quantile',
-		   clearer   => '_clear_quantile',
-		   trigger   => \&_quantile_rules);
-
-has 'x'        => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => '_has_x',
-		   clearer   => '_clear_x',
-		   trigger   => \&_x_rules);
-
-has 'y'        => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => '_has_y',
-		   clearer   => '_clear_y',
-		   trigger   => \&_y_rules);
-
-sub _rules {
-    my ($self, $ruler) = @_;
-    
-    foreach('distance', 'quantile', 'x', 'y') {
-	unless($_ eq $ruler) {
-	    my $clearer = '_clear_'.$_;
-	    $self->$clearer;
-	}
-    }
-
-    $self->clear_global_buffer;
+while(my ($name, $alternatives) = each %alternative_sources) {
+    __PACKAGE__->alternatives
+	(name         => $name,
+	 alternatives => $alternatives);
 }
-
-sub _distance_rules { $_[0]->_rules('distance') }
-sub _quantile_rules { $_[0]->_rules('quantile') }
-sub _x_rules        { $_[0]->_rules('x') }
-sub _y_rules        { $_[0]->_rules('y') }
 
 sub BUILD {
     my ($self, $args) = @_;
 
-    foreach('distance', 'quantile', 'x', 'y') {
-	my $predicate = '_has_'.$_;
-	return if($self->$predicate);
-    }
-    croak "Position of PointOnLine has to be set somehow";
+    $self->_check_position_sources;
 }
 
 ###########################################################################
