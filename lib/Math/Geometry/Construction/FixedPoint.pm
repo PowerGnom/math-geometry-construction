@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Point';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Vector;
 use Math::Geometry::Construction::Types qw(Vector);
 use Math::Vector::Real;
 use Carp;
@@ -14,11 +15,11 @@ C<Math::Geometry::Construction::FixedPoint> - independent user-defined point
 
 =head1 VERSION
 
-Version 0.019
+Version 0.024
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -29,11 +30,12 @@ our $VERSION = '0.019';
 
 with 'Math::Geometry::Construction::Role::Buffering';
 
-has 'position' => (isa      => Vector,
-		   coerce   => 1,
-	           is       => 'rw',
-	           required => 1,
-		   trigger  => \&clear_global_buffer);
+has 'position_vector' => (isa      => Vector,
+			  coerce   => 1,
+			  is       => 'rw',
+			  required => 1,
+			  init_arg => 'position',
+			  trigger  => \&clear_global_buffer);
 
 sub BUILDARGS {
     my ($class, %args) = @_;
@@ -50,6 +52,13 @@ sub BUILDARGS {
 #                             Retrieve Data                               #
 #                                                                         #
 ###########################################################################
+
+sub position {
+    my ($self, @args) = @_;
+
+    return $self->position_vector(@args) if(@args);
+    return $self->position_vector->value;
+}
 
 ###########################################################################
 #                                                                         #
@@ -93,39 +102,40 @@ C<Math::Geometry::Construction>.
 
 =head3 position
 
-Holds a L<Math::Vector::Real|Math::Vector::Real> object with the
-position of the point. As initialization argument to the
-constructor, you can also give either an array reference or a
-C<Math::VectorReal|Math::VectorReal> (C<VectorReal> one word instead
-of C<Vector::Real>) object. In the first case, the first two
-elements of the array are used to construct the
-L<Math::Vector::Real|Math::Vector::Real> object, further elements
-are silently ignored. In the second case, the C<x> and C<y>
-attributes are used, C<z> is ignored.
-
-As a further option, you can give C<x> and C<y> explicitly.
+The accessor returns a L<Math::Vector::Real|Math::Vector::Real>
+object with the position of the point. To the constructor or
+mutator, you can give anything that
+L<Math::Geometry::Construction::Vector|Math::Geometry::Construction::Vector>
+accepts. The constructor additionally supports explicit C<x> and
+C<y> arguments.
 
 Examples:
 
-  # Math::Vector::Real object
-  $construction->add_point(position => V(1, 4));
   # arrayref
   $construction->add_point(position => [1, 4]);
-  # Math::VectorReal object
-  $construction->add_point(position => vector(1, 4, 0));
+  $construction->position([5, -3]);
+  $construction->position([4, -1, 7]);  # 7 is ignored
+
+  # Math::Vector::Real object
+  $construction->add_point(position => V(1, 4));
+  $construction->position(V(5, -3));
+
   # x and y
   $construction->add_point('x' => 1, 'y' => 4);
 
-Note that these conversions are only done at construction time (at
-least currently). If you want to change the position later you have
-to hand a L<Math::Vector::Real|Math::Vector::Real> object to the
-mutator method.
+See also
+L<Math::Geometry::Construction::Vector|Math::Geometry::Construction::Vector>.
 
 Note that you must not alter the elements of the
 C<Math::Vector::Real> object directly although the class interface
 allows it. This will circumvent the tracking of changes that
 C<Math::Geometry::Construction> performs in order to improve
 performance.
+
+  $point = $construction->add_point([5, 7]);
+  $pos   = $point->position;
+  $pos->[0] = 6;             # wrong!
+  $point->position([6, 7]);  # right
 
 =head3 size
 
@@ -166,7 +176,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
@@ -174,6 +184,4 @@ by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
 
-
 =cut
-

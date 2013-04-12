@@ -1,5 +1,12 @@
 Revision history for Math-Geometry-Construction
 
+0.024	 
+	 - Math::Geometry::Construction::Vector to unify access to
+	   sources for "vector values"
+	 - started using MooseX::Params::Validate
+	 - using MooseX::Types::Structured to enhance strictness
+	 - docu enhancements
+
 0.023	 Thu Apr  4 13:14:01 CEST 2013
 	 PointOnCircle derivate
 

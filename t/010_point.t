@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 72;
+use Test::More tests => 112;
 use Test::Exception;
 use Test::Warn;
 use Math::Geometry::Construction;
@@ -44,53 +44,48 @@ sub constructs_ok {
     return $point;
 }
 
-sub point {
-    my $construction = Math::Geometry::Construction->new;
-    my $p;
-
-    $p = constructs_ok($construction,
-		       {position => V(14, 15)},
-		       14, 15);
-
-    $p = constructs_ok($construction,
-		       {x => 9, 'y' => 10, z => 11},
-		       9, 10);
-    ok(!$p->hidden, 'not hidden');
-    is($p->size, 6, 'default size');
-
-    $p = constructs_ok($construction,
-		       {x => 12, 'y' => 13, hidden => 1, size => 10},
-		       12, 13);
-    ok($p->hidden, 'hidden');
-    is($p->size, 10, 'size 10');
-
-    lives_ok(sub { $construction->as_svg(width => 800, height => 300) },
-	     'as_svg');
-    lives_ok(sub { $construction->as_tikz(width => 800, height => 300) },
-	     'as_tikz');
-}
-
-sub coercion {
+sub construction {
     my $construction = Math::Geometry::Construction->new;
     my $point;
+    my @template;
 
-    $point = constructs_ok($construction,
-			   {position => vector(1, 2, 3)},
-			   1, 2);
+    @template = ([{position => [1, 2]}, [1, 2]],
+		 [{position => [3, 4, 5]}, [3, 4]],
+		 [{position => V(6, 7)}, [6, 7]],
+		 [{position => vector(8, 9, 10)}, [8, 9]],
+		 [{x => 11, 'y' => 12}, [11, 12]],
+		 [{x => 13, 'y' => 14, z => 15}, [13, 14]]);
 
-    $point = constructs_ok($construction,
-			   {position => [4, 5, 6]},
-			   4, 5);
+    foreach(@template) {
+	constructs_ok($construction, $_->[0], @{$_->[1]});
+    }
 
-    $point = constructs_ok($construction,
-			   {position => [7, 8]},
-			   7, 8);
+    $point = $construction->add_point(position => [0, 0]);
+    ok(!$point->hidden, 'point not hidden by default');
+    $point->hidden(1);
+    ok($point->hidden, 'point can be hidden');
+    $point = $construction->add_point(position => [0, 0],
+				      hidden   => 1);
+    ok($point->hidden, 'point can be hidden at startup');
+}
 
-    $point->position(vector(-3, 4, 1));
-    position_ok($point->position, -3, 4);
+sub modify_position {
+    my $construction = Math::Geometry::Construction->new;
+    my $point        = $construction->add_point(position => [0, 0]);
+    my @template;
+    
+    position_ok($point->position, 0, 0);
+    
+    @template = ([[1, 2], [1, 2]],
+		 [[3, 4, 5], [3, 4]],
+		 [V(6, 7), [6, 7]],
+		 [vector(8, 9, 10), [8, 9]]);
 
-    $point->position([9, -10]);
-    position_ok($point->position, 9, -10);
+    foreach(@template) {
+	lives_ok(sub { $point->position($_->[0]) },
+	     'point lives through position change');
+	position_ok($point->position, @{$_->[1]});
+    }
 }
 
 sub defaults {
@@ -100,20 +95,79 @@ sub defaults {
     $point = $construction->add_point(position => [0, 0]);
     is($point->size, 6, 'default point size 6');
     is($point->radius, 3, 'default radius 3');
-    $construction->point_size(7.5);
 
+    $construction->point_size(7.5);
     $point = $construction->add_point(position => [0, 0]);
     is($point->size, 7.5, 'default point size 7.5');
     is($point->radius, 3.75, 'default radius 3.75');
     $point->size(12);
     is($point->size, 12, 'adjusted point size 12');
-    is($point->radius, 6, 'adjusted point size 6');
+    is($point->radius, 6, 'adjusted radius size 6');
 
     $point = $construction->add_point(position => [0, 0], size => 13.35);
     is($point->size, 13.35, 'constructed point size 13.35');
-    is($point->radius, 6.675, 'constructed point size 6.675');
+    is($point->radius, 6.675, 'constructed radius size 6.675');
 }
 
-point;
-coercion;
+sub vector_and_point {
+    my $construction = Math::Geometry::Construction->new;
+    my $p;
+    my $vector;
+    my $value;
+    my @template;
+
+    $p = $construction->add_point(position => [1, 2]);
+
+    @template = ([$p, [1, 2]]);
+
+    foreach(@template) {
+	$vector = Math::Geometry::Construction::Vector->new
+	    (point => $_->[0]);
+	ok(defined($vector), 'vector is defined');
+	isa_ok($vector, 'Math::Geometry::Construction::Vector');
+	$value = $vector->value;
+	ok(defined($value), 'value is defined');
+	isa_ok($value, 'Math::Vector::Real');
+	is($value->[0], $_->[1]->[0], 'x = '.$_->[1]->[0]);
+	is($value->[1], $_->[1]->[1], 'y = '.$_->[1]->[1]);
+    }
+
+    constructs_ok($construction, {position => $p}, 1, 2);
+
+    $vector = Math::Geometry::Construction::Vector->new
+	(vector => [3, 4]);
+    $value  = $vector->value;
+    is($value->[0], 3, 'x = 3');
+    is($value->[1], 4, 'y = 4');
+    foreach('point', 'point_point') {
+	my $predicate = "_has_${_}";
+	ok(!$vector->$predicate, "$_ is clear");
+    }
+
+    $vector->point($p);
+    $value  = $vector->value;
+    is($value->[0], 1, 'x = 1');
+    is($value->[1], 2, 'y = 2');
+    foreach('vector', 'point_point') {
+	my $predicate = "_has_${_}";
+	ok(!$vector->$predicate, "$_ is clear");
+    }
+}
+
+sub draw {
+    my $construction;
+
+    $construction = Math::Geometry::Construction->new;
+    $construction->add_point(position => [0, 0]);
+
+    lives_ok(sub { $construction->as_svg(width => 800, height => 300) },
+	     'construction with point lives through as_svg');
+    lives_ok(sub { $construction->as_tikz(width => 800, height => 300) },
+	     'construction with point lives through as_tikz');
+}
+
+construction;
+modify_position;
 defaults;
+vector_and_point;
+draw;

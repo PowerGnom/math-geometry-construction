@@ -4,8 +4,8 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(CircleCircle);
 use Carp;
-
 use Math::Vector::Real;
 
 =head1 NAME
@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Derivate::IntersectionCircleCircle> - circle cir
 
 =head1 VERSION
 
-Version 0.018
+Version 0.024
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -26,6 +26,14 @@ our $VERSION = '0.018';
 #                               Accessors                                 # 
 #                                                                         #
 ###########################################################################
+
+has 'input' => (isa      => CircleCircle,
+		is       => 'bare',
+		traits   => ['Array'],
+		required => 1,
+		handles  => {count_input  => 'count',
+			     input        => 'elements',
+			     single_input => 'accessor'});
 
 ###########################################################################
 #                                                                         #
@@ -36,14 +44,6 @@ our $VERSION = '0.018';
 sub calculate_positions {
     my ($self)  = @_;
     my @circles = $self->input;
-
-    croak "Need two circles to intersect" if(@circles != 2);
-    foreach(@circles) {
-	if(!$_->isa('Math::Geometry::Construction::Circle')) {
-	    croak sprintf("Need circles for CircleCircle intersection, ".
-			  "no %s", ref($_));
-	}
-    }
 
     # currently assuming that points have to be defined
     my @center_p = map { $_->center->position  } @circles;
@@ -108,7 +108,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

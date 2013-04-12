@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 89;
+use Test::More tests => 133;
 use Test::Exception;
 use Test::Warn;
 use Math::Geometry::Construction;
@@ -57,12 +57,10 @@ sub constructs_ok {
     support_ok($circle, $pos);
 
     if($args->{radius}) {
-	ok($circle->fixed_radius, 'radius is fixed');
 	is_close($circle->radius, $args->{radius},
 		 'radius is '.$args->{radius});
     }
     else {
-	ok(!$circle->fixed_radius, 'radius is not fixed');
 	my $radius = sqrt(($pos->[1]->[0] - $pos->[0]->[0])**2 +
 			  ($pos->[1]->[1] - $pos->[0]->[1])**2);
 	is_close($circle->radius, $radius, "radius is $radius");
@@ -71,53 +69,160 @@ sub constructs_ok {
     return $circle;
 }
 
-sub circle {
+sub construction {
     my $construction = Math::Geometry::Construction->new;
+    my $point;
     my $circle;
-    my $center;
-    my $support;
-    my @points;
-    my @positions;
+    my @template;
 
-    $center  = $construction->add_point(position => [10, 10]);
-    $support = $construction->add_point(position => [40, 50]);
-    $circle  = constructs_ok($construction, {center  => $center,
-					     support => $support},
-			     [[10, 10], [40, 50]]);
-    @points = $circle->points;
-    is(@points, 1, 'one point');
-    is($points[0]->id, $support->id, 'point is support point');
-    @positions = $circle->positions;
-    position_ok($positions[0], 40, 50);
+    $point = $construction->add_point(position => [14, 15]);
+    @template = ([{center  => [1, 2],
+		   support => [3, 4]},
+		  [[1, 2], [3, 4]]],
+		 [{center  => V(5, 6),
+		   support => [7, 8]},
+		  [[5, 6], [7, 8]]],
+		 [{center  => V(9, 10),
+		   support => vector(11, 12, 13)},
+		  [[9, 10], [11, 12]]],
+		 [{center  => $point,
+		   support => [16, 17]},
+		  [[14, 15], [16, 17]]],
+		 [{center => [18, 19],
+		   radius => 20},
+		  [[18, 19]]]);
 
-    $circle = constructs_ok($construction, {center  => [20, -10],
-					    support => [70, 110]},
-			     [[20, -10], [70, 110]]);
+    foreach(@template) {
+	constructs_ok($construction, $_->[0], $_->[1]);
+    }
 
-    $circle = constructs_ok($construction, {center  => V(5, 6),
-					    support => vector(3, 2, 0)},
-			     [[5, 6], [3, 2]]);
+    dies_ok(sub { $construction->add_circle },
+	    'dies without center');
+    dies_ok(sub { $construction->add_circle(center => [1, 2]) },
+	    'dies without support');
 
-    $circle = constructs_ok($construction, {center => [50, 100],
-					    radius => 20},
-			     [[50, 100]]);
-
-    $circle->center->position(V(100, 200));
-    is_close($circle->radius, 20, 'set radius after moving');
-    $center = $circle->center;
-    position_ok($center->position, 100, 200);
-    $support = $circle->support;
-    ok(defined($support), 'support defined');
-    isa_ok($support, 'Math::Geometry::Construction::DerivedPoint');
-    is_close(($support->position - $center->position)->abs, 20,
-	     'support distance');
-    @points = $circle->points;
-    is(@points, 1, 'one point');
-    is($points[0]->id, $support->id, 'point is support point');
-    @positions = $circle->positions;
-    is(@positions, 1, 'one position');
-    is_close(($positions[0] - $center->position)->abs, 20,
-	     'position lies on circle');
+    $circle = $construction->add_circle(center  => [1, 2],
+					support => [3, 4]);
+    ok(!$circle->hidden, 'circle not hidden by default');
+    $circle->hidden(1);
+    ok($circle->hidden, 'circle can be hidden');
+    $circle = $construction->add_circle(center  => [1, 2],
+					support => [3, 4],
+					hidden  => 1);
+    ok($circle->hidden, 'circle can be hidden at startup');
 }
 
-circle;
+sub modify_positions {
+    my $construction = Math::Geometry::Construction->new;
+    my $point;
+    my $circle;
+
+    $circle = $construction->add_circle(center  => [1, 2],
+					support => [3, 4]);
+
+    $point  = $construction->add_point(position => [5, 6]);
+    dies_ok(sub { $circle->center($point) },
+	    'center is readonly');
+    lives_ok(sub { $circle->center->position([7, 8]) },
+	     'center position can be changed');
+    position_ok($circle->center->position, 7, 8);
+    lives_ok(sub { $circle->center->position($point) },
+	     'center position gets coerced');
+    position_ok($circle->center->position, 5, 6);
+
+    dies_ok(sub { $circle->support($point) },
+	    'support is readonly');
+    lives_ok(sub { $circle->support->position([9, 10]) },
+	     'support position can be changed');
+    position_ok($circle->support->position, 9, 10);
+    lives_ok(sub { $circle->support->position($point) },
+	     'support position gets coerced');
+    position_ok($circle->support->position, 5, 6);
+
+    throws_ok(sub { $circle->radius(11) },
+	      qr/Refusing to set radius on circle .* without fixed radius/,
+	      'radius cannot be set on normal circle');
+
+    $circle = $construction->add_circle(center => [12, 13],
+					radius => 14);
+    is_close($circle->radius, 14, "radius is 14");
+    $circle->center->position([15, 16]);
+    is_close($circle->radius, 14, "radius stays 14");
+
+    lives_ok(sub { $circle->radius(17) },
+	     'radius can be set on fixed radius circle');
+    is_close($circle->radius, 17, "radius is 17");
+    $circle->center->position([18, 19]);
+    is_close($circle->radius, 17, "radius stays 17");
+}
+
+sub identify_points {
+    my $construction = Math::Geometry::Construction->new;
+    my @points;
+    my $circle;
+
+    push(@points, $construction->add_point(position => [1, 2]));
+    push(@points, $construction->add_point(position => [3, 4]));
+    $circle = $construction->add_circle(center  => $points[0],
+					support => $points[1]);
+
+    is($circle->center->id, $points[0]->id,
+       'center point has been used');
+    is($circle->support->id, $points[1]->id,
+       'support point has been used');
+
+    is_deeply([map { $_->id } $circle->points], [$points[1]->id],
+	      'points retrieves the support point');
+}
+
+sub defaults {
+    my $construction = Math::Geometry::Construction->new;
+    my $circle;
+
+    $circle = $construction->add_circle(center  => [1, 2],
+					support => [3, 4]);
+
+    is($circle->partial_draw, 0, 'partial_draw off by default');
+    is_close($circle->min_gap, 1.5707963267949,
+	     'min_gap pi/2 by default');
+    $circle->partial_draw(1);
+    is($circle->partial_draw, 1, 'partial_draw can be turned on');
+    $circle->min_gap(1);
+    is($circle->min_gap, 1, 'min_gap can be changed');
+
+  SKIP: {
+      skip 'Not implemented, yet', 4;
+      
+      $construction->partial_circles(1);
+      $construction->min_gap(2);
+      $circle = $construction->add_circle(center  => [1, 2],
+					  support => [3, 4]);
+      is($circle->partial_draw, 1,
+	 'partial_draw can be turned on globally');
+      is($circle->min_gap, 2, 'min_gap can be changed globally');
+
+      $construction->partial_circles(0);
+      $construction->min_gap(3);
+      is($circle->partial_draw, 0, 'partial_draw is volatile');
+      is($circle->min_gap, 3, 'min_gap is volatile');
+    };
+}
+
+sub draw {
+    my $construction;
+
+    $construction = Math::Geometry::Construction->new;
+    $construction->add_circle(center  => [1, 2],
+			      support => [3, 4]);
+
+    lives_ok(sub { $construction->as_svg(width => 800, height => 300) },
+	     'construction with circle lives through as_svg');
+    lives_ok(sub { $construction->as_tikz(width => 800, height => 300) },
+	     'construction with circle lives through as_tikz');
+}
+
+construction;
+modify_positions;
+identify_points;
+defaults;
+draw;

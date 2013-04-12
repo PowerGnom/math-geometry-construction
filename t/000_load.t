@@ -1,8 +1,12 @@
 #!perl -T
 
-use Test::More tests => 15;
+use Test::More tests => 17;
 
 BEGIN {
+    use_ok('Math::Geometry::Construction::Types')
+	|| print "Bail out!\n";
+    use_ok('Math::Geometry::Construction::Vector')
+	|| print "Bail out!\n";
     use_ok('Math::Geometry::Construction')
 	|| print "Bail out!\n";
     use_ok('Math::Geometry::Construction::FixedPoint')

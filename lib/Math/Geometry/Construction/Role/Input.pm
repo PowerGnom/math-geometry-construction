@@ -12,30 +12,20 @@ C<Math::Geometry::Construction::Role::Input> - format conversions
 
 =head1 VERSION
 
-Version 0.021
+Version 0.024
 
 =cut
 
-our $VERSION = '0.021';
+our $VERSION = '0.024';
 
 
-# As a general rule, this method should only deal with 'fixed
-# values'; e.g. Point positions and Line directions have to be
-# evaluated by the caller in order supply the vector object to this
-# method.
-sub import_vector {
-    my ($self, $value) = @_;
-
-    return undef if(!defined($value));
-    return $value if(eval { $value->isa('Math::Vector::Real') });
-    return V(@{$value}[0, 1]) if(ref($value) eq 'ARRAY');
-    return V($value->x, $value->y)
-	if(eval { $value->isa('Math::VectorReal') });
-    croak sprintf('Unsupported vector format %s', ref($value));
-}
-
+# This method is also used during construction time, so $self might
+# just be a class name.
 sub import_point {
     my ($self, $construction, $value) = @_;
+
+    croak "Invalid construction object."
+	if(!eval { $construction->isa('Math::Geometry::Construction') });
 
     return undef if(!defined($value));
     return $value
@@ -68,7 +58,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

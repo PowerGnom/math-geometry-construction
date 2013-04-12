@@ -1,3 +1,4 @@
+- documentation of error messages is out of date
 - think about using MooseX::Params::Validate for Vector coercion in
   PositionSelection; it might also come in useful if I allow Point
   objects in these methods
@@ -12,7 +13,6 @@
   the moment is to allow default styles/colors and hidden status and
   go with the second alternative. Still, in many cases one will need
   to use the more verbose method form.
-- PointOnCircle
 - label positioning
 - PointSet labels via PointOn points
 - Can't I move positions from Circle/Line to PointSet? There might
@@ -24,3 +24,5 @@
 - I need a clear concept of which return values can be undef and how
   to react to that (specifically where to croak and where to return
   undef).
+- It should be possible to allow the modification the fixed radius
+  of a circle by triggering the change of the translator.

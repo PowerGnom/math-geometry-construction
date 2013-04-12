@@ -4,7 +4,7 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
-use Math::Geometry::Construction::Types qw(Vector);
+use Math::Geometry::Construction::Types qw(Vector Point);
 use Carp;
 use Math::Vector::Real;
 
@@ -14,11 +14,11 @@ C<Math::Geometry::Construction::Derivate::TranslatedPoint> - point translated by
 
 =head1 VERSION
 
-Version 0.019
+Version 0.024
 
 =cut
 
-our $VERSION = '0.019';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -28,6 +28,11 @@ our $VERSION = '0.019';
 ###########################################################################
 
 with 'Math::Geometry::Construction::Role::Buffering';
+
+has 'input'      => (isa       => Point,
+		     coerce    => 1,
+		     is        => 'ro',
+		     required  => 1);
 
 has 'translator' => (isa      => Vector,
 		     coerce   => 1,
@@ -42,19 +47,13 @@ has 'translator' => (isa      => Vector,
 ###########################################################################
 
 sub calculate_positions {
-    my ($self) = @_;
-    my @input  = $self->input;
+    my ($self)    = @_;
+    my $reference = $self->input;
 
-    croak "Need one point" if(@input != 1);
-    if(!$input[0]->can('position')) {
-	croak sprintf("Need something with a position, no %s",
-		      ref($_));
-    }
-
-    my $position = $input[0]->position;
+    my $position = $reference->position;
     return if(!$position);
 
-    return($position + $self->translator);
+    return($position + $self->translator->value);
 }
 
 ###########################################################################
@@ -92,7 +91,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

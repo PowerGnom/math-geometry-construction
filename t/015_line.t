@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 110;
+use Test::More tests => 144;
 use Test::Exception;
 use Test::Warn;
 use Math::Geometry::Construction;
@@ -119,5 +119,66 @@ sub defaults {
     is_deeply($line->extend, [0, 30], 'mixed extend in constructor');
 }
 
+sub vector_and_line {
+    my $construction = Math::Geometry::Construction->new;
+    my $l;
+    my $vector;
+    my $value;
+    my @template;
+
+    $l = $construction->add_line(support => [[1, 2], [3, 5]]);
+
+    @template = ([$l, [2, 3]]);
+
+    foreach(@template) {
+	$vector = Math::Geometry::Construction::Vector->new
+	    (point_point => $_->[0]);
+	ok(defined($vector), 'vector is defined');
+	isa_ok($vector, 'Math::Geometry::Construction::Vector');
+	$value = $vector->value;
+	ok(defined($value), 'value is defined');
+	isa_ok($value, 'Math::Vector::Real');
+	is($value->[0], $_->[1]->[0], 'x = '.$_->[1]->[0]);
+	is($value->[1], $_->[1]->[1], 'y = '.$_->[1]->[1]);
+    }
+
+    constructs_ok($construction,
+		  {support => [$l, [6, 7]]},
+		  [[2, 3], [6, 7]]);
+
+    $vector = Math::Geometry::Construction::Vector->new
+	(point => $l->single_support(0));
+    $value  = $vector->value;
+    is($value->[0], 1, 'x = 1');
+    is($value->[1], 2, 'y = 2');
+    foreach('vector', 'point_point') {
+	my $predicate = "_has_${_}";
+	ok(!$vector->$predicate, "$_ is clear");
+    }
+
+    $vector->point_point($l);
+    $value  = $vector->value;
+    is($value->[0], 2, 'x = 2');
+    is($value->[1], 3, 'y = 3');
+    foreach('vector', 'point') {
+	my $predicate = "_has_${_}";
+	ok(!$vector->$predicate, "$_ is clear");
+    }
+}
+
+sub draw {
+    my $construction;
+
+    $construction = Math::Geometry::Construction->new;
+    $construction->add_line(support => [[1, 2], [3, 5]]);
+
+    lives_ok(sub { $construction->as_svg(width => 800, height => 300) },
+	     'construction with line lives through as_svg');
+    lives_ok(sub { $construction->as_tikz(width => 800, height => 300) },
+	     'construction with line lives through as_tikz');
+}
+
 line;
 defaults;
+vector_and_line;
+draw;

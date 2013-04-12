@@ -4,6 +4,7 @@ extends 'Math::Geometry::Construction::Derivate';
 
 use 5.008008;
 
+use Math::Geometry::Construction::Types qw(Line);
 use Carp;
 
 =head1 NAME
@@ -12,11 +13,11 @@ C<Math::Geometry::Construction::Derivate::PointOnLine> - point on a line
 
 =head1 VERSION
 
-Version 0.018
+Version 0.024
 
 =cut
 
-our $VERSION = '0.018';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -25,56 +26,30 @@ our $VERSION = '0.018';
 #                                                                         #
 ###########################################################################
 
-has 'distance' => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => 'has_distance',
-		   clearer   => 'clear_distance',
-		   trigger   => \&_distance_rules);
+with 'Math::Geometry::Construction::Role::AlternativeSources';
 
-has 'quantile' => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => 'has_quantile',
-		   clearer   => 'clear_quantile',
-		   trigger   => \&_quantile_rules);
+has 'input'    => (isa       => Line,
+		   coerce    => 1,
+		   is        => 'ro',
+		   required  => 1);
 
-has 'x'        => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => 'has_x',
-		   clearer   => 'clear_x',
-		   trigger   => \&_x_rules);
+my %alternative_sources =
+    (position_sources => {'distance' => {isa => 'Num'},
+			  'quantile' => {isa => 'Num'},
+			  'x'        => {isa => 'Num'},
+			  'y'        => {isa => 'Num'}});
 
-has 'y'        => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => 'has_y',
-		   clearer   => 'clear_y',
-		   trigger   => \&_y_rules);
-
-sub _rules {
-    my ($self, $ruler) = @_;
-    
-    foreach('distance', 'quantile', 'x', 'y') {
-	unless($_ eq $ruler) {
-	    my $clearer = 'clear_'.$_;
-	    $self->$clearer;
-	}
-    }
-
-    $self->clear_global_buffer;
+while(my ($name, $alternatives) = each %alternative_sources) {
+    __PACKAGE__->alternatives
+	(name         => $name,
+	 alternatives => $alternatives,
+	 clear_buffer => 1);
 }
-
-sub _distance_rules { $_[0]->_rules('distance') }
-sub _quantile_rules { $_[0]->_rules('quantile') }
-sub _x_rules        { $_[0]->_rules('x') }
-sub _y_rules        { $_[0]->_rules('y') }
 
 sub BUILD {
     my ($self, $args) = @_;
 
-    foreach('distance', 'quantile', 'x', 'y') {
-	my $predicate = 'has_'.$_;
-	return if($self->$predicate);
-    }
-    croak "Position of PointOnLine has to be set somehow";
+    $self->_check_position_sources;
 }
 
 ###########################################################################
@@ -85,40 +60,33 @@ sub BUILD {
 
 sub calculate_positions {
     my ($self) = @_;
-    my @input  = $self->input;
+    my $line   = $self->input;
 
-    if(@input != 1
-       or
-       !eval { $input[0]->isa('Math::Geometry::Construction::Line') })
-    {
-	croak "Need one line for PointOnLine";
-    }
-
-    my @support_p = map { $_->position } $input[0]->support;
+    my @support_p = map { $_->position } $line->support;
     return if(!defined($support_p[0]) or !defined($support_p[1]));
     my $s_distance = ($support_p[1] - $support_p[0]);
 
-    if($self->has_distance) {
+    if($self->_has_distance) {
 	my $d = abs($s_distance);
 	return if($d == 0);
 
-	return($support_p[0] + $s_distance / $d * $self->distance);
+	return($support_p[0] + $s_distance / $d * $self->_distance);
     }
-    elsif($self->has_quantile) {
-        return($support_p[0] + $s_distance * $self->quantile);
+    elsif($self->_has_quantile) {
+        return($support_p[0] + $s_distance * $self->_quantile);
     }
-    elsif($self->has_x) {
+    elsif($self->_has_x) {
 	my $sx = $s_distance->[0];
 	return if($sx == 0);
 
-	my $scale = ($self->x - $support_p[0]->[0]) / $sx;
+	my $scale = ($self->_x - $support_p[0]->[0]) / $sx;
 	return($support_p[0] + $s_distance * $scale);
     }
-    elsif($self->has_y) {
+    elsif($self->_has_y) {
 	my $sy = $s_distance->[1];
 	return if($sy == 0);
 
-	my $scale = ($self->y - $support_p[0]->[1]) / $sy;
+	my $scale = ($self->_y - $support_p[0]->[1]) / $sy;
 	return($support_p[0] + $s_distance * $scale);
     }
     else {
@@ -135,7 +103,7 @@ sub calculate_positions {
 sub register_derived_point {
     my ($self, $point) = @_;
 
-    foreach($self->input) { $_->register_point($point) }
+    $self->input->register_point($point);
 }
 
 1;
@@ -167,7 +135,7 @@ Lutz Gehlen, C<< <perl at lutzgehlen.de> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Lutz Gehlen.
+Copyright 2011, 2013 Lutz Gehlen.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

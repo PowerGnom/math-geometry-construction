@@ -3,7 +3,7 @@ use Moose;
 
 use 5.008008;
 
-use Math::Geometry::Construction::Types qw(ArrayRefOfPoint);
+use Math::Geometry::Construction::Types qw(PointPoint);
 use Carp;
 use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
@@ -19,11 +19,11 @@ C<Math::Geometry::Construction::Line> - line through two points
 
 =head1 VERSION
 
-Version 0.021
+Version 0.024
 
 =cut
 
-our $VERSION = '0.021';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -42,12 +42,13 @@ sub id_template { return $ID_TEMPLATE }
 #                                                                         #
 ###########################################################################
 
+with 'Math::Geometry::Construction::Role::Input';
 with 'Math::Geometry::Construction::Role::Object';
 with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
-has 'support'     => (isa      => ArrayRefOfPoint,
+has 'support'     => (isa      => PointPoint,
 		      is       => 'bare',
 		      traits   => ['Array'],
 		      required => 1,
@@ -71,13 +72,7 @@ sub BUILD {
 
     $self->style('stroke', 'black') unless($self->style('stroke'));
 
-    my @support = $self->support;
-    if(@support != 2) {
-	croak "A line needs exactly two support points";
-	return undef;
-    }
-
-    $self->register_point(@support);
+    $self->register_point($self->support);
 }
 
 ###########################################################################

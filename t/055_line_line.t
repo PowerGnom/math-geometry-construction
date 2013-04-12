@@ -2,8 +2,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 65;
+use Test::More tests => 69;
 use Math::Geometry::Construction;
+use Test::Exception;
 
 sub is_close {
     my ($value, $reference, $message, $limit) = @_;
@@ -75,38 +76,90 @@ sub id {
     my @lines;
     my $d;
     my $dp;
+    my %count;
 
     @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
 	      $construction->add_line(support => [[20, 10], [20, 40]]));
-    is($lines[0]->id, 'L000000002', 'line id');
-    is($lines[1]->id, 'L000000005', 'line id');
 
     $d = $construction->add_derivate
 	('IntersectionLineLine', input => [@lines]);
-    is($d->id, 'D000000006', 'derivate id');
+    is($d->order_index, $construction->count_objects - 1,
+       'derivate is last object');
+    is($d->id,
+       sprintf(Math::Geometry::Construction::Derivate->id_template,
+	       $d->order_index),
+       'derivate id is composed from id_template and order_index');
 
     $dp = $d->create_derived_point;
-    is($dp->id, 'S000000007', 'derived point id');
+    is($dp->order_index, $construction->count_objects - 1,
+       'derived point is last object');
+    is($dp->id,
+       sprintf(Math::Geometry::Construction::DerivedPoint->id_template,
+	       $dp->order_index),
+       'derived point id is composed from id_template and order_index');
 
     $dp = $construction->add_derived_point
 	('IntersectionLineLine', {input => [@lines]});
-    is($dp->id, 'S000000009', 'derived point id');
-    ok(defined($construction->object('D000000008')), 'derivate exists');
+    is($dp->order_index, $construction->count_objects - 1,
+       'derived point is last object');
+    is($dp->id,
+       sprintf(Math::Geometry::Construction::DerivedPoint->id_template,
+	       $dp->order_index),
+       'derived point id is composed from id_template and order_index');
+    ok(defined($dp->derivate), 'derivate exists');
+    ok(defined($construction->object($dp->derivate->id)),
+       'derivate can be found via id');
 
     $dp = $construction->add_derived_point
 	('IntersectionLineLine',
 	 {input => [$construction->add_line(support => [[1, 2], [3, 4]]),
 		    $construction->add_line(support => [[5, 6], [7, 8]])]});
-    foreach('P000000010',
-	    'P000000011',
-	    'L000000012',
-	    'P000000013',
-	    'P000000014',
-	    'L000000015',
-	    'D000000016',
-	    'S000000017')
-    {
-	ok(defined($construction->object($_)), "$_ defined");
+
+    %count = ();
+    foreach($construction->objects) {
+	$count{$_->order_index} = 1;
+    }
+    is(scalar(keys %count), $construction->count_objects,
+       'order_indices are unique');
+
+    %count = ();
+    foreach($construction->objects) {
+	$count{$_->id} = 1;
+    }
+    is(scalar(keys %count), $construction->count_objects,
+       'ids are unique');
+}
+
+sub input {
+    my $construction = Math::Geometry::Construction->new;
+    my @template;
+    my @lines;
+    my $d;
+
+    @lines = ($construction->add_line(support => [[10, 30], [30, 30]]),
+	      $construction->add_line(support => [[20, 10], [20, 40]]));
+    
+    $d = $construction->add_derivate
+	('IntersectionLineLine', input => [@lines]);
+    is($d->count_input, 2, 'count_input works and delivers 2');
+    @lines = $d->input;
+    foreach(@lines) {
+	isa_ok($_, 'Math::Geometry::Construction::Line');
+    }
+    foreach(0, 1) {
+	isa_ok($d->single_input($_),
+	       'Math::Geometry::Construction::Line');
+    }
+
+    @template = ([$lines[0]],
+		 $lines[0],
+		 [$lines[0], $lines[1]->single_support(0)]);
+    
+    foreach(@template) {
+	throws_ok(sub { $construction->add_derivate
+			('IntersectionLineLine', input => $_); },
+		  qr/type constraint/,
+		  'LineLine type constraint');
     }
 }
 
@@ -146,5 +199,6 @@ sub overloading {
 
 line_line;
 id;
+input;
 register_derived_point;
 overloading;

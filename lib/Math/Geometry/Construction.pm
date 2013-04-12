@@ -16,11 +16,11 @@ C<Math::Geometry::Construction> - intersecting lines and circles
 
 =head1 VERSION
 
-Version 0.023
+Version 0.024
 
 =cut
 
-our $VERSION = '0.023';
+our $VERSION = '0.024';
 
 
 ###########################################################################
@@ -32,37 +32,52 @@ our $VERSION = '0.023';
 has 'background'      => (isa => 'Str|ArrayRef',
 			  is  => 'rw');
 
-has 'objects'         => (isa     => HashRefOfGeometricObject,
-			  is      => 'bare',
-			  traits  => ['Hash'],
-			  default => sub { {} },
-			  handles => {count_objects => 'count',
-				      object        => 'accessor',
-				      object_ids    => 'keys',
-				      objects       => 'values'});
+has 'objects'         => (isa      => HashRefOfGeometricObject,
+			  is       => 'bare',
+			  traits   => ['Hash'],
+			  default  => sub { {} },
+			  handles  => {count_objects => 'count',
+				       object        => 'accessor',
+				       object_ids    => 'keys',
+				       objects       => 'values'},
+			  init_arg => undef);
 
-has 'point_size'      => (isa     => 'Num',
-			  is      => 'rw',
-			  default => 6);
+has '_counter'        => (isa      => 'Int',
+			  is       => 'rw',
+			  default  => 0,
+			  init_arg => undef);
 
-has 'partial_circles' => (isa     => 'Bool',
-			  is      => 'ro',
-			  default => 0);
+has 'point_size'      => (isa      => 'Num',
+			  is       => 'rw',
+			  default  => 6);
 
-has 'min_circle_gap'  => (isa     => 'Num',
-			  is      => 'ro',
-			  default => 1.5707963267949);
+has 'partial_circles' => (isa      => 'Bool',
+			  is       => 'ro',
+			  default  => 0);
 
-has 'buffer_results'  => (isa     => 'Bool',
-			  is      => 'rw',
-			  default => 1,
-			  trigger => \&clear_buffer);
+has 'min_circle_gap'  => (isa      => 'Num',
+			  is       => 'ro',
+			  default  => 1.5707963267949);
 
-has '_output'         => (isa     => Draw,
-			  is      => 'rw',
-			  handles => {draw_line   => 'line',
-				      draw_circle => 'circle',
-				      draw_text   => 'text'});
+has 'buffer_results'  => (isa      => 'Bool',
+			  is       => 'rw',
+			  default  => 1,
+			  trigger  => \&clear_buffer);
+
+has '_output'         => (isa      => Draw,
+			  is       => 'rw',
+			  handles  => {draw_line   => 'line',
+				       draw_circle => 'circle',
+				       draw_text   => 'text'},
+			  init_arg => undef);
+
+sub counter {
+    my ($self) = @_;
+
+    my $counter = $self->_counter;
+    $self->_counter($counter + 1);
+    return $counter;
+}
 
 sub clear_buffer {
     my ($self) = @_;
@@ -101,8 +116,9 @@ sub add_object {
     }
     else { croak "Class name $class did not pass regex check" }
     
-    my $object = $class->new(construction => $self, @args);
-    $object->order_index($self->count_objects);
+    my $object = $class->new(construction => $self,
+			     @args,
+			     order_index  => $self->counter);
     $self->object($object->id, $object);
 
     return $object;
@@ -272,18 +288,6 @@ least deserves that name by now, but input checks and documentation
 are still sparse. However, release early, release often, so here we
 go.
 
-Please note: In version 0.014, the underlying vector class has been
-changed from L<Math::VectorReal|Math::VectorReal> to
-L<Math::Vector::Real|Math::Vector::Real>. The advantage of the
-latter is that it natively supports 2D
-vectors. C<Math::Geometry::Construction> continues to accept
-L<Math::VectorReal|Math::VectorReal> objects in constructors, but
-the relevant accessors and mutators will return or accept only
-L<Math::Vector::Real|Math::Vector::Real> objects. Many basic
-applications will not make use of these features and therefore will
-continue to work without change. Applications making use of them,
-however, will need to be adapted.
-
 =head2 Aims
 
 This distribution serves two purposes:
@@ -310,7 +314,7 @@ powerful automization features. This problem has two aspects:
 
 =over 4
 
-=item * For some project, I want to create many illustrations. I
+=item * For some projects, I want to create many illustrations. I
 have certain rules for the size of output images, usage of colors
 etc.. With the programs I have used so far, I have found it
 difficult to set these things in a consistent way for all of my
@@ -328,7 +332,8 @@ intersection point and which the second, so from the user point of
 view the choice is arbitrary. Or, for example, I have come across
 the situation where I needed to double an angle iteratively until it
 becomes larger than a given angle. Impossible in most macro
-languages. With this module, you have Perl as your "macro language".
+languages. With C<Math::Geometry::Construction>, you have Perl as
+your "macro language".
 
 =back
 
@@ -472,7 +477,7 @@ affect C<Point> objects created afterwards.
   $construction->add_point(%args)
 
 Returns a new
-L<Math::Geometry::Construction::Point|Math::Geometry::Construction::Point>.
+L<Math::Geometry::Construction::FixedPoint|Math::Geometry::Construction::FixedPoint> object.
 All parameters are handed over to the constructor after adding the
 C<construction> and C<order_index> arguments.
 
@@ -497,9 +502,9 @@ Examples:
   $construction->add_line(%args)
 
 Returns a new
-L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>.
-All parameters are handed over to the constructor after adding the
-C<construction> and C<order_index> arguments.
+L<Math::Geometry::Construction::Line|Math::Geometry::Construction::Line>
+object.  All parameters are handed over to the constructor after
+adding the C<construction> and C<order_index> arguments.
 
 Example:
 
@@ -511,13 +516,13 @@ Example:
   $construction->add_circle(%args)
 
 Returns a new
-L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>.
-All parameters are handed over to the constructor after adding the
-C<construction> and C<order_index> arguments.
+L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>
+object.  All parameters are handed over to the constructor after
+adding the C<construction> and C<order_index> arguments.
 
-The "standard" circle requires the center and a point "support"
-point on its perimeter. However, you can provide a radius instead of
-the support point, and the constructor of
+The "standard" circle requires the center and a "support" point on
+its perimeter. However, you can provide a radius instead of the
+support point, and the constructor of
 L<Math::Geometry::Construction::Circle|Math::Geometry::Construction::Circle>
 will create a support point under the hood. Even if you move the
 center later on, the radius of the circle will stay constant.
@@ -528,16 +533,6 @@ Examples:
                             support => $point2);
   $construction->add_circle(center  => $point1,
                             radius  => 50);
-
-=head3 add_object
-
-  $construction->add_object($class, %args)
-
-Returns a new instance of the given class. All parameters are handed
-over to the constructor after adding the C<construction> and
-C<order_index> arguments. In fact, L<add_point|/add_point>,
-L<add_line|/add_line>, and L<add_circle|/add_circle> just call this
-method with the appropriate class.
 
 =head3 add_derived_point
 
@@ -628,21 +623,14 @@ Example:
                                           translator => [10, -20]);
   $point    = $derivate->create_derived_point;
 
-=head3 draw
+=head3 add_object
 
-  $construction->draw('SVG', %args)
+  $construction->add_object($class, %args)
 
-Draws the construction. The return value depends on the output type
-and might be an object or a stringified version. Currently, the only
-output types are C<SVG> and C<TikZ>. See L<as_svg|/as_svg> and
-L<as_tikz|/as_tikz>.
-
-If the type does not contain a C<::> then it is prepended by
-C<Math::Geometry::Construction::Draw::> before requiring the module.
-
-Calls the C<draw> method first on all non-point objects, then on
-all C<Point> and C<DerivedPoint> objects. This is because I think
-that points should be drawn on top of lines, circles etc..
+Returns a new instance of the given class. All parameters are handed
+over to the constructor after adding the C<construction> and
+C<order_index> arguments. In fact, the methods above just call this
+one with the appropriate class.
 
 =head3 as_svg
 
@@ -659,6 +647,22 @@ of that color is drawn as background. The size is taken from the
 C<viewBox> attribute if specified, from C<width> and C<height>
 otherwise. If none is given, no background is drawn.
 
+Example:
+
+  my $svg = $construction->as_svg(width  => 800,
+				    height => 300);
+  
+  print $svg->xmlify;
+
+  # or if SVG::Rasterize is installed...
+  my $rasterize = SVG::Rasterize->new();
+  $rasterize->rasterize(svg    => $svg,
+			  width  => $width,
+			  height => $height);
+  $rasterize->write(type      => 'png',
+		    file_name => 'construction.png');
+
+
 =head3 as_tikz
 
   $construction->as_tikz(%args)
@@ -672,6 +676,31 @@ L<Math::Geometry::Construction::Draw::TikZ|Math::Geometry::Construction::Draw::T
 for supported parameters. At least C<width> and C<height> should be
 provided.
 
+Example:
+
+  my $tikz = $construction->as_tikz(width  => 8,
+                                    height => 3);
+
+  my (undef, undef, $body) = TikZ->formatter->render($tikz);
+  
+  printff("%s\n", join("\n", @$body));
+
+=head3 draw
+
+  $construction->draw('SVG', %args)
+
+Draws the construction. The return value depends on the output type
+and might be an object or a stringified version. Currently, the only
+output types are C<SVG> and C<TikZ>. See L<as_svg|/as_svg> and
+L<as_tikz|/as_tikz>.
+
+If the type does not contain a C<::> then it is prepended by
+C<Math::Geometry::Construction::Draw::> before requiring the module.
+
+Calls the C<draw> method first on all non-point objects, then on
+all C<Point> and C<DerivedPoint> objects. This is because I think
+that points should be drawn on top of lines, circles etc..
+
 
 =head2 List of Derivates
 
@@ -684,8 +713,7 @@ in. At drawing time, the object determines the most extreme points
 and they define the end points of the drawn line segment. The
 C<extend> attribute allows to extend the line for a given length
 beyond these points because this often looks better. A similar
-concept will be implemented for circles, but currently, the full
-circle is drawn.
+concept exist for circles.
 
 =head2 Reusing Objects
 
