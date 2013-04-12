@@ -60,7 +60,7 @@ sub BUILD {
 
 sub calculate_positions {
     my ($self) = @_;
-    my $line  = $self->input;
+    my $line   = $self->input;
 
     my @support_p = map { $_->position } $line->support;
     return if(!defined($support_p[0]) or !defined($support_p[1]));
@@ -70,23 +70,23 @@ sub calculate_positions {
 	my $d = abs($s_distance);
 	return if($d == 0);
 
-	return($support_p[0] + $s_distance / $d * $self->distance);
+	return($support_p[0] + $s_distance / $d * $self->_distance);
     }
     elsif($self->_has_quantile) {
-        return($support_p[0] + $s_distance * $self->quantile);
+        return($support_p[0] + $s_distance * $self->_quantile);
     }
     elsif($self->_has_x) {
 	my $sx = $s_distance->[0];
 	return if($sx == 0);
 
-	my $scale = ($self->x - $support_p[0]->[0]) / $sx;
+	my $scale = ($self->_x - $support_p[0]->[0]) / $sx;
 	return($support_p[0] + $s_distance * $scale);
     }
     elsif($self->_has_y) {
 	my $sy = $s_distance->[1];
 	return if($sy == 0);
 
-	my $scale = ($self->y - $support_p[0]->[1]) / $sy;
+	my $scale = ($self->_y - $support_p[0]->[1]) / $sy;
 	return($support_p[0] + $s_distance * $scale);
     }
     else {

@@ -5,7 +5,7 @@ use 5.008008;
 use Math::Vector::Real;
 use Math::Geometry::Construction::Types qw(MathVectorReal
                                            Point
-                                           Line);
+                                           PointPoint);
 use Moose;
 use Carp;
 
@@ -37,10 +37,11 @@ our $VERSION = '0.024';
 with 'Math::Geometry::Construction::Role::AlternativeSources';
 
 my %alternative_sources =
-    (value_sources => {'vector' => {isa    => MathVectorReal,
-				    coerce => 1},
-		       'point'  => {isa => Point},
-		       'line'   => {isa => Line}});
+    (value_sources => {'vector'      => {isa    => MathVectorReal,
+					 coerce => 1},
+		       'point'       => {isa    => Point},
+		       'point_point' => {isa    => PointPoint,
+					 coerce => 1}});
 
 while(my ($name, $alternatives) = each %alternative_sources) {
     __PACKAGE__->alternatives
@@ -64,9 +65,12 @@ sub BUILD {
 sub value {
     my ($self)   = @_;
 
-    return $self->vector          if($self->_has_vector);
-    return $self->point->position if($self->_has_point);
-    return $self->line->direction if($self->_has_line);
+    return $self->_vector          if($self->_has_vector);
+    return $self->_point->position if($self->_has_point);
+    if($self->_has_point_point) {
+	my $points = $self->_point_point;
+	return $points->[1]->position - $points->[0]->position;
+    }
     croak('No way to determine value of Vector, '.
 	  'please send a bug report');
 }

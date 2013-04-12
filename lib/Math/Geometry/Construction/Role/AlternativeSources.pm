@@ -25,6 +25,8 @@ sub alternatives {
     while(my ($alt_name, $alt_spec) = each %{$args{alternatives}}) {
 	$alt_spec->{is}        = 'rw'
 	    unless(exists($alt_spec->{is}));
+	$alt_spec->{reader}    = '_'.$alt_name
+	    unless(exists($alt_spec->{reader}));
 	$alt_spec->{predicate} = '_has_'.$alt_name
 	    unless(exists($alt_spec->{predicate}));
 	$alt_spec->{clearer}   = '_clear_'.$alt_name

@@ -3,7 +3,7 @@ use Moose;
 
 use 5.008008;
 
-use Math::Geometry::Construction::Types qw(ArrayRefOfPoint);
+use Math::Geometry::Construction::Types qw(PointPoint);
 use Carp;
 use List::MoreUtils qw(any);
 use Scalar::Util qw(blessed);
@@ -48,7 +48,7 @@ with 'Math::Geometry::Construction::Role::PositionSelection';
 with 'Math::Geometry::Construction::Role::Output';
 with 'Math::Geometry::Construction::Role::PointSet';
 
-has 'support'     => (isa      => ArrayRefOfPoint,
+has 'support'     => (isa      => PointPoint,
 		      is       => 'bare',
 		      traits   => ['Array'],
 		      required => 1,
@@ -72,13 +72,7 @@ sub BUILD {
 
     $self->style('stroke', 'black') unless($self->style('stroke'));
 
-    my @support = $self->support;
-    if(@support != 2) {
-	croak "A line needs exactly two support points";
-	return undef;
-    }
-
-    $self->register_point(@support);
+    $self->register_point($self->support);
 }
 
 ###########################################################################
