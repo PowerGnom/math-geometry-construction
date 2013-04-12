@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 59;
+use Test::More tests => 65;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -174,5 +174,28 @@ sub alternative_sources {
     }
 }
 
+sub buffering {
+    my $construction = Math::Geometry::Construction->new;
+    my $circle;
+    my $dp;
+    my $pos;
+
+    $circle = $construction->add_circle(center  => [0, 0],
+					support => [5, 0]);
+    $dp     = $construction->add_derived_point
+	('PointOnCircle',
+	 {input => [$circle], quantile => 0.5});
+    $pos  = $dp->position;
+    is_close($pos->[0], -5, 'x = -5');
+    is_close($pos->[1], 0, 'y = 0');
+    ok($dp->is_buffered('position'), 'position is buffered');
+    $dp->derivate->phi(0);
+    ok(!$dp->is_buffered('position'), 'position is not buffered');
+    $pos = $dp->position;
+    is_close($pos->[0], 5, 'x = 5');
+    is_close($pos->[1], 0, 'y = 0');
+}
+
 point;
 alternative_sources;
+buffering;

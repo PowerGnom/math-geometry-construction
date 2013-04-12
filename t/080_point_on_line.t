@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 67;
+use Test::More tests => 73;
 use Test::Exception;
 use Math::Geometry::Construction;
 
@@ -156,6 +156,27 @@ sub alternative_sources {
     }
 }
 
+sub buffering {
+    my $construction = Math::Geometry::Construction->new;
+    my $line;
+    my $dp;
+    my $pos;
+
+    $line = $construction->add_line(support => [[0, 0], [1, 0]]);
+    $dp   = $construction->add_derived_point
+	('PointOnLine',
+	 {input => [$line], distance => 5});
+    $pos  = $dp->position;
+    is_close($pos->[0], 5, 'x = 5');
+    is_close($pos->[1], 0, 'y = 0');
+    ok($dp->is_buffered('position'), 'position is buffered');
+    $dp->derivate->x(7);
+    ok(!$dp->is_buffered('position'), 'position is not buffered');
+    $pos = $dp->position;
+    is_close($pos->[0], 7, 'x = 7');
+    is_close($pos->[1], 0, 'y = 0');
+}
+
 sub register_derived_point {
     my $construction = Math::Geometry::Construction->new;
     my $line;
@@ -172,4 +193,5 @@ sub register_derived_point {
 
 point_on_line;
 alternative_sources;
+buffering;
 register_derived_point;

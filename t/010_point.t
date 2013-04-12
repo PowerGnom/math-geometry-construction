@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 104;
+use Test::More tests => 112;
 use Test::Exception;
 use Test::Warn;
 use Math::Geometry::Construction;
@@ -112,6 +112,8 @@ sub defaults {
 sub vector_and_point {
     my $construction = Math::Geometry::Construction->new;
     my $p;
+    my $vector;
+    my $value;
     my @template;
 
     $p = $construction->add_point(position => [1, 2]);
@@ -119,11 +121,11 @@ sub vector_and_point {
     @template = ([$p, [1, 2]]);
 
     foreach(@template) {
-	my $vector = Math::Geometry::Construction::Vector->new
-	    (provider => $_->[0]);
+	$vector = Math::Geometry::Construction::Vector->new
+	    (point => $_->[0]);
 	ok(defined($vector), 'vector is defined');
 	isa_ok($vector, 'Math::Geometry::Construction::Vector');
-	my $value = $vector->value;
+	$value = $vector->value;
 	ok(defined($value), 'value is defined');
 	isa_ok($value, 'Math::Vector::Real');
 	is($value->[0], $_->[1]->[0], 'x = '.$_->[1]->[0]);
@@ -131,6 +133,25 @@ sub vector_and_point {
     }
 
     constructs_ok($construction, {position => $p}, 1, 2);
+
+    $vector = Math::Geometry::Construction::Vector->new
+	(vector => [3, 4]);
+    $value  = $vector->value;
+    is($value->[0], 3, 'x = 3');
+    is($value->[1], 4, 'y = 4');
+    foreach('point', 'point_point') {
+	my $predicate = "_has_${_}";
+	ok(!$vector->$predicate, "$_ is clear");
+    }
+
+    $vector->point($p);
+    $value  = $vector->value;
+    is($value->[0], 1, 'x = 1');
+    is($value->[1], 2, 'y = 2');
+    foreach('vector', 'point_point') {
+	my $predicate = "_has_${_}";
+	ok(!$vector->$predicate, "$_ is clear");
+    }
 }
 
 sub draw {

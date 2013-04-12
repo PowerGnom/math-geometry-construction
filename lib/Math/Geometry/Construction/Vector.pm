@@ -2,15 +2,12 @@ package Math::Geometry::Construction::Vector;
 
 use 5.008008;
 
-use Math::Geometry::Construction::Types qw(ArrayRefOfNum
-                                           MathVectorReal
-                                           MathVectorReal3D
+use Math::Vector::Real;
+use Math::Geometry::Construction::Types qw(MathVectorReal
                                            Point
-                                           Line);
+                                           PointPoint);
 use Moose;
 use Carp;
-
-use Math::Vector::Real;
 
 =head1 NAME
 
@@ -37,13 +34,27 @@ our $VERSION = '0.024';
 #                                                                         #
 ###########################################################################
 
-has 'provider' => (isa      => ArrayRefOfNum
-		             | MathVectorReal
-		             | MathVectorReal3D
-		             | Point
-		             | Line,
-		   is       => 'rw',
-		   required => 1);
+with 'Math::Geometry::Construction::Role::AlternativeSources';
+
+my %alternative_sources =
+    (value_sources => {'vector'      => {isa    => MathVectorReal,
+					 coerce => 1},
+		       'point'       => {isa    => Point},
+		       'point_point' => {isa    => PointPoint,
+					 coerce => 1}});
+
+while(my ($name, $alternatives) = each %alternative_sources) {
+    __PACKAGE__->alternatives
+	(name         => $name,
+	 alternatives => $alternatives,
+	 clear_buffer => 0);
+}
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    $self->_check_value_sources;
+}
 
 ###########################################################################
 #                                                                         #
@@ -53,22 +64,15 @@ has 'provider' => (isa      => ArrayRefOfNum
 
 sub value {
     my ($self)   = @_;
-    my $provider = $self->provider;
-    
-    croak "Undefined provider of a Vector should not be possible.\n"
-	if(!defined($provider));
-    return V(@$provider[0, 1])
-	if(!blessed($provider) and ref($provider) eq 'ARRAY');
-    return $provider            if($provider->isa('Math::Vector::Real'));
-    return V($provider->x, $provider->y)
-	if($provider->isa('Math::VectorReal'));
-    return $provider->position
-	if($provider->isa('Math::Geometry::Construction::Point'));
-    return $provider->direction
-	if($provider->isa('Math::Geometry::Construction::Line'));
-    croak("Unknown provider type (".
-	  ref($provider).
-	  ") of a Vector should not be possible.\n");
+
+    return $self->_vector          if($self->_has_vector);
+    return $self->_point->position if($self->_has_point);
+    if($self->_has_point_point) {
+	my $points = $self->_point_point;
+	return $points->[1]->position - $points->[0]->position;
+    }
+    croak('No way to determine value of Vector, '.
+	  'please send a bug report');
 }
 ###########################################################################
 #                                                                         #

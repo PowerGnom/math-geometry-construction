@@ -41,7 +41,8 @@ my %alternative_sources =
 while(my ($name, $alternatives) = each %alternative_sources) {
     __PACKAGE__->alternatives
 	(name         => $name,
-	 alternatives => $alternatives);
+	 alternatives => $alternatives,
+	 clear_buffer => 1);
 }
 
 sub BUILD {
@@ -49,6 +50,7 @@ sub BUILD {
 
     $self->_check_position_sources;
 }
+
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #
@@ -68,13 +70,13 @@ sub calculate_positions {
 
     my $phi = atan2($radius_v->[1], $radius_v->[0]);
     if($self->_has_distance) {
-	$phi += $self->distance / $radius;
+	$phi += $self->_distance / $radius;
     }
     elsif($self->_has_quantile) {
-	$phi += 6.28318530717959 * $self->quantile;
+	$phi += 6.28318530717959 * $self->_quantile;
     }
     elsif($self->_has_phi) {
-	$phi += $self->phi;
+	$phi += $self->_phi;
     }
     else {
 	croak "No way to determine position of PointOnCircle ".$self->id;
