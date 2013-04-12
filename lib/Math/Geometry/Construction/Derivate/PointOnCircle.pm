@@ -26,56 +26,29 @@ our $VERSION = '0.024';
 #                                                                         #
 ###########################################################################
 
+with 'Math::Geometry::Construction::Role::AlternativeSources';
+
 has 'input'    => (isa       => Circle,
 		   coerce    => 1,
 		   is        => 'ro',
 		   required  => 1);
 
-has 'distance' => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => 'has_distance',
-		   clearer   => 'clear_distance',
-		   trigger   => \&_distance_rules);
+my %alternative_sources =
+    (position_sources => {'distance' => {isa => 'Num'},
+			  'quantile' => {isa => 'Num'},
+			  'phi'      => {isa => 'Num'}});
 
-has 'quantile' => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => 'has_quantile',
-		   clearer   => 'clear_quantile',
-		   trigger   => \&_quantile_rules);
-
-has 'phi'      => (isa       => 'Num',
-		   is        => 'rw',
-		   predicate => 'has_phi',
-		   clearer   => 'clear_phi',
-		   trigger   => \&_phi_rules);
-
-sub _rules {
-    my ($self, $ruler) = @_;
-    
-    foreach('distance', 'quantile', 'phi') {
-	unless($_ eq $ruler) {
-	    my $clearer = 'clear_'.$_;
-	    $self->$clearer;
-	}
-    }
-
-    $self->clear_global_buffer;
+while(my ($name, $alternatives) = each %alternative_sources) {
+    __PACKAGE__->alternatives
+	(name         => $name,
+	 alternatives => $alternatives);
 }
-
-sub _distance_rules { $_[0]->_rules('distance') }
-sub _quantile_rules { $_[0]->_rules('quantile') }
-sub _phi_rules      { $_[0]->_rules('phi') }
 
 sub BUILD {
     my ($self, $args) = @_;
 
-    foreach('distance', 'quantile', 'phi') {
-	my $predicate = 'has_'.$_;
-	return if($self->$predicate);
-    }
-    croak "Position of PointOnCircle has to be set somehow";
+    $self->_check_position_sources;
 }
-
 ###########################################################################
 #                                                                         #
 #                             Retrieve Data                               #
@@ -94,13 +67,13 @@ sub calculate_positions {
     return $center_p if($radius == 0);
 
     my $phi = atan2($radius_v->[1], $radius_v->[0]);
-    if($self->has_distance) {
+    if($self->_has_distance) {
 	$phi += $self->distance / $radius;
     }
-    elsif($self->has_quantile) {
+    elsif($self->_has_quantile) {
 	$phi += 6.28318530717959 * $self->quantile;
     }
-    elsif($self->has_phi) {
+    elsif($self->_has_phi) {
 	$phi += $self->phi;
     }
     else {

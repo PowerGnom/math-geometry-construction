@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 51;
+use Test::More tests => 59;
+use Test::Exception;
 use Math::Geometry::Construction;
 
 sub is_close {
@@ -141,4 +142,37 @@ sub point {
     }
 }
 
+sub alternative_sources {
+    my $construction = Math::Geometry::Construction->new;
+    my $circle;
+    my $d;
+
+    $circle = $construction->add_circle(center  => [50, 50],
+					support => [50, 20]);
+    lives_ok(sub { $construction->add_derivate
+		       ('PointOnCircle',
+			input => $circle,
+			distance => 10)
+	     },
+	     'just checking');
+    throws_ok(sub { $construction->add_derivate
+			('PointOnCircle', input => $circle) },
+	      qr/At least one of the attributes.*distance.*has to be/,
+	      'no source dies');
+    $d = $construction->add_derivate
+	('PointOnCircle', input => $circle, distance => 10);
+    is($d->distance, 10, 'distance is 10');
+    foreach('quantile', 'phi') {
+	my $predicate = "_has_${_}";
+	ok(!$d->$predicate, "$_ is clear");
+    }
+    $d->quantile(0.5);
+    is($d->quantile, 0.5, 'quantile is 0.5');
+    foreach('distance', 'phi') {
+	my $predicate = "_has_${_}";
+	ok(!$d->$predicate, "$_ is clear");
+    }
+}
+
 point;
+alternative_sources;
