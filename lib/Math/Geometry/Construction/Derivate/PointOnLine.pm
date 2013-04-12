@@ -42,7 +42,8 @@ my %alternative_sources =
 while(my ($name, $alternatives) = each %alternative_sources) {
     __PACKAGE__->alternatives
 	(name         => $name,
-	 alternatives => $alternatives);
+	 alternatives => $alternatives,
+	 clear_buffer => 1);
 }
 
 sub BUILD {

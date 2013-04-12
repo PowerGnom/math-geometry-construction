@@ -21,20 +21,6 @@ sub alternatives {
     my ($class, %args) = @_;
     my $meta           = Class::MOP::Class->initialize($class);
 
-    my $_rules = sub {
-	my ($self, $ruler) = @_;
-    
-	foreach(keys %{$args{alternatives}}) {
-	    unless($_ eq $ruler) {
-		my $clearer = '_clear_'.$_;
-		$self->$clearer;
-	    }
-	}
-
-	$self->clear_global_buffer;
-    };
-    $meta->add_method('_rules' => $_rules);
-
     # complete spec (except triggers)
     while(my ($alt_name, $alt_spec) = each %{$args{alternatives}}) {
 	$alt_spec->{is}        = 'rw'
@@ -57,7 +43,7 @@ sub alternatives {
 		}
 	    }
 
-	    $self->clear_global_buffer;
+	    $self->clear_global_buffer if($args{clear_buffer});
 	};
 	$alt_spec->{trigger} = $_rules
 	    unless(exists($alt_spec->{trigger}));

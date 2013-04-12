@@ -53,26 +53,35 @@ class_type Point,  {class => 'Math::Geometry::Construction::Point'};
 class_type Line,   {class => 'Math::Geometry::Construction::Line'};
 class_type Circle, {class => 'Math::Geometry::Construction::Circle'};
 
+# coerce into Math::Vector::Real
+coerce MathVectorReal,
+    from MathVectorReal3D,
+    via { V($_->x, $_->y) };
+
+coerce MathVectorReal,
+    from ArrayRef[Num],
+    via { V(@$_[0, 1]) };
+
 # coerce into Vector
 coerce Vector,
     from ArrayRef[Num],
-    via { Vector->new(provider => $_) };
+    via { Vector->new(vector => $_) };
 
 coerce Vector,
     from MathVectorReal,
-    via { Vector->new(provider => $_) };
+    via { Vector->new(vector => $_) };
 
 coerce Vector,
     from MathVectorReal3D,
-    via { Vector->new(provider => $_) };
+    via { Vector->new(vector => $_) };
 
 coerce Vector,
     from Point,
-    via { Vector->new(provider => $_) };
+    via { Vector->new(point => $_) };
 
 coerce Vector,
     from Line,
-    via { Vector->new(provider => $_) };
+    via { Vector->new(line => $_) };
 
 class_type Construction, {class => 'Math::Geometry::Construction'};
 
