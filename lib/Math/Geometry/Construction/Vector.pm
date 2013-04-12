@@ -65,10 +65,10 @@ sub BUILD {
 sub value {
     my ($self)   = @_;
 
-    return $self->vector          if($self->_has_vector);
-    return $self->point->position if($self->_has_point);
+    return $self->_vector          if($self->_has_vector);
+    return $self->_point->position if($self->_has_point);
     if($self->_has_point_point) {
-	my $points = $self->point_point;
+	my $points = $self->_point_point;
 	return $points->[1]->position - $points->[0]->position;
     }
     croak('No way to determine value of Vector, '.
