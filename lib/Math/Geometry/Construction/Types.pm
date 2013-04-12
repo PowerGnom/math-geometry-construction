@@ -14,6 +14,7 @@ use MooseX::Types -declare => ['ArrayRefOfNum',
 			       'Draw',
 			       'HashRefOfGeometricObject',
 			       'ArrayRefOfGeometricObject',
+			       'PointPoint',
 			       'LineLine',
 			       'LineCircle',
 			       'CircleLine',
@@ -96,6 +97,13 @@ subtype HashRefOfGeometricObject,
 
 subtype ArrayRefOfGeometricObject,
     as ArrayRef[GeometricObject];
+
+subtype PointPoint,
+    as Tuple[Point, Point];
+
+coerce PointPoint,
+    from Line,
+    via { [$_->support] };
 
 subtype LineLine,
     as Tuple[Line, Line];
